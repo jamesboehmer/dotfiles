@@ -15,7 +15,7 @@ then
     echo "Adding thumbprint ID to sudo...";
     tmpfile="$(mktemp)";
     grep "#" "${PAM_SUDO}" >> "${tmpfile}";
-    echo "auth       sufficient     pam_tid.so" >> "${tmpfile}";    
+    echo "auth       sufficient     pam_tid.so" >> "${tmpfile}";
     grep -v "#" "${PAM_SUDO}" >> "${tmpfile}";
     sudo cp "${PAM_SUDO}" "${PAM_SUDO}.${TIME}";
     sudo cp "${tmpfile}" "${PAM_SUDO}";
@@ -28,19 +28,23 @@ echo "${BASEDIRS[0]}/brew/install.sh ${CLEANUPFILE}";
 
 for BASEDIR in ${BASEDIRS[@]};
 do
-    find "${BASEDIR}" -name '.*' -maxdepth 1 -mindepth 1 | egrep -ve '.DS_Store|.gitignore|.git$' | awk -F'/' '{print $NF}' | while read dotfile
+    find "${BASEDIR}" -maxdepth 1 -mindepth 1 -name '.*' | egrep -ve '.DS_Store|.gitignore|.git$' | awk -F'/' '{print $NF}' | while read dotfile
     do
         [[ -e "${HOME}/${dotfile}" ]] && mv "${HOME}/${dotfile}" "${HOME}/${dotfile}.dotfilebak.${TIME}" && echo "${HOME}/${dotfile}.dotfilebak.${TIME}" >> "${CLEANUPFILE}";
         echo -e "Linking ${HOME}/${dotfile} -> ${BASEDIR}/${dotfile}";
         ln -sf "${BASEDIR}/${dotfile}" "${HOME}/${dotfile}";
     done
 
-    find "${BASEDIR}" -name install.sh -maxdepth 2 -mindepth 2 | grep -v brew/install.sh | while read INSTALLSCRIPT;
+    find "${BASEDIR}" -maxdepth 2 -mindepth 2 -name install.sh | grep -v brew/install.sh | while read INSTALLSCRIPT;
     do
         echo "${INSTALLSCRIPT} ${CLEANUPFILE}";
         "${INSTALLSCRIPT}" "${CLEANUPFILE}";
     done
 done
+
+which defaults &>/dev/null;
+if [[ $? -eq 0 ]]
+then
 
 echo "Setting up iTerm2 defaults..."
 
@@ -52,10 +56,12 @@ defaults write com.googlecode.iterm2.plist BootstrapDaemon -bool false #makes su
 defaults read com.googlecode.iterm2.plist >/dev/null
 defaults read -app iTerm >/dev/null
 
-# Enable keyboard to be used to navigate dialogs.  
+# Enable keyboard to be used to navigate dialogs.
 # This probably won't take effect until after you open the sysprefs->keyboard->shortcuts window or restart.
 # See https://stackoverflow.com/a/54192723
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 2
+
+fi
 
 # Prevent iTunes from hijacking the play key, but only if not on High Sierra
 which launchctl &>/dev/null && defaults read loginwindow SystemVersionStampAsString | egrep "10.1(3|4)" &>/dev/null || launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist &>/dev/null
@@ -64,7 +70,7 @@ which launchctl &>/dev/null && defaults read loginwindow SystemVersionStampAsStr
 [[ -e /Library/LaunchAgents/com.cisco.anyconnect.gui.plist ]] &>/dev/null && launchctl unload -w /Library/LaunchAgents/com.cisco.anyconnect.gui.plist
 
 # Fix zsh compinit permission issue
-zsh -ic 'compaudit | xargs chmod g-w'
+zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
 
 if [[ -s "${CLEANUPFILE}" ]]
 then

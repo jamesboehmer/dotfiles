@@ -16,6 +16,8 @@ do
 	do
 		for pattern in PyCharm IntelliJ Gogland GoLand CLion DataGrip PhpStorm WebStorm ReSharper Rider RubyMine AppCode TeamCity Upsource
 		do
+            if [[ -e /Applications ]]
+            then
 			find /Applications -type d -maxdepth 1 -name "${pattern}*.app" | while read appdir
 			do
 				plist="${appdir}/Contents/Info.plist";
@@ -25,7 +27,8 @@ do
 				echo "Linking ${prefsdir}/${subdir}/${xmlfile} to ${BASEDIR}/${subdir}/${xmlfile}";
 				ln -sf "${BASEDIR}/${subdir}/${xmlfile}" "${prefsdir}/${subdir}/${xmlfile}";
 			done
-		done	
+            fi
+		done
 	done
 
 	popd
