@@ -3,7 +3,7 @@
 [include]
 	path = ~/.private/.gitconfig
 [core]
-	editor = subl -w
+	editor = $EDITOR
 	pager = less -x4
 	excludesFile = ~/.gitexcludes
 [filter "lfs"]
