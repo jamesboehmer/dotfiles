@@ -11,7 +11,14 @@ then
 fi
 
 $SUDO apt update;
-$SUDO apt-get install -y $(grep -vE "^\s*#" packages.txt  | tr "\n" " ")
+$SUDO apt-get install -y $(grep -vE "^\s*#" "${BASEDIR}/packages.txt"  | tr "\n" " ")
 
 #disable DVC analytics
 which dvc &>/dev/null && dvc config --global core.analytics false
+
+which starship &>/dev/null
+if [[ $? -ne 0 ]]
+then
+	echo "Installing starship...";
+	curl -fsSL https://starship.rs/install.sh | $SUDO FORCE=yes bash
+fi
