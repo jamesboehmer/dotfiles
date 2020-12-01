@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ -e /usr/bin/apt ]] || { echo "Not Debian.  Bye" && exit 0; }
+[[ -e /usr/bin/apt-get ]] || { echo "Not Debian.  Bye" && exit 0; }
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
