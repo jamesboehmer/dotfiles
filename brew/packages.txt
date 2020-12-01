@@ -21,7 +21,7 @@ findutils
 fx
 gawk
 git
-github/gh/gh
+gh
 glances
 gnu-sed
 gnuplot
@@ -38,7 +38,6 @@ jenv
 jq
 jsawk
 jwt-cli
-keys
 luaver
 maven
 micro
