@@ -1,0 +1,20 @@
+#!/bin/bash
+
+name="$(basename ${0})";
+
+if [[ "${name}" == "lower" ]]
+then
+	cmd="tr '[:upper:]' '[:lower:]'";
+elif [[ "${name}" == "upper" ]]
+then
+	cmd="tr '[:lower:]' '[:upper:]'";
+else
+	echo "Unknown command" && exit 1;
+fi
+
+if [[ $# -gt 0 ]]
+then
+	echo $@ | $cmd
+else
+	$cmd
+fi
