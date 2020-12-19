@@ -86,6 +86,43 @@ function loadAliases {
     function shellLoadTime {
         for i in $(seq 1 10); do /usr/bin/time $SHELL -i -c exit; done
     }
+
+    function serv {
+        function usage { echo "Usage: $0 [-p <port:random>] [-d <dir:pwd>] [-b <bind:localhost>]"; }
+        local port=$(getFreePort);
+        local dir=$(pwd);
+        local bind="localhost";
+
+        while getopts 'p:d:b:' OPT; do
+          case "$OPT" in
+            p)
+              if [[ "${OPTARG}" =~ ^-?[0-9]+$ ]]
+              then
+                port="${OPTARG}"
+              else
+                usage;
+                return 1;
+              fi
+              ;;
+
+            d)
+              dir="${OPTARG}";
+              ;;
+
+            b)
+              bind="${OPTARG}";
+              ;;
+            ?)
+              usage && return 0
+              ;;
+          esac
+        done
+        python3 -m http.server $port --directory "$dir" --bind "$bind" &;
+        echo "HTTP server listening at http://$bind:$port";
+        open http://$bind:$port;
+        fg;
+
+    }
 }
 
 # Only if this is a login shell
