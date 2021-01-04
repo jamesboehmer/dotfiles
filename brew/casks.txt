@@ -10,13 +10,12 @@ homebrew/cask/firefox
 homebrew/cask/freac
 homebrew/cask/ghost-browser
 homebrew/cask/github
-homebrew/cask/goland
 homebrew/cask/google-backup-and-sync
 homebrew/cask/gpg-suite
 homebrew/cask/iina
-homebrew/cask/intellij-idea-ce
 homebrew/cask/iterm2
 homebrew/cask/java
+homebrew/cask/jetbrains-toolbox
 homebrew/cask/keka
 homebrew/cask/keybase
 homebrew/cask/little-snitch
@@ -27,7 +26,6 @@ homebrew/cask/muzzle
 homebrew/cask/ngrok
 homebrew/cask/osxfuse
 homebrew/cask/postman
-homebrew/cask/pycharm
 homebrew/cask/seashore
 homebrew/cask/signal
 homebrew/cask/slack
@@ -38,7 +36,6 @@ homebrew/cask/telegram
 homebrew/cask/virtualbox
 homebrew/cask/virtualbox-extension-pack
 homebrew/cask/vlc
-homebrew/cask/webstorm
 homebrew/cask/whatsapp
 homebrew/cask/wireshark
 homebrew/cask/zeplin
