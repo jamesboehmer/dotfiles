@@ -3,7 +3,7 @@
 [[ -e ~/.private ]] && source /dev/stdin <<<"$(cat ~/.private/*rc 2>/dev/null)";
 
 # [[ "$(uname -s)" == "Darwin" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
-[[ -e "/Applications/iTunes.app" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
+[[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
 [[ -e "/usr/local/bin/exa" ]] && alias ls='exa -laF'
 
 function loadAliases {
