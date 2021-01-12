@@ -1,1 +1,1 @@
-. ${HOME}/.profile &>/dev/null
+#. ${HOME}/.profile &>/dev/null

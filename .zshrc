@@ -28,4 +28,5 @@ select-word-style bash
 
 alias -s json='jq .'
 
-. ${HOME}/.bashrc
+[[ -e ~/.profile ]] && . ~/.profile;
+[[ -e ~/.bashrc ]] && . ~/.bashrc;
