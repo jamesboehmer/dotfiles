@@ -25,6 +25,7 @@ fi
 
 if [[ ! -e ~/.pyenv ]]
 then
+	mkdir -p ~/.private
 	git clone https://github.com/pyenv/pyenv.git ~/.pyenv;
 	git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
 	echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.private/pyenvrc
