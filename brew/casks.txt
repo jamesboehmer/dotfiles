@@ -36,7 +36,6 @@ homebrew/cask/telegram
 homebrew/cask/virtualbox
 homebrew/cask/virtualbox-extension-pack
 homebrew/cask/vlc
-homebrew/cask/whatsapp
 homebrew/cask/wireshark
 homebrew/cask/zeplin
 homebrew/cask-versions/adoptopenjdk8
