@@ -1,5 +1,6 @@
 autoconf
 awscli
+build-essentials
 coreutils
 ctop
 direnv
@@ -13,9 +14,14 @@ graphviz
 grep
 htop
 jq
+libbz2-dev
+libreadline-dev
+libsqlite3-dev
+libssl-dev
 moreutils
 net-tools
 socat
 tree
 vim
+zlib1g-dev
 zsh

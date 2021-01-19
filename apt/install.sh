@@ -22,3 +22,11 @@ then
 	echo "Installing starship...";
 	curl -fsSL https://starship.rs/install.sh | $SUDO FORCE=yes bash
 fi
+
+if [[ ! -e ~/.pyenv ]]
+then
+	git clone https://github.com/pyenv/pyenv.git ~/.pyenv;
+	git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
+	echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.private/pyenvrc
+	echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.private/pyenvrc
+fi
