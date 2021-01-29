@@ -117,7 +117,7 @@ function loadAliases {
               ;;
           esac
         done
-        python3 -m http.server $port --directory "$dir" --bind "$bind" &;
+        python3 -m http.server $port --directory "$dir" --bind "$bind" &
         echo "HTTP server listening at http://$bind:$port";
         open http://$bind:$port;
         fg;
