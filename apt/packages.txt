@@ -1,6 +1,6 @@
 autoconf
 awscli
-build-essentials
+build-essential
 coreutils
 ctop
 direnv
