@@ -1,6 +1,6 @@
 # .bashrc must NOT output anything
 
-[[ -e ~/.private ]] && source /dev/stdin <<<"$(cat ~/.private/*rc 2>/dev/null)";
+[[ -e ~/.private ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.private/*rc 2>/dev/null)";
 
 # [[ "$(uname -s)" == "Darwin" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
 [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
