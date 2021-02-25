@@ -51,6 +51,7 @@ echo "Setting up iTerm2 defaults..."
 defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string ${HOME}/.iterm
 defaults write com.googlecode.iterm2.plist SUEnableAutomaticChecks -bool false
+defaults write com.apple.gamed Disabled -bool true
 defaults write com.apple.desktopservices DSDontWriteNetworkStores true # disable creation of .DS_Store files
 defaults write com.googlecode.iterm2.plist BootstrapDaemon -bool false #makes sudo thumbprint ID work
 defaults read com.googlecode.iterm2.plist >/dev/null
