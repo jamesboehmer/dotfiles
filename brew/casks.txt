@@ -17,6 +17,7 @@ homebrew/cask/iina
 homebrew/cask/iterm2
 homebrew/cask/java
 homebrew/cask/jetbrains-toolbox
+homebrew/cask/karabiner-elements
 homebrew/cask/keka
 homebrew/cask/keybase
 homebrew/cask/little-snitch
