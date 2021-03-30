@@ -24,7 +24,7 @@ function loadAliases {
     alias jwt='/usr/local/bin/jwt';
     alias sha256='openssl dgst -sha256';
     alias weather='curl wttr.in';
-    alias whereami='curl -s ifconfig.co/json | jq .';
+    alias whereami='curl -s ifconfig.co/json | jq';
     alias scalaenvinit='eval "$(scalaenv init - --no-rehash)" && eval "$(sbtenv init - --no-rehash)"';
     alias goenvinit='eval "$(goenv init - --no-rehash)"';
     alias luaenvinit='eval "$(luaenv init - --no-rehash)"';
