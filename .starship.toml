@@ -2,8 +2,4 @@
 truncation_length=100
 truncate_to_repo=false
 
-[character]
-use_symbol_for_status=true
 
-[aws]
-displayed_items="profile"
