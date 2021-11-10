@@ -14,7 +14,7 @@ function loadAliases {
     alias cerebro='docker run -d --rm $([[ -e ${HOME}/.cerebro/application.conf ]] && echo "-v ${HOME}/.cerebro/application.conf:/opt/cerebro/conf/application.conf") --name cerebro -it -p9000:9000 yannart/cerebro && urlWaitSpin http://localhost:9000 200 true && docker attach cerebro';
     alias swagger='docker run -d --rm --name swagger -it -p8889:8080 swaggerapi/swagger-editor && urlWaitSpin http://localhost:8889 200 true && docker attach swagger';
     alias openapi='docker run -d --rm --name openapi -it -p3000:3000 mermade/openapi-gui && urlWaitSpin http://localhost:3000 200 true && docker attach openapi';
-    alias es='docker run -d --rm --name elasticsearch -it -p9200:9200 -p9300:9300 -e discovery.type=single-node -v /usr/share/elasticsearch/data elasticsearch:7.7.1 && urlWaitSpin http://localhost:9200 200 true && docker attach elasticsearch';
+    alias es='docker run -d --rm --name elasticsearch -it -p9200:9200 -p9300:9300 -e discovery.type=single-node -v /usr/share/elasticsearch/data elasticsearch:7.14.1 && urlWaitSpin http://localhost:9200 200 true && docker attach elasticsearch';
     alias ff='docker run -d --rm --name=firefox -p5800:5800 -v "${HOME}/.firefox-container":/config --shm-size 2g --security-opt seccomp=unconfined jlesage/firefox && urlWaitSpin http://localhost:5800 200 true && docker attach firefox';
     alias ubuntu='PORT="$(getFreePort)" && docker run -d --rm --name=ubuntu -p${PORT}:80 --shm-size 2g dorowu/ubuntu-desktop-lxde-vnc:bionic && urlWaitSpin http://localhost:${PORT} 200 true && docker attach ubuntu';
     alias dockerps='docker ps --format "{{json .}}" | jq';
@@ -34,6 +34,15 @@ function loadAliases {
     alias nodenvinit='eval "$(nodenv init - --no-rehash)"';
     alias pyenvinit='eval "$(pyenv init - --no-rehash)" && eval "$(pyenv virtualenv-init init - --no-rehash)"';
     alias sdkinit='source "${SDKMAN_DIR}/bin/sdkman-init.sh" || test 0';
+
+    function uuid() {
+        if [[ -t 1 ]]
+        then
+            uuidgen | lower
+        else
+            uuidgen | lower | tr -d "\n"
+        fi
+    }
 
     function openapi-generator-cli {
         [[ $# -eq 2 ]] || echo "Usage: $0 <filename> <language>" && return 1;
