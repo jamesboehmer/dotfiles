@@ -46,7 +46,7 @@
 	co = checkout
 	ci = commit
 	df = diff
-	lg = log -p
+	lg = log -p --show-signature
 	rso = remote show origin
 	me = config user.email
 
@@ -63,11 +63,11 @@
 	ir = !sh -c 'git rebase -i ${1-$(git root)}' -
 
 	# all commits since root
-	log-branch = !git log $(git root)..
+	log-branch = !git log --show-signature $(git root)..
 	blog = !git log-branch
 
 	# all commits by me
-	mlog = !git log --committer=\"`git me`\"
+	mlog = !git log --committer=\"`git me`\" --show-signature
 
 	# update current branch
 	update = !sh -c 'git fetch origin && git rebase -p ${1-$(git root)}' -
@@ -80,7 +80,7 @@
 	all = !git log --pretty=oneline --abbrev-commit --all --no-merges
 
 	# all commits today for only me
-	today = !git all --since='12am' --committer=\"`git me`\"
+	today = !git all --since='12am' --committer=\"`git me`\"  --show-signature
 
 	# today's commits without formatting or paging
 	today-text = !git --no-pager today --no-color
@@ -89,7 +89,7 @@
 	fdm = !git diff $(git root)... --name-status
 
 	# last commit info in svn style
-	last = !git show --name-status
+	last = !git show --name-status --show-signature
 	last-files = !git last --pretty=format:""
 
 	# last commit only certain type of modification
@@ -119,6 +119,8 @@
 	# `git save`
 	# saves a commit in current branch: local branches you will be rebasing
 	save = !git commit -am \"save game\"
+
+	sh = show --show-signature
 
 	# attempt to cleanup some common problems
 	unfuck = !git fsck && git remote prune origin && git gc
