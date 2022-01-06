@@ -1,7 +1,9 @@
 [push]
 	default = simple
 [include]
+[include]
 	path = ~/.private/.gitconfig
+	path = ~/.local/.local.gitconfig
 [core]
 	pager = less -x4
 	excludesFile = ~/.gitexcludes
