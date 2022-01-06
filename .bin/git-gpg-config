@@ -1,0 +1,26 @@
+#!/bin/bash
+
+NAMESPACE="";
+
+if [[ $# -lt 1 ]]
+then
+	echo "Usage: git gpg-config <namespace>";
+	exit 1;
+fi
+
+NAMESPACE=".${1}";
+
+echo "Pick a key to use for git gpg signatures:";
+
+gpg -K
+select KEYID in $(gpg -K | grep -vA1 '^sec' | grep '^\s' | tr -d ' ')
+do
+	break
+done
+
+git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${KEYID}"
+git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true
+git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true
+git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format openpgp
+
+echo "Created ~/.local/${NAMESPACE}.gitconfig"
