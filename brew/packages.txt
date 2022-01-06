@@ -46,6 +46,7 @@ ndenv
 netcat
 node
 nodenv
+openssh
 pcre
 perl-build
 plantuml
