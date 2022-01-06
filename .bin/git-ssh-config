@@ -10,34 +10,14 @@ fi
 
 NAMESPACE=".${1}";
 
-echo "Pick a file to use for git gpg-ssh signatures:";
+echo "Pick a file to use for git-ssh identity:";
 
-select PUBKEY in ~/.ssh/*.pub
+select PRIVKEY in $(find ~/.ssh/ -name '*.pub' | while read line; do find $(dirname $line) -name $(basename ${line/.pub/}); done)
 do
 	break
 done
 
-PRIVKEY="${PUBKEY/.pub/}";
-
-PUBKEY_CONTENTS="$(cat "${PUBKEY}" | awk '{print $1 FS $2}')";
-
-TMPFILE="$(mktemp)";
-echo "* ${PUBKEY_CONTENTS}" > ${TMPFILE};
-
-if [[ -f ~/.ssh/allowed_signers ]]
-then
-	cat ~/.ssh/allowed_signers >> ${TMPFILE};
-fi
-
-cat "${TMPFILE}" | sort -u > ~/.ssh/allowed_signers
-
 mkdir -p ~/.local;
-
-git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${PUBKEY_CONTENTS}"
-git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true
-git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true
-git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format ssh
-git config --file ~/.local/${NAMESPACE}.gitconfig gpg.ssh.allowedSignersFile '~/.ssh/allowed_signers'
 git config --file ~/.local/${NAMESPACE}.gitconfig core.sshCommand "ssh -i ${PRIVKEY}"
 
-echo "Created ~/.local/${NAMESPACE}.gitconfig and updated ~/.ssh/allowed_signers"
+echo "Updated ~/.local/${NAMESPACE}.gitconfig"

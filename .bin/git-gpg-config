@@ -1,7 +1,5 @@
 #!/bin/bash
 
-NAMESPACE="";
-
 if [[ $# -lt 1 ]]
 then
 	echo "Usage: git gpg-config <namespace>";
@@ -10,17 +8,59 @@ fi
 
 NAMESPACE=".${1}";
 
-echo "Pick a key to use for git gpg signatures:";
+echo "Which method do you want to use for signing commits?"
 
-gpg -K
-select KEYID in $(gpg -K | grep -vA1 '^sec' | grep '^\s' | tr -d ' ')
+select METHOD in openpgp ssh
 do
 	break
 done
 
-git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${KEYID}"
-git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true
-git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true
-git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format openpgp
+case $METHOD in
+	openpgp )
+		echo "Pick a GPG key to use for openpgp git commit signatures:";
 
-echo "Created ~/.local/${NAMESPACE}.gitconfig"
+		gpg -K
+		select KEYID in $(gpg -K | grep -vA1 '^sec' | grep '^\s' | tr -d ' ')
+		do
+			break
+		done
+
+		mkdir -p ~/.local;
+		git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${KEYID}";
+		git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true;
+		git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true;
+		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format openpgp;
+
+		echo "Updated ~/.local/${NAMESPACE}.gitconfig";
+		;;
+	ssh )
+		echo "Pick an SSH key to use for ssh git commit signatures:";
+
+		select PRIVKEY in $(find ~/.ssh/ -name '*.pub' | while read line; do find $(dirname $line) -name $(basename ${line/.pub/}); done)
+		do
+			break
+		done
+		PUBKEY="${PRIVKEY}.pub";
+
+		PUBKEY_CONTENTS="$(cat "${PUBKEY}" | awk '{print $1 FS $2}')";
+
+		TMPFILE="$(mktemp)";
+		echo "* ${PUBKEY_CONTENTS}" > ${TMPFILE};
+
+		if [[ -f ~/.ssh/allowed_signers ]]
+		then
+			cat ~/.ssh/allowed_signers >> ${TMPFILE};
+		fi
+
+		cat "${TMPFILE}" | sort -u > ~/.ssh/allowed_signers
+
+		mkdir -p ~/.local;
+		git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${PUBKEY_CONTENTS}";
+		git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true;
+		git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true;
+		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format ssh;
+
+		echo "Updated ~/.local/${NAMESPACE}.gitconfig and updated ~/.ssh/allowed_signers"
+		
+	;;
+esac
