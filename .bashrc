@@ -172,7 +172,13 @@ if [[ $- = *i* ]]
 then
     loadAliases
     [[ -e "${HOME}/.loginenv" ]] && source "${HOME}/.loginenv" 2>/dev/null;
-    [[ -e "${HOME}/.git-completion" ]] && source "${HOME}/.git-completion" 2>/dev/null;
+    # [[ -e "${HOME}/.git-completion" ]] && source "${HOME}/.git-completion" 2>/dev/null;
+    if [[ -n ${ZSH_VERSION-} ]]
+    then
+        autoload -Uz compinit && compinit
+    else
+        [[ -e "${HOME}/.git-completion" ]] && source "${HOME}/.git-completion" 2>/dev/null;
+    fi
     # [[ -e "/usr/local/bin/kubectl" ]] && source <(kubectl completion $(basename ${SHELL}))
     [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh" || test 0;
     which direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
