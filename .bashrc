@@ -34,6 +34,7 @@ function loadAliases {
     alias nodenvinit='eval "$(nodenv init - --no-rehash)"';
     alias pyenvinit='eval "$(pyenv init - --no-rehash)" && eval "$(pyenv virtualenv-init init - --no-rehash)"';
     alias sdkinit='source "${SDKMAN_DIR}/bin/sdkman-init.sh" || test 0';
+    alias sshadd='ssh-add $(find ~/.ssh/ -name "*.pub" | while read line; do find $(dirname $line) -name $(basename ${line/.pub/}); done)'
 
     function uuid() {
         if [[ -t 1 ]]
