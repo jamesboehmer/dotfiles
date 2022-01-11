@@ -1,8 +1,5 @@
 [push]
 	default = simple
-[include]
-	path = ~/.private/.gitconfig
-	path = ~/.local/.local.gitconfig
 [core]
 	pager = less -x4
 	excludesFile = ~/.gitexcludes
@@ -152,3 +149,6 @@
 	ff = only
 [init]
 	defaultBranch = main
+[include]
+	path = ~/.local/.local.gitconfig
+	path = ~/.private/.gitconfig
