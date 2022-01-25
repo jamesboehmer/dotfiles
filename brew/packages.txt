@@ -21,6 +21,7 @@ findutils
 fx
 gawk
 git
+git-delta
 gh
 glances
 gnu-sed

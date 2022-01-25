@@ -1,8 +1,12 @@
 [push]
 	default = simple
 [core]
-	pager = less -x4
+	pager = delta # less -x4
 	excludesFile = ~/.gitexcludes
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true # use n and N to move between diff sections
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -13,6 +17,7 @@
 [diff]
 	# tool = diffmerge
 	tool = meld
+	colorMoved = default
 [difftool]
 	prompt = false
 [difftool "diffmerge"]
