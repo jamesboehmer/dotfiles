@@ -59,6 +59,7 @@ case $METHOD in
 		git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true;
 		git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true;
 		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format ssh;
+		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.ssh.allowedSignersFile '~/.ssh/allowed_signers'
 
 		echo "Updated ~/.local/${NAMESPACE}.gitconfig and updated ~/.ssh/allowed_signers"
 		
