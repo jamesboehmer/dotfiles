@@ -23,6 +23,7 @@
 [merge]
 	# tool = diffmerge
 	tool = meld
+	conflictStyle = zdiff3
 [mergetool]
 	prompt = false
 [mergetool "diffmerge"]
