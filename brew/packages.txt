@@ -6,6 +6,7 @@ aws-shell
 awslogs
 basex
 bat
+btop
 calc
 coreutils
 ctop
@@ -20,7 +21,6 @@ exa
 findutils
 fx
 gawk
-git
 git-delta
 gh
 glances
@@ -50,6 +50,7 @@ nodenv
 openssh
 pcre
 perl-build
+pgpdump
 plantuml
 plenv
 pyenv
