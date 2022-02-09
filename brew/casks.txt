@@ -21,7 +21,6 @@ ngrok
 postman
 signal
 slack
-sonos-s1-controller
 spotify
 sublime-text
 telegram
