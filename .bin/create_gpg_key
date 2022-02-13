@@ -1,0 +1,122 @@
+#!/bin/bash
+
+set -e
+
+########################
+## START GENERATE KEY ##
+########################
+echo -e "This script will prompt you for a passphrase for every secure operation.\n"
+
+while [[ "${fullname}" == "" ]]; do read -p "Full Name: " fullname; done
+while [[ "${email}" == "" ]]; do read -p "Email: " email; done
+read -p "Comment (enter for none): " comment
+
+commandfile="$(mktemp)";
+cat > "${commandfile}" <<EOF
+1
+4096
+2y
+${fullname}
+${email}
+${comment}
+EOF
+
+statusfile="$(mktemp)";
+#echo "Status file: ${statusfile}"
+outputfile="$(mktemp)";
+#echo "Output file: ${outputfile}"
+
+echo "Generating new PGP key...";
+
+gpg --status-file="${statusfile}" --command-file="${commandfile}" --no-tty --full-generate-key &> "${outputfile}";
+
+tail +5 "${outputfile}";
+
+KEYID="$(cat "${statusfile}" | grep KEY_CREATED | awk '{print $4}')";
+REVOCATION_FILE="$(grep 'gpg: revocation' ${outputfile} | awk -F"'" '{print $2}')"
+
+echo "Moving revocation certificate to revocation.asc";
+mv "${REVOCATION_FILE}" "revocation.asc";
+
+######################
+## END GENERATE KEY ##
+######################
+
+########################
+## START UPDATE PREFS ##
+########################
+
+echo "Updating preferences with most secure hash algorithms...";
+cat > "${commandfile}" <<EOF
+setpref SHA512 SHA384 SHA256 SHA224 AES256 AES192 AES CAST5 ZLIB BZIP2 ZIP Uncompressed
+save
+EOF
+
+gpg --command-file="${commandfile}" --expert --no-tty --edit-key $KEYID &>/dev/null
+
+######################
+## END UPDATE PREFS ##
+######################
+
+##############################
+## START ADD SIGNING SUBKEY ##
+##############################
+
+echo "Adding a new signing subkey...";
+
+cat > "${commandfile}" <<EOF
+addkey
+4
+4096
+0
+save
+EOF
+
+
+gpg --command-file="${commandfile}" --expert --no-tty --edit-key $KEYID &>/dev/null
+
+############################
+## END ADD SIGNING SUBKEY ##
+############################
+
+##########################
+## START EXPORTING KEYS ##
+##########################
+
+echo "Exporting public key to public.asc..."
+rm -f public.asc;
+gpg -a --output public.asc --export "${KEYID}" &>/dev/null
+echo "Exporting secret key to secret.asc..."
+rm -f secret.asc;
+gpg -a --output secret.asc --export-secret-keys "${KEYID}" &>/dev/null
+echo "Exporting secret subkeys to secret_subkeys.asc..."
+rm -f secret_subkeys.asc;
+gpg -a --output secret_subkeys.asc --export-secret-subkeys ${KEYID} &>/dev/null
+
+########################
+## END EXPORTING KEYS ##
+########################
+
+##################################
+## START DELETE ALL SECRET KEYS ##
+##################################
+
+echo "Deleting secret keys..."
+gpg --batch --yes --delete-secret-keys ${KEYID} &>/dev/null
+
+################################
+## END DELETE ALL SECRET KEYS ##
+################################
+
+#################################
+## START IMPORT SECRET SUBKEYS ##
+#################################
+echo "Reimporting secret subkeys..."
+gpg --import secret_subkeys.asc &>/dev/null
+
+
+###############################
+## END IMPORT SECRET SUBKEYS ##
+###############################
+
+echo -e "\nBe sure to store secret.asc, secret_subkeys.asc, and revocation.asc somewhere safe as soon as possible.";
