@@ -12,7 +12,6 @@ karabiner-elements
 keepassxc
 keybase
 little-snitch
-macfuse
 macmediakeyforwarder
 meld
 mullvadvpn

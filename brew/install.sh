@@ -24,8 +24,17 @@ do
 	[[ -e "${tapdir}" ]] && echo "Already tapped: ${tap}" || brew tap "${tap}";
 done < ${BASEDIR}/taps.txt
 
-xargs brew install --cask < ${BASEDIR}/casks.txt
-xargs brew install < ${BASEDIR}/packages.txt
+cat "${BASEDIR}/casks.txt" | while read cask
+do
+	echo "#### Cask: ${cask} ####";
+	brew install --cask "${cask}";
+done
+
+cat "${BASEDIR}/packages.txt" | while read package
+do
+	echo "#### Package: ${package} ####";
+	brew install "${package}";
+done
 
 # only install mas on high sierra
 defaults read loginwindow SystemVersionStampAsString | grep "10.13" &>/dev/null && brew install mas;
