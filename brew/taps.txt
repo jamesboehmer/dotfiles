@@ -1,2 +1,5 @@
+homebrew/cask-fonts
+homebrew/cask-versions
+jorgelbg/tap
 mike-engel/jwt-cli
 moncho/dry
