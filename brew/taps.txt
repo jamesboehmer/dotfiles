@@ -3,3 +3,4 @@ homebrew/cask-versions
 jorgelbg/tap
 mike-engel/jwt-cli
 moncho/dry
+dbcli/tap
