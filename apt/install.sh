@@ -9,6 +9,7 @@ if [[ $EUID -ne 0 ]]
 then
     SUDO="sudo";
 fi
+export DEBIAN_FRONTEND=noninteractive;
 
 $SUDO apt update;
 $SUDO apt-get install -y $(grep -vE "^\s*#" "${BASEDIR}/packages.txt"  | tr "\n" " ")
