@@ -2,13 +2,11 @@ autoconf
 awscli
 build-essential
 coreutils
-ctop
 direnv
 findutils
 fonts-firacode
 gawk
 git
-glances
 gnuplot
 graphviz
 grep
