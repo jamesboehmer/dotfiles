@@ -86,15 +86,16 @@ zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
 
 if [[ -s "${CLEANUPFILE}" ]]
 then
-	read -p "Would you like to clean up backed up files? " -n 1 -r
-	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
+	# read -p "Would you like to clean up backed up files? " -n 1 -r
+	# echo
+	# if [[ $REPLY =~ ^[Yy]$ ]]
+	# then
+        echo "Cleaning up backed up files...";
     	cat "${CLEANUPFILE}" | while read line
     	do
     		echo -e "Removing ${line}";
     		rm "${line}";
     	done
-    fi
+    # fi
 fi
 
