@@ -42,6 +42,17 @@ do
     done
 done
 
+if [[ "$(uname -s)" != "Darwin" ]]
+then
+    mkdir -p ~/.local;
+    echo "Setting git credential helper to cache...";
+    git config --file ~/.local/.local.gitconfig credential.helper 'cache --timeout=30000'
+    echo "Unsetting git diff and merge tools...";
+    git config --file ~/.local/.local.gitconfig merge.tool ""
+    git config --file ~/.local/.local.gitconfig diff.tool ""
+
+fi
+
 which defaults &>/dev/null;
 if [[ $? -eq 0 ]]
 then
