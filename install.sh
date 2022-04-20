@@ -42,15 +42,16 @@ do
     done
 done
 
+mkdir -p ~/.local;
+
 if [[ "$(uname -s)" != "Darwin" ]]
 then
-    mkdir -p ~/.local;
-    echo "Setting git credential helper to cache...";
-    git config --file ~/.local/.local.gitconfig credential.helper 'osxkeychain'
     echo "Unsetting git diff and merge tools...";
     git config --file ~/.local/.local.gitconfig merge.tool ""
     git config --file ~/.local/.local.gitconfig diff.tool ""
-
+else
+    echo "Setting git credential helper to osxkeychain...";
+    git config --file ~/.local/.local.gitconfig credential.helper 'osxkeychain'
 fi
 
 which defaults &>/dev/null;
