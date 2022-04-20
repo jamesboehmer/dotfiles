@@ -15,28 +15,7 @@
 [color]
 	ui = auto
 [diff]
-	# tool = diffmerge
-	tool = meld
 	colorMoved = default
-[difftool]
-	prompt = false
-[difftool "diffmerge"]
-	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
-[difftool "meld"]
-  trustExitCode = true
-  cmd = meld \"$LOCAL\" \"$REMOTE\"
-[merge]
-	# tool = diffmerge
-	tool = meld
-	# conflictStyle = zdiff3
-[mergetool]
-	prompt = false
-[mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
-	trustExitCode = true
-[mergetool "meld"]
-  trustExitCode = true
-  cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output=\"$MERGED\"
 [alias]
 	br = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) | %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) | %(color:magenta)%(authorname)%(color:reset) | (%(color:green)%(committerdate:relative)%(color:reset))' 
 	unstage = reset HEAD

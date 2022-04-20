@@ -42,16 +42,12 @@ do
     done
 done
 
-mkdir -p ~/.local;
-
-if [[ "$(uname -s)" != "Darwin" ]]
+if [[ "$(uname -s)" == "Darwin" ]]
 then
-    echo "Unsetting git diff and merge tools...";
-    git config --file ~/.local/.local.gitconfig merge.tool ""
-    git config --file ~/.local/.local.gitconfig diff.tool ""
-else
-    echo "Setting git credential helper to osxkeychain...";
-    git config --file ~/.local/.local.gitconfig credential.helper 'osxkeychain'
+    echo "Setting local gitconfig defaults for mac...";
+    mkdir -p ~/.local;
+    ln -sf "${BASEDIRS[0]}/mac.gitconfig" "${HOME}/.local/mac.gitconfig";
+    git config --file ~/.local/.local.gitconfig include.path '~/.local/mac.gitconfig'
 fi
 
 which defaults &>/dev/null;
