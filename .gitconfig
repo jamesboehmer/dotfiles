@@ -150,7 +150,7 @@
 	crazy = status
 	stupid = status
 [credential]
-	helper = osxkeychain
+	helper = cache --timeout=30000
 [pull]
 	ff = only
 [init]
