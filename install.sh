@@ -73,6 +73,9 @@ defaults read -app iTerm >/dev/null
 # See https://stackoverflow.com/a/54192723
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 2
 
+# disable the macos tips thing
+sudo launchctl disable system/com.apple.tipsd
+
 fi
 
 # Prevent iTunes from hijacking the play key, but only if not on High Sierra
