@@ -8,6 +8,7 @@ basex
 bat
 btop
 calc
+colima
 coreutils
 ctop
 deno
