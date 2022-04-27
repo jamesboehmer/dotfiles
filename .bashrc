@@ -182,6 +182,7 @@ then
     fi
     # [[ -e "/usr/local/bin/kubectl" ]] && source <(kubectl completion $(basename ${SHELL}))
     [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh" || test 0;
+    [[ -e ~/.local ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.local/*rc 2>/dev/null)";
     which direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
     which starship &>/dev/null && eval "$(starship init ${SHELL})";
 fi
