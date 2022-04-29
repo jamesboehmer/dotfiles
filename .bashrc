@@ -1,7 +1,5 @@
 # .bashrc must NOT output anything
 
-[[ -e ~/.private ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.private/*rc 2>/dev/null)";
-
 # [[ "$(uname -s)" == "Darwin" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
 [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
 [[ -e "/usr/local/bin/exa" ]] && alias ls='exa -laF'
@@ -182,7 +180,10 @@ then
     fi
     # [[ -e "/usr/local/bin/kubectl" ]] && source <(kubectl completion $(basename ${SHELL}))
     [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh" || test 0;
+    [[ -n ${ZSH_VERSION-} ]] && setopt NONOMATCH;
+    [[ -e ~/.private ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.private/*rc 2>/dev/null)";
     [[ -e ~/.local ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.local/*rc 2>/dev/null)";
+    [[ -n ${ZSH_VERSION-} ]] && setopt NOMATCH;
     which direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
     which starship &>/dev/null && eval "$(starship init ${SHELL})";
 fi
