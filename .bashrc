@@ -184,6 +184,6 @@ then
     [[ -e ~/.private ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.private/*rc 2>/dev/null)";
     [[ -e ~/.local ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.local/*rc 2>/dev/null)";
     [[ -n ${ZSH_VERSION-} ]] && setopt NOMATCH;
-    which direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
-    which starship &>/dev/null && eval "$(starship init ${SHELL})";
+    [[ -n ${SHELL-} ]] && which direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
+    [[ -n ${SHELL-} ]] && which starship &>/dev/null && eval "$(starship init ${SHELL})";
 fi
