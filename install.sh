@@ -89,18 +89,19 @@ fi
 # Fix zsh compinit permission issue
 zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
 
+# Automatically enabled git PGP signing in codespaces
+if [[ "${CODESPACES}" == "true" ]]
+then
+    [[ -e ~/.bin/git-gpg-config ]] && ~/.bin/git-gpg-config local codespace
+fi
+
 if [[ -s "${CLEANUPFILE}" ]]
 then
-	# read -p "Would you like to clean up backed up files? " -n 1 -r
-	# echo
-	# if [[ $REPLY =~ ^[Yy]$ ]]
-	# then
-        echo "Cleaning up backed up files...";
-    	cat "${CLEANUPFILE}" | while read line
-    	do
-    		echo -e "Removing ${line}";
-    		rm "${line}";
-    	done
-    # fi
+    echo "Cleaning up backed up files...";
+    cat "${CLEANUPFILE}" | while read line
+    do
+        echo -e "Removing ${line}";
+        rm "${line}";
+    done
 fi
 

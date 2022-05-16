@@ -2,18 +2,26 @@
 
 if [[ $# -lt 1 ]]
 then
-	echo "Usage: git gpg-config <namespace>";
+	echo "Usage: git gpg-config <namespace> [openpgp|ssh|codespace]";
 	exit 1;
 fi
 
 NAMESPACE=".${1}";
 
-echo "Which method do you want to use for signing commits?"
+if [[ $# -gt 1 ]]
+then
+	METHOD="${2}"
+fi
 
-select METHOD in openpgp ssh
-do
-	break
-done
+if [[ -z ${METHOD} ]]
+then
+	echo "Which method do you want to use for signing commits?"
+
+	select METHOD in openpgp ssh codespace
+	do
+		break
+	done
+fi
 
 case $METHOD in
 	openpgp )
@@ -62,6 +70,20 @@ case $METHOD in
 		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.ssh.allowedSignersFile '~/.ssh/allowed_signers'
 
 		echo "Updated ~/.local/${NAMESPACE}.gitconfig and updated ~/.ssh/allowed_signers"
-		
-	;;
+		;;
+	codespace )
+		echo "Using your codespace environment for git commit signing";
+
+		mkdir -p ~/.local;
+		git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true;
+		git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true;
+		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format openpgp;
+
+		echo "Updated ~/.local/${NAMESPACE}.gitconfig";
+		;;
+	* )
+		echo "Unknown method: $METHOD"
+		exit 1;
+		;;
+
 esac
