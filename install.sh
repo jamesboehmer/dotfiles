@@ -93,6 +93,7 @@ zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
 if [[ "${CODESPACES}" == "true" ]]
 then
     [[ -e ~/.bin/git-gpg-config ]] && ~/.bin/git-gpg-config local codespace
+    echo 'export EDITOR=code' > ~/.private/codespacerc
 fi
 
 if [[ -s "${CLEANUPFILE}" ]]
