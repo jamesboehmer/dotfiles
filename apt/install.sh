@@ -37,5 +37,5 @@ if [[ ! -e ~/.tfenv ]]
 then
 	mkdir -p ~/.private
 	git clone https://github.com/tfutils/tfenv.git ~/.tfenv;
-	echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.private/tfenvrc
+	echo 'export PATH="$HOME/.tfenv/bin:$PATH"' > ~/.private/tfenvrc
 fi
