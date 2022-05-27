@@ -20,6 +20,7 @@ moreutils
 net-tools
 socat
 tree
+uuid-runtime
 vim
 zlib1g-dev
 zsh
