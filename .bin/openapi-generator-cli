@@ -1,0 +1,11 @@
+#!/bin/bash
+
+[[ $# -eq 2 ]] || { echo "Usage: $0 <filename> <language>" && exit 1; }
+filename="$1";
+language="$2"
+tmpdir="$(mktemp -d)";
+cp "$filename" "$tmpdir";
+docker run --rm \
+    -v "$tmpdir:/local" openapitools/openapi-generator-cli generate \
+    -i "/local/$filename" \
+    -g "$language"

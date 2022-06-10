@@ -1,0 +1,13 @@
+#!/bin/bash
+
+port="";
+until [[ "${port}" != "" ]]
+do
+    port="$(($RANDOM % 64511 + 1024))"
+    netstat -an | grep tcp4 | grep LISTEN | awk '{print $4}' | awk -F"." '{print $NF}' | grep -e "^${port}$" &>/dev/null;
+    [[ $? -eq 0 ]] && port="";
+done
+
+[[ -t 1 ]] && NL="\n"
+
+printf "${port}${NL}";

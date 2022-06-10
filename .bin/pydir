@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [[ $# -lt 1 ]]
+then
+    echo "Usage: $0 <dirname> [PYENV_VERSION or '@' (default: latest conda version)] [package1, [package2...]]";
+    exit 1;
+fi
+
+if [[ $# -ge 2 ]]
+then
+    PYENV_VER="${2}"
+fi
+
+if [[ "${PYENV_VER}" == "" || "${PYENV_VER}" == "@" ]]
+then
+    # Use the latest 3.x version, prefer conda, exclude anything with a slash that indicates existing venvs
+    PYENV_VER="$(pyenv versions | tr -d ' ' | grep -e '^\(3\|conda-3\)' | grep -v / | sort | tail -1)";
+fi
+mkdir -p "${1}";
+cd "${1}";
+cat > .envrc << EOF
+source_up
+layout pyenv ${PYENV_VER}
+EOF
+direnv allow .;
+if [[ $# -ge 3 ]]
+then
+    shift;
+    shift;
+    direnv exec . pip install --upgrade pip ${@}
+fi
+
+echo $(pwd)

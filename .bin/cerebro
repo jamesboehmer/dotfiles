@@ -1,0 +1,8 @@
+#!/bin/bash
+
+port=9000
+docker run -d --rm $([[ -e ${HOME}/.cerebro/application.conf ]]
+echo "-v ${HOME}/.cerebro/application.conf:/opt/cerebro/conf/application.conf") --name cerebro -it -p${port}:9000 yannart/cerebro
+urlwaitspin http://localhost:${port} 200 true
+echo "Listening on http://localhost:${port}"
+docker attach cerebro

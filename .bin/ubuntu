@@ -1,0 +1,7 @@
+#!/bin/bash
+
+port="$(getfreeport)"
+docker run -d --rm --name=ubuntu -p${port}:80 --shm-size 2g dorowu/ubuntu-desktop-lxde-vnc:bionic
+urlwaitspin http://localhost:${port} 200 true
+echo "Listening on http://localhost:${port}"
+docker attach ubuntu

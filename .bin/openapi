@@ -1,0 +1,7 @@
+#!/bin/bash
+
+port=3000
+docker run -d --rm --name openapi -it -p${port}:3000 mermade/openapi-gui
+urlwaitspin http://localhost:${port} 200 true
+echo "Listening on http://localhost:${port}"
+docker attach openapi

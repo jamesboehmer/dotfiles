@@ -1,0 +1,8 @@
+#!/bin/bash
+
+port=9200
+version=7.14.1
+docker run -d --rm --name elasticsearch -it -p${port}:9200 -e discovery.type=single-node -v /usr/share/elasticsearch/data elasticsearch:${version}
+urlwaitspin http://localhost:${port} 200 true
+echo "Listening on http://localhost:${port}"
+docker attach elasticsearch

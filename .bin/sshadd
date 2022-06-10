@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ssh-add $(find ~/.ssh/ -name "*.pub" | while read line; do find $(dirname $line) -name $(basename ${line/.pub/}); done)

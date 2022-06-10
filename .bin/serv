@@ -1,0 +1,38 @@
+#!/bin/bash
+
+function usage { echo "Usage: $0 [-p <port:random>] [-d <dir:pwd>] [-b <bind:localhost>]"; }
+
+port=$(getfreeport);
+dir=$(pwd);
+bind="localhost";
+
+while getopts 'p:d:b:' OPT; do
+  case "$OPT" in
+    p)
+      if [[ "${OPTARG}" =~ ^-?[0-9]+$ ]]
+      then
+        port="${OPTARG}"
+      else
+        usage;
+        exit 1;
+      fi
+      ;;
+
+    d)
+      dir="${OPTARG}";
+      ;;
+
+    b)
+      bind="${OPTARG}";
+      ;;
+    ?)
+      usage && exit 0
+      ;;
+  esac
+done
+
+set -m # enable job control or fg won't work
+
+python3 -m http.server $port --directory "$dir" --bind "$bind" &
+open http://$bind:$port;
+fg
