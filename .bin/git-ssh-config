@@ -12,12 +12,12 @@ NAMESPACE=".${1}";
 
 echo "Pick a file to use for git-ssh identity:";
 
-select PRIVKEY in $(find ~/.ssh/ -name '*.pub' | while read line; do find $(dirname $line) -name $(basename ${line/.pub/}); done)
+select PRIVKEY in $(find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | while read line; do echo "$line:$(awk '{print $NF}' $line)" ; done)
 do
 	break
 done
 
 mkdir -p ~/.local;
-git config --file ~/.local/${NAMESPACE}.gitconfig core.sshCommand "ssh -i ${PRIVKEY}"
+git config --file ~/.local/${NAMESPACE}.gitconfig core.sshCommand "ssh -i $(echo "${PRIVKEY}" | awk -F: '{print $1}')"
 
 echo "Updated ~/.local/${NAMESPACE}.gitconfig"
