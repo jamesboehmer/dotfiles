@@ -10,6 +10,13 @@ fi
 
 NAMESPACE=".${1}";
 
+find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | grep . &>/dev/null;
+if [[ $? -ne 0 ]]
+then
+	echo "No SSH keys found!"
+	exit
+fi
+
 echo "Pick a file to use for git-ssh identity:";
 
 select PRIVKEY in $(find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | while read line; do echo "$line:$(awk '{print $NF}' $line)" ; done)
