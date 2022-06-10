@@ -19,6 +19,7 @@ libssl-dev
 moreutils
 net-tools
 socat
+time
 tree
 uuid-runtime
 vim
