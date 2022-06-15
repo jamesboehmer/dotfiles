@@ -7,19 +7,22 @@ BASEDIRS=( "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" "$( cd "$( dirnam
 
 CLEANUPFILE="$(mktemp)";
 
-#Enable thumbprint ID for sudo
-PAM_SUDO="/etc/pam.d/sudo";
-grep "pam_tid.so" "${PAM_SUDO}" &>/dev/null
-if [[ $? -ne 0 ]]
+if [[ "$(uname -s)" == "Darwin" ]]
 then
-    echo "Adding thumbprint ID to sudo...";
-    tmpfile="$(mktemp)";
-    grep "#" "${PAM_SUDO}" >> "${tmpfile}";
-    echo "auth       sufficient     pam_tid.so" >> "${tmpfile}";
-    grep -v "#" "${PAM_SUDO}" >> "${tmpfile}";
-    sudo cp "${PAM_SUDO}" "${PAM_SUDO}.${TIME}";
-    sudo cp "${tmpfile}" "${PAM_SUDO}";
-    sudo chmod 444 "${PAM_SUDO}";
+    #Enable touch ID for sudo
+    PAM_SUDO="/etc/pam.d/sudo";
+    grep "pam_tid.so" "${PAM_SUDO}" &>/dev/null
+    if [[ $? -ne 0 ]]
+    then
+        echo "Adding touch ID to ${PAM_SUDO}";
+        tmpfile="$(mktemp)";
+        grep "#" "${PAM_SUDO}" >> "${tmpfile}";
+        echo "auth       sufficient     pam_tid.so" >> "${tmpfile}";
+        grep -v "#" "${PAM_SUDO}" >> "${tmpfile}";
+        sudo cp "${PAM_SUDO}" "${PAM_SUDO}.${TIME}";
+        sudo cp "${tmpfile}" "${PAM_SUDO}";
+        sudo chmod 444 "${PAM_SUDO}";
+    fi
 fi
 
 # ensure brew runs first
