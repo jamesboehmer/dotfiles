@@ -18,6 +18,7 @@ mullvadvpn
 muzzle
 ngrok
 postman
+secretive
 signal
 slack
 spotify
