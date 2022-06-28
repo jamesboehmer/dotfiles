@@ -27,11 +27,12 @@ case $METHOD in
 	openpgp )
 		echo "Pick a GPG key to use for openpgp git commit signatures:";
 
-		gpg -K
-		select KEYID in $(gpg -K | grep -vA1 '^sec' | grep '^\s' | tr -d ' ')
+		select KEYID in $(gpg -K | grep -E -A2 '^sec.+expires:' | grep -v '^sec' | grep -v '\-\-' | xargs -L2 | tr -d '<>' | awk '{print $1 ":" $NF}' | tr '\n' ' ')
 		do
 			break
 		done
+
+		KEYID="$(echo "${KEYID}" | awk -F: '{print $1}')";
 
 		mkdir -p ~/.local;
 		git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${KEYID}";
