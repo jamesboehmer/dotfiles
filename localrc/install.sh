@@ -20,7 +20,7 @@ if [[ $? -eq 0 ]]
 then
 	cat >> "${FILENAME}" <<EOF
 export OPENBLAS="$(brew --prefix openblas)"
-export OPENSSL="$(brew --prefix openssl)"
+export OPENSSL="$(brew --prefix openssl@1.1)"
 export LDFLAGS="-L\${OPENSSL}/lib"
 export CPPFLAGS="-I\${OPENSSL}/include"
 export HDF5_DIR="$(brew --prefix hdf5)"
