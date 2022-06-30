@@ -8,10 +8,12 @@ then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-HOMEBREW_DIR="$(brew config | grep HOMEBREW_PREFIX | awk '{print $2}')";
+HOMEBREW_DIR="$(brew --prefix)";
 CASKROOM_DIR="${HOMEBREW_DIR}/Caskroom";
 CELLAR_DIR="${HOMEBREW_DIR}/Cellar";
 export PATH="${HOMEBREW_DIR}/bin:$PATH";
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_INSTALL_CLEANUP=1
 
 brew install git;
 
@@ -24,17 +26,27 @@ do
 	[[ -e "${tapdir}" ]] && echo "Already tapped: ${tap}" || brew tap "${tap}";
 done < ${BASEDIR}/taps.txt
 
+existingcasks=($(brew ls --cask))
 cat "${BASEDIR}/casks.txt" | while read cask
 do
-	echo "#### Cask: ${cask} ####";
-	brew install --cask "${cask}";
+	if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
+	then
+		echo "#### Cask: ${cask} ####";
+		brew install --cask "${cask}";
+	fi
 done
 
-cat "${BASEDIR}/packages.txt" | while read package
+for package in $(cat "${BASEDIR}/packages.txt")
 do
-	echo "#### Package: ${package} ####";
-	brew install "${package}";
+	if [[ ! -e $(brew --prefix ${package}) ]]
+	then
+		echo "#### Installing Package: ${package} ####";
+		brew install "${package}";
+	else
+		echo "#### Already installed: ${package} ####"
+	fi
 done
+exit
 
 # only install mas on high sierra
 defaults read loginwindow SystemVersionStampAsString | grep "10.13" &>/dev/null && brew install mas;

@@ -21,9 +21,11 @@ then
 	cat >> "${FILENAME}" <<EOF
 export OPENBLAS="$(brew --prefix openblas)"
 export OPENSSL="$(brew --prefix openssl@1.1)"
-export LDFLAGS="-L\${OPENSSL}/lib"
-export CPPFLAGS="-I\${OPENSSL}/include"
+export ZLIB="$(brew --prefix zlib)"
+export LDFLAGS="-L\${OPENSSL}/lib:\${ZLIB}/lib"
+export CPPFLAGS="-I\${OPENSSL}/include:\${ZLIB}/include"
 export HDF5_DIR="$(brew --prefix hdf5)"
+export PKG_CONFIG_PATH="-L\${OPENSSL}/lib/pkgconfig:\${ZLIB}/lib/pkgconfig"
 
 EOF
 fi
