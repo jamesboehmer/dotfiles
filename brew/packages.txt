@@ -62,7 +62,6 @@ sbtenv
 scalaenv
 serveit
 socat
-sponge
 starship
 tree
 vim
