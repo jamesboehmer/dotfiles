@@ -22,8 +22,10 @@ then
 export OPENBLAS="$(brew --prefix openblas)"
 export OPENSSL="$(brew --prefix openssl@1.1)"
 export ZLIB="$(brew --prefix zlib)"
-export LDFLAGS="-L\${OPENSSL}/lib:\${ZLIB}/lib"
-export CPPFLAGS="-I\${OPENSSL}/include:\${ZLIB}/include"
+export PROTOBUF="$(brew --prefix protobuf)"
+export LDFLAGS="-L\${OPENSSL}/lib:\${ZLIB}/lib:\${PROTOBUF}/lib"
+export CPPFLAGS="-I\${OPENSSL}/include:\${ZLIB}/include:\${PROTOBUF}/include"
+export CFLAGS="\${CPPFLAGS}"
 export HDF5_DIR="$(brew --prefix hdf5)"
 export PKG_CONFIG_PATH="-L\${OPENSSL}/lib/pkgconfig:\${ZLIB}/lib/pkgconfig"
 
@@ -34,6 +36,12 @@ export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL=1
 export GRPC_PYTHON_BUILD_SYSTEM_ZLIB=1
 
 EOF
+
+cat >> "${FILENAME}" <<EOF
+export PATH="\$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
+EOF
+
 
 LOGITECHPLIST="/Library/LaunchAgents/com.logitech.manager.daemon.plist";
 if [[ -e "${LOGITECHPLIST}" ]]
