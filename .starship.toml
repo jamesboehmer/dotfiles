@@ -4,3 +4,6 @@ truncate_to_repo=false
 
 [container]
 disabled=true
+
+[nodejs]
+format = "via [🤖 $version](bold green) "
