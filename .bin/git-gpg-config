@@ -43,15 +43,22 @@ case $METHOD in
 		echo "Updated ~/.local/${NAMESPACE}.gitconfig";
 		;;
 	ssh )
+		find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | grep . &>/dev/null;
+		if [[ $? -ne 0 ]]
+		then
+			echo "No SSH keys found!"
+			exit
+		fi
+
 		echo "Pick an SSH key to use for ssh git commit signatures:";
 
-		select PRIVKEY in $(find ~/.ssh/ -name '*.pub' | while read line; do find $(dirname $line) -name $(basename ${line/.pub/}); done)
+		select PUBKEY in $(find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | while read line; do echo "$line:$(awk '{print $NF}' $line)" ; done)
 		do
 			break
 		done
-		PUBKEY="${PRIVKEY}.pub";
 
-		PUBKEY_CONTENTS="$(cat "${PUBKEY}" | awk '{print $1 FS $2}')";
+		PUBKEY="$(echo "${PUBKEY}" | awk -F: '{print $1}')";
+		PUBKEY_CONTENTS=""$(cat "${PUBKEY}" | awk '{print $1 FS $2}')"";
 
 		TMPFILE="$(mktemp)";
 		echo "* ${PUBKEY_CONTENTS}" > ${TMPFILE};
@@ -64,13 +71,17 @@ case $METHOD in
 		cat "${TMPFILE}" | sort -u > ~/.ssh/allowed_signers
 
 		mkdir -p ~/.local;
-		git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${PUBKEY_CONTENTS}";
+		git config --file ~/.local/${NAMESPACE}.gitconfig user.signingKey "${PUBKEY}"; # "${PUBKEY_CONTENTS}";
 		git config --file ~/.local/${NAMESPACE}.gitconfig commit.gpgSign true;
 		git config --file ~/.local/${NAMESPACE}.gitconfig tag.gpgSign true;
 		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.format ssh;
 		git config --file ~/.local/${NAMESPACE}.gitconfig gpg.ssh.allowedSignersFile '~/.ssh/allowed_signers'
 
-		echo "Updated ~/.local/${NAMESPACE}.gitconfig and updated ~/.ssh/allowed_signers"
+		echo "Updated ~/.local/${NAMESPACE}.gitconfig and updated ~/.ssh/allowed_signers";
+		if [[ ${PUBKEY} =~ .*com.maxgoedjen.Secretive.SecretAgent.* ]]
+		then
+			echo "Looks like you're using Secretive for your key signing.  Be sure the agent is running and SSH_AUTH_SOCK=~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
+		fi
 		;;
 	codespace )
 		echo "Using your codespace environment for git commit signing";
