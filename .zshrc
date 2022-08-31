@@ -30,3 +30,9 @@ alias -s json='jq .'
 
 [[ -e ~/.profile ]] && . ~/.profile;
 [[ -e ~/.bashrc ]] && . ~/.bashrc;
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+fpath+=~/.zfunc
+fpath+=~/.local/.zfunc
+fpath+=~/.private/.zfunc
