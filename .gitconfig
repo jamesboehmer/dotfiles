@@ -1,5 +1,6 @@
 [push]
 	default = simple
+	autoSetupRemote = true
 [core]
 	pager = delta # less -x4
 	excludesFile = ~/.gitexcludes
