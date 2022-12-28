@@ -5,6 +5,10 @@ function usage { echo "Usage: $0 [-p <port:random>] [-d <dir:pwd>] [-b <bind:loc
 port=$(getfreeport);
 dir=$(pwd);
 bind="localhost";
+if [[ "${CODESPACES}" == "true" ]]
+then
+  bind="0.0.0.0"
+fi
 
 while getopts 'p:d:b:' OPT; do
   case "$OPT" in
@@ -33,6 +37,9 @@ done
 
 set -m # enable job control or fg won't work
 
-python3 -m http.server $port --directory "$dir" --bind "$bind" &
-open http://$bind:$port;
+python3 -m http.server --directory "$dir" --bind "$bind" $port &
+if [[ "$(uname -s)" == "Darwin" ]]
+then
+  urlwaitspin http://$bind:$port && open http://$bind:$port
+fi
 fg
