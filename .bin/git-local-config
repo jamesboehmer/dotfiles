@@ -1,0 +1,149 @@
+#!/bin/bash
+
+function ensurelocal {
+	mkdir -p ~/.local;
+}
+
+function local-config {
+	until [[ -n  "${GITUSERNAME}" ]]; do
+		read -p "Your Name: " GITUSERNAME
+	done
+
+	until [[ -n  "${GITUSEREMAIL}" ]]; do
+		read -p "Your Email: " GITUSEREMAIL
+	done
+
+	ensurelocal;
+	git config --file "${CONFIGFILE}" user.name "${GITUSERNAME}";
+	git config --file "${CONFIGFILE}" user.email "${GITUSEREMAIL}";
+
+	echo "Updated ${CONFIGFILE}";
+}
+
+function gpg-config {
+	echo "Which method do you want to use for signing commits?"
+
+	select METHOD in openpgp ssh codespace
+	do
+		break
+	done
+
+	case $METHOD in
+		openpgp )
+			echo "Pick a GPG key to use for openpgp git commit signatures:";
+
+			select KEYID in $(gpg -K | grep -E -A2 '^sec.+expires:' | grep -v '^sec' | grep -v '\-\-' | xargs -L2 | tr -d '<>' | awk '{print $1 ":" $NF}' | tr '\n' ' ')
+			do
+				break
+			done
+
+			KEYID="$(echo "${KEYID}" | awk -F: '{print $1}')";
+
+			ensurelocal;
+			git config --file "${CONFIGFILE}" user.signingKey "${KEYID}";
+			git config --file "${CONFIGFILE}" commit.gpgSign true;
+			git config --file "${CONFIGFILE}" tag.gpgSign true;
+			git config --file "${CONFIGFILE}" gpg.format openpgp;
+
+			echo "Updated ${CONFIGFILE}";
+			;;
+		ssh )
+			find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | grep . &>/dev/null;
+			if [[ $? -ne 0 ]]
+			then
+				echo "No SSH keys found!"
+				exit
+			fi
+
+			echo "Pick an SSH key to use for ssh git commit signatures:";
+
+			select PUBKEY in $(find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | while read line; do echo "$line:$(awk '{print $NF}' $line)" ; done)
+			do
+				break
+			done
+
+			PUBKEY="$(echo "${PUBKEY}" | awk -F: '{print $1}')";
+			PUBKEY_CONTENTS="$(cat "${PUBKEY}" | awk '{print $1 FS $2}')";
+
+			TMPFILE="$(mktemp)";
+			echo "* ${PUBKEY_CONTENTS}" > ${TMPFILE};
+
+			if [[ -f ~/.ssh/allowed_signers ]]
+			then
+				cat ~/.ssh/allowed_signers >> ${TMPFILE};
+			fi
+
+			cat "${TMPFILE}" | sort -u > ~/.ssh/allowed_signers
+
+			ensurelocal;
+			git config --file "${CONFIGFILE}" user.signingKey "${PUBKEY}"; # "${PUBKEY_CONTENTS}";
+			git config --file "${CONFIGFILE}" commit.gpgSign true;
+			git config --file "${CONFIGFILE}" tag.gpgSign true;
+			git config --file "${CONFIGFILE}" gpg.format ssh;
+			git config --file "${CONFIGFILE}" gpg.ssh.allowedSignersFile '~/.ssh/allowed_signers'
+
+			echo "Updated "${CONFIGFILE}" and updated ~/.ssh/allowed_signers";
+			if [[ ${PUBKEY} =~ .*com.maxgoedjen.Secretive.SecretAgent.* ]]
+			then
+				echo "Looks like you're using Secretive for your key signing.  Be sure the agent is running and to set SSH_AUTH_SOCK=\${HOME}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
+			fi
+			;;
+		codespace )
+			echo "Using your codespace environment for git commit signing";
+
+			ensurelocal;
+			git config --file "${CONFIGFILE}" --unset user.signingKey;
+			git config --file "${CONFIGFILE}" commit.gpgSign true;
+			git config --file "${CONFIGFILE}" tag.gpgSign true;
+			git config --file "${CONFIGFILE}" gpg.format openpgp;
+
+			echo "Updated ${CONFIGFILE}";
+			;;
+		* )
+			echo "Unknown method: $METHOD"
+			exit 1;
+			;;
+
+	esac
+}
+
+function ssh-config {
+	find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | grep . &>/dev/null;
+	if [[ $? -ne 0 ]]
+	then
+		echo "No SSH keys found!"
+		exit
+	fi
+
+	echo "Pick a file to use for git-ssh identity:";
+
+	select PUBKEY in $(find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | while read line; do echo "$line:$(awk '{print $NF}' $line)" ; done)
+	do
+		break
+	done
+
+	ensurelocal;
+	git config --file "${CONFIGFILE}" core.sshCommand "ssh -i $(echo "${PUBKEY}" | awk -F: '{print $1}')"
+
+	echo "Updated "${CONFIGFILE}": SSH Identity set to ${PUBKEY}"
+}
+
+BASENAME="$(basename $0)";
+GITCOMMAND="${BASENAME/git-/}";
+
+type ${GITCOMMAND} &>/dev/null;
+[[ $? -ne 0 ]] && echo "Unknown command: ${GITCOMMAND}" && exit 1;
+
+if [[ $# -ge 1 ]]; then
+	NAMESPACE="${1}";
+else
+	read -p "Namespace [local]: " NAMESPACE
+	NAMESPACE=${NAMESPACE:-local}
+fi
+
+[[ "${NAMESPACE}" != "local" ]] && PREFIX=".${NAMESPACE}";
+
+CONFIGFILE="${HOME}/.local/${PREFIX}.gitconfig";
+echo "Configuring ${CONFIGFILE}";
+
+${GITCOMMAND};
