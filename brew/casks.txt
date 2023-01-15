@@ -1,4 +1,5 @@
 1password
+bartender
 bettertouchtool
 charles
 diffmerge
@@ -12,6 +13,7 @@ karabiner-elements
 keepassxc
 keybase
 little-snitch
+lunar
 macmediakeyforwarder
 meld
 mullvadvpn
