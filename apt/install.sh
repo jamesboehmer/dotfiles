@@ -21,7 +21,11 @@ which starship &>/dev/null
 if [[ $? -ne 0 ]]
 then
 	echo "Installing starship...";
-	curl -fsSL https://starship.rs/install.sh | $SUDO FORCE=yes sh
+	if [[ $SUDO == "" ]]; then
+		curl -fsSL https://starship.rs/install.sh | FORCE=yes sh
+	else
+		curl -fsSL https://starship.rs/install.sh | $SUDO FORCE=yes sh
+	fi
 fi
 
 if [[ ! -e ~/.pyenv ]]
