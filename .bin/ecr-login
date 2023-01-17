@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+REGION="${AWS_REGION:-us-east-1}";
+ACCOUNTID="${AWS_ACCOUNTID}"
+if [[ ${ACCOUNTID} == "" ]]; then
+	tmpfile="$(mktemp)";
+	ACCOUNTID="$(aws sts get-caller-identity --query Account --output text 2>"${tmpfile}")";
+	if [[ $? -ne 0 ]]; then
+		ACCOUNTID="$(cat "${tmpfile}" | tr ' ' '\n' | grep arn:aws:iam | awk -F: '{print $5}')"
+	fi
+fi
+REPO="${ACCOUNTID}.dkr.ecr.${REGION}.amazonaws.com";
+
+aws ecr get-login-password --region "${REGION}" | docker login --username AWS --password-stdin "${REPO}"
