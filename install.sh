@@ -11,6 +11,15 @@ CLEANUPFILE="$(mktemp)";
 echo "${BASEDIRS[0]}/brew/install.sh ${CLEANUPFILE}";
 "${BASEDIRS[0]}/brew/install.sh" "${CLEANUPFILE}";
 
+# First remove the old .gitconfig symlink
+if [[ -s ~/.gitconfig ]]; then
+    ls -laF ~/.gitconfig | grep "${BASEDIRS[0]}/.gitconfig" &>/dev/null;
+    if [[ $? -eq 0 ]]; then
+        echo "Removing ~/.gitconfig symlink";
+        rm ~/.gitconfig;
+    fi
+fi
+
 for BASEDIR in ${BASEDIRS[@]};
 do
     find "${BASEDIR}" -maxdepth 1 -mindepth 1 -name '.*' | egrep -ve '.DS_Store|.gitignore|.git$' | awk -F'/' '{print $NF}' | while read dotfile
@@ -25,6 +34,15 @@ do
         echo "${INSTALLSCRIPT} ${CLEANUPFILE}";
         "${INSTALLSCRIPT}" "${CLEANUPFILE}";
     done
+done
+
+# include the .dotfiles.gitconfig file in the main .gitconfig.  This way the dotfiles gitconfig won't get clobbered by other tools that modify the main gitconfig
+GITINCLUDESTMP="$(mktemp)";
+git config --file ~/.gitconfig --get-all include.path | grep -v '~/.dotfiles.gitconfig' | grep -v '${HOME}/.dotfiles.gitconfig' | grep -v "${HOME}/.dotfiles.gitconfig" > "${GITINCLUDESTMP}";
+git config --file ~/.gitconfig --unset-all include.path;
+git config --file ~/.gitconfig include.path '~/.dotfiles.gitconfig';
+cat "${GITINCLUDESTMP}" | while read include; do
+    git config --file ~/.gitconfig --add include.path "${include}";
 done
 
 ${BASEDIRS[0]}/macinstall.sh
