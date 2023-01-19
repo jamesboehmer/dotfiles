@@ -23,10 +23,15 @@ function local-config {
 function gpg-config {
 	echo "Which method do you want to use for signing commits?"
 
-	select METHOD in openpgp ssh codespace
-	do
-		break
-	done
+	if [[ $# -ge 1 ]]; then
+		METHOD="${1}";
+		shift;
+	else
+		select METHOD in openpgp ssh codespace
+		do
+			break
+		done
+	fi
 
 	case $METHOD in
 		openpgp )
@@ -136,6 +141,7 @@ type ${GITCOMMAND} &>/dev/null;
 
 if [[ $# -ge 1 ]]; then
 	NAMESPACE="${1}";
+	shift;
 else
 	read -p "Namespace [local]: " NAMESPACE
 	NAMESPACE=${NAMESPACE:-local}
@@ -146,4 +152,4 @@ fi
 CONFIGFILE="${HOME}/.local/${PREFIX}.gitconfig";
 echo "Configuring ${CONFIGFILE}";
 
-${GITCOMMAND};
+${GITCOMMAND} ${@};
