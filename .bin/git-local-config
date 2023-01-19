@@ -6,11 +6,15 @@ function ensurelocal {
 
 function local-config {
 	until [[ -n  "${GITUSERNAME}" ]]; do
-		read -p "Your Name: " GITUSERNAME
+		default="$(git config --file "${CONFIGFILE}" --get user.name)";
+		read -p "Your Name [${default}]: " GITUSERNAME
+		GITUSERNAME=${GITUSERNAME:-$default}
 	done
 
 	until [[ -n  "${GITUSEREMAIL}" ]]; do
-		read -p "Your Email: " GITUSEREMAIL
+		default="$(git config --file "${CONFIGFILE}" --get user.email)";
+		read -p "Your Email [${default}]: " GITUSEREMAIL
+		GITUSEREMAIL=${GITUSEREMAIL:-$default}
 	done
 
 	ensurelocal;
