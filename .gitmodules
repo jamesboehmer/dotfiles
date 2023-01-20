@@ -1,3 +1,0 @@
-[submodule ".luaenv"]
-	path = .luaenv
-	url = https://github.com/cehoffman/luaenv.git

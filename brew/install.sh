@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Bye" && exit 0; }
+[[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping brew." && exit 0; }
 
 which brew &>/dev/null
 if [[ $? -ne 0 ]]

@@ -38,7 +38,6 @@ jenv
 jq
 jsawk
 jwt-cli
-luaver
 maven
 micro
 moreutils
@@ -60,6 +59,7 @@ redis
 rg
 sbtenv
 scalaenv
+sdkman-cli
 serveit
 socat
 starship
