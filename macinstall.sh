@@ -20,7 +20,7 @@ fi
 
 echo "Setting local gitconfig defaults for mac...";
 mkdir -p ~/.local;
-ln -sf "${BASEDIRS[0]}/mac.gitconfig" "${HOME}/.local/mac.gitconfig";
+ln -sf "$(pwd)/mac.gitconfig" "${HOME}/.local/mac.gitconfig";
 git config --file ~/.local/.gitconfig --replace-all include.path '~/.local/mac.gitconfig' '~/.local/mac.gitconfig'
 
 echo "Setting up iTerm2 defaults..."
