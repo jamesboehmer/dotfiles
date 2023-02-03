@@ -1,9 +1,17 @@
 #!/bin/bash
 
-set -e
-port=$(getfreeport)
-mkdir -p "${HOME}/.firefox-container" &>/dev/null
-docker run -d --rm --name=firefox -p${port}:5800 -v "${HOME}/.firefox-container":/config:rw -e TAKE_CONFIG_OWNERSHIP=0 --shm-size 2g --security-opt seccomp=unconfined jlesage/firefox
-urlwaitspin http://localhost:${port} 200 true
+#set -e
+#set -x
+
+inspection="$(mktemp)";
+docker inspect docker-firefox > "${inspection}" 2>/dev/null;
+if [[ $? -eq 0 ]]; then
+	port="$(jq -r '.[0].NetworkSettings.Ports["5800/tcp"][0].HostPort' "${inspection}")";
+	open http://localhost:${port};
+else
+	port=$(getfreeport)
+	docker run -d --rm --name="docker-firefox" -p ${port}:5800 -v /docker/appdata/${USER}/firefox:/config:rw jlesage/firefox
+	urlwaitspin http://localhost:${port} 200 true
+fi
 echo "Listening on http://localhost:${port}"
-docker attach firefox
+docker attach "docker-firefox"
