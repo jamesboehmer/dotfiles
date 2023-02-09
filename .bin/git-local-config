@@ -139,7 +139,7 @@ function ssh-config {
 	git config --file "${CONFIGFILE}" core.sshCommand "ssh -i ${PUBKEY/:*/}"
 
 	echo -e "\nUpdated ${CONFIGFILE}:"
-	git config --file "${CONFIGFILE}" --get-regexp 'core.sshCommand';
+	git config --file "${CONFIGFILE}" --get-regexp 'core.sshcommand';
 }
 
 BASENAME="$(basename $0)";
