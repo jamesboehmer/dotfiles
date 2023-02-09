@@ -21,7 +21,8 @@ function local-config {
 	git config --file "${CONFIGFILE}" user.name "${GITUSERNAME}";
 	git config --file "${CONFIGFILE}" user.email "${GITUSEREMAIL}";
 
-	echo "Updated ${CONFIGFILE}";
+	echo -e "\nUpdated ${CONFIGFILE}:";
+	git config --file "${CONFIGFILE}" --get-regexp 'user.(name|email)';
 }
 
 function gpg-config {
@@ -46,15 +47,14 @@ function gpg-config {
 				break
 			done
 
-			KEYID="$(echo "${KEYID}" | awk -F: '{print $1}')";
-
 			ensurelocal;
-			git config --file "${CONFIGFILE}" user.signingKey "${KEYID}";
+			git config --file "${CONFIGFILE}" user.signingKey "${KEYID/:*/}";
 			git config --file "${CONFIGFILE}" commit.gpgSign true;
 			git config --file "${CONFIGFILE}" tag.gpgSign true;
 			git config --file "${CONFIGFILE}" gpg.format openpgp;
 
-			echo "Updated ${CONFIGFILE}";
+			echo -e "\nUpdated ${CONFIGFILE}:";
+			git config --file "${CONFIGFILE}" --get-regexp 'user.signingkey|commit.gpgsign|tag.gpgsign|gpg.format';
 			;;
 		ssh )
 			find ~/.ssh ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys -name '*.pub' 2>/dev/null | grep . &>/dev/null;
@@ -71,7 +71,7 @@ function gpg-config {
 				break
 			done
 
-			PUBKEY="$(echo "${PUBKEY}" | awk -F: '{print $1}')";
+			PUBKEY=${PUBKEY/:*/}
 			PUBKEY_CONTENTS="$(cat "${PUBKEY}" | awk '{print $1 FS $2}')";
 
 			TMPFILE="$(mktemp)";
@@ -91,10 +91,13 @@ function gpg-config {
 			git config --file "${CONFIGFILE}" gpg.format ssh;
 			git config --file "${CONFIGFILE}" gpg.ssh.allowedSignersFile '~/.ssh/allowed_signers'
 
-			echo "Updated "${CONFIGFILE}" and updated ~/.ssh/allowed_signers";
-			if [[ ${PUBKEY} =~ .*com.maxgoedjen.Secretive.SecretAgent.* ]]
+			echo -e "\nUpdated ${CONFIGFILE}:"
+			git config --file "${CONFIGFILE}" --get-regexp 'user.signingkey|commit.gpgsign|tag.gpgsign|gpg.format|gpg.ssh.allowedsignersfile';
+
+			echo -e "\nAlso updated ~/.ssh/allowed_signers";
+			if [[ ${PUBKEY} =~ .*com.maxgoedjen.Secretive.SecretAgent.* && "${SSH_AUTH_SOCK}" != "${HOME}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh" ]]
 			then
-				echo "Looks like you're using Secretive for your key signing.  Be sure the agent is running and to set SSH_AUTH_SOCK=\${HOME}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
+				echo -e "\nIt looks like you're using Secretive for your key signing.  Be sure the agent is running and to set SSH_AUTH_SOCK=\${HOME}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh"
 			fi
 			;;
 		codespace )
@@ -106,7 +109,8 @@ function gpg-config {
 			git config --file "${CONFIGFILE}" tag.gpgSign true;
 			git config --file "${CONFIGFILE}" gpg.format openpgp;
 
-			echo "Updated ${CONFIGFILE}";
+			echo -e "\nUpdated ${CONFIGFILE}:";
+			git config --file "${CONFIGFILE}" --get-regexp 'commit.gpgsign|tag.gpgsign|gpg.format';
 			;;
 		* )
 			echo "Unknown method: $METHOD"
@@ -132,9 +136,10 @@ function ssh-config {
 	done
 
 	ensurelocal;
-	git config --file "${CONFIGFILE}" core.sshCommand "ssh -i $(echo "${PUBKEY}" | awk -F: '{print $1}')"
+	git config --file "${CONFIGFILE}" core.sshCommand "ssh -i ${PUBKEY/:*/}"
 
-	echo "Updated "${CONFIGFILE}": SSH Identity set to ${PUBKEY}"
+	echo -e "\nUpdated ${CONFIGFILE}:"
+	git config --file "${CONFIGFILE}" --get-regexp 'core.sshCommand';
 }
 
 BASENAME="$(basename $0)";
@@ -151,9 +156,20 @@ else
 	NAMESPACE=${NAMESPACE:-local}
 fi
 
-[[ "${NAMESPACE}" != "local" ]] && PREFIX=".${NAMESPACE}";
+if [[ "${NAMESPACE}" != "local" ]]; then
+	PREFIX=".${NAMESPACE}";
+	DIRPATTERN="**/${NAMESPACE}/**";
+fi
 
 CONFIGFILE="${HOME}/.local/${PREFIX}.gitconfig";
-echo "Configuring ${CONFIGFILE}";
+echo -e "Configuring ${CONFIGFILE}\n";
 
 ${GITCOMMAND} ${@};
+
+if [[ -n "${DIRPATTERN}" ]]; then
+	git config --file "${HOME}/.local/.gitconfig" "includeIf.gitdir:${DIRPATTERN}.path" "${CONFIGFILE}"
+	echo -e "\nUpdated ${HOME}/.local/.gitconfig:";
+	printf -v DIRPATTERN "%q" "${DIRPATTERN}";
+	git config --file "${HOME}/.local/.gitconfig" --get-regexp "includeIf.gitdir:${DIRPATTERN}";
+fi
+
