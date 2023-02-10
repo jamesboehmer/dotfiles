@@ -2,7 +2,7 @@
 	default = simple
 	autoSetupRemote = true
 [core]
-	pager = delta # less -x4
+	pager = less -FX
 	excludesFile = ~/.gitexcludes
 [interactive]
   diffFilter = delta --color-only
