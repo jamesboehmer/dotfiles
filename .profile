@@ -9,6 +9,7 @@ export PATH="${HOME}/.local/bin:${HOME}/.private/.bin:${HOME}/.bin:${HOME}/.luae
 export STARSHIP_CONFIG="${HOME}/.starship.toml";
 export SDKMAN_DIR="${HOME}/.sdkman";
 [[ -z $VISUAL ]] && which subl &>/dev/null && export VISUAL="subl -w";
+[[ -z $VISUAL ]] && [[ -x /usr/local/bin/code ]] &>/dev/null && export VISUAL="code -w";
 [[ -z $VISUAL ]] && which vim &>/dev/null && export VISUAL="vim";
 [[ -z $VISUAL ]] && which nano &>/dev/null && export VISUAL="nano";
 export EDITOR="${VISUAL}";
