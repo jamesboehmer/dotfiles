@@ -129,6 +129,8 @@
 	deploy = status
 	crazy = status
 	stupid = status
+	lock = !git crypt lock
+	unlock = !git crypt unlock
 [credential]
 	helper = cache --timeout=30000
 [pull]
