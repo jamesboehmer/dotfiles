@@ -15,6 +15,7 @@ keybase
 little-snitch
 lunar
 macmediakeyforwarder
+maestral
 meld
 mullvadvpn
 muzzle
