@@ -1,0 +1,7 @@
+Host github.com
+  ControlMaster no
+
+Host *
+  ControlMaster auto
+  ControlPath ~/.ssh/%r@%h-%p
+  ControlPersist 5
