@@ -42,7 +42,7 @@ cat "${GITINCLUDESTMP}" | while read include; do
     git config --file ~/.gitconfig --add include.path "${include}";
 done
 
-${BASEDIRS[0]}/macinstall.sh
+${BASEDIRS[0]}/macinstall/macinstall.sh "${CLEANUPFILE}"
 
 # Fix zsh compinit permission issue
 zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done

@@ -4,6 +4,10 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 [[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping macinstall." && exit 0; }
 
+TIME="$(date +%Y%m%d%H%M%S)";
+CLEANUPFILE="${1}";
+[[ -z $CLEANUPFILE ]] && CLEANUPFILE="/dev/null";
+
 PAM_SUDO="/etc/pam.d/sudo";
 grep "pam_tid.so" "${PAM_SUDO}" &>/dev/null
 if [[ $? -ne 0 ]]
@@ -24,6 +28,9 @@ ln -sf "$(pwd)/mac.gitconfig" "${HOME}/.local/mac.gitconfig";
 git config --file ~/.local/.gitconfig --replace-all include.path '~/.local/mac.gitconfig' '~/.local/mac.gitconfig'
 
 echo "Setting up iTerm2 defaults..."
+
+mkdir -p ~/.iterm
+cat com.googlecode.iterm2.plist.template | envsubst > ~/.iterm/com.googlecode.iterm2.plist
 
 defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string ${HOME}/.iterm
