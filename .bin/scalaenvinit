@@ -1,0 +1,1 @@
+eval "$(scalaenv init - --no-rehash)" && eval "$(sbtenv init - --no-rehash)"
