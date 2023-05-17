@@ -20,6 +20,7 @@ exa
 findutils
 fx
 gawk
+git-crypt
 git-delta
 gh
 glances
