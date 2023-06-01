@@ -1,9 +1,0 @@
-[directory]
-truncation_length=100
-truncate_to_repo=false
-
-[container]
-disabled=true
-
-[nodejs]
-format = "via [🤖 $version](bold green) "

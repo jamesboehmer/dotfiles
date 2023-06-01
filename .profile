@@ -6,7 +6,7 @@ export COPYFILE_DISABLE=true
 export ANSIBLE_HOST_KEY_CHECKING=False
 export BASH_SILENCE_DEPRECATION_WARNING=1;
 export PATH="${HOME}/.local/bin:${HOME}/.private/.bin:${HOME}/.bin:${HOME}/.luaenv/bin:/opt/homebrew/bin:/usr/local/bin:/usr/local/sbin:$PATH";
-export STARSHIP_CONFIG="${HOME}/.starship.toml";
+export STARSHIP_CONFIG="${HOME}/.config/starship.toml";
 export SDKMAN_DIR="${HOME}/.sdkman";
 # Set EDITOR from least to most preferable.
 which nano &>/dev/null && export VISUAL="nano";

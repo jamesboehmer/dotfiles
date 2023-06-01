@@ -64,3 +64,4 @@ then
     done
 fi
 
+${BASEDIRS[0]}/xdgconfig/starshipconfig.sh
