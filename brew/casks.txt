@@ -4,6 +4,7 @@ bettertouchtool
 charles
 diffmerge
 docker
+dropbox
 firefox
 gpg-suite
 iina
@@ -15,7 +16,6 @@ keybase
 little-snitch
 lunar
 macmediakeyforwarder
-maestral
 meld
 mullvadvpn
 muzzle
