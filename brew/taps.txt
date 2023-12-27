@@ -5,3 +5,4 @@ mike-engel/jwt-cli
 moncho/dry
 dbcli/tap
 sdkman/tap
+teamookla/speedtest

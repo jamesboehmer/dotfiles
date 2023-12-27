@@ -12,7 +12,6 @@ colima
 coreutils
 ctop
 deno
-dep
 direnv
 dry
 dvc
@@ -63,11 +62,11 @@ scalaenv
 sdkman-cli
 serveit
 socat
+speedtest
 starship
 tree
 vim
 watch
-wireshark
 youtube-dl
 zlib
 zsh
