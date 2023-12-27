@@ -4,6 +4,20 @@ function ensurelocal {
 	mkdir -p ~/.local;
 }
 
+function ensuregithubkey {
+	GITHUB_KEY_ID="4AEE18F83AFDEB23"; # update this if it changes
+	gpg -k "${GITHUB_KEY_ID}" &>/dev/null;
+	
+	if [[ $? -ne 0 ]]; then
+		printf "\n";
+		curl -s https://github.com/web-flow.gpg | gpg --import;
+		printf "\n";
+	fi
+
+	# ensure it's fully trusted too
+	echo -e "4\ny\n" | gpg --command-fd 0 --status-fd 3  --edit-key "${GITHUB_KEY_ID}" trust &>/dev/null
+}
+
 function local-config {
 	until [[ -n  "${GITUSERNAME}" ]]; do
 		default="$(git config --file "${CONFIGFILE}" --get user.name)";
@@ -38,6 +52,7 @@ function gpg-config {
 		done
 	fi
 
+	ensuregithubkey
 	case $METHOD in
 		openpgp )
 			echo "Pick a GPG key to use for openpgp git commit signatures:";
