@@ -51,6 +51,7 @@ sudo launchctl disable system/com.apple.tipsd
 
 DOCKERCONFIG=~/.docker/config.json;
 echo "Setting ${DOCKERCONFIG} credsStore to osxkeychain";
+mkdir -p ~/.docker;
 if [[ -e ${DOCKERCONFIG} ]]
 then
     jq '.credsStore="osxkeychain"' ${DOCKERCONFIG} | sponge ${DOCKERCONFIG}
