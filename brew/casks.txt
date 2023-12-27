@@ -12,7 +12,6 @@ iterm2
 jetbrains-toolbox
 karabiner-elements
 keepassxc
-keybase
 little-snitch
 lunar
 macmediakeyforwarder
