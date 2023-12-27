@@ -46878,7 +46878,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>FiraCodeRoman-Regular 11</string>
+			<string>FiraCode-Regular 14</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Option Key Sends</key>
@@ -48374,7 +48374,7 @@
 										<key>Program</key>
 										<dict>
 											<key>Command</key>
-											<string>login -fqp "${LOGNAME}"</string>
+											<string>login -fqp "jim"</string>
 											<key>Type</key>
 											<string>Command</string>
 										</dict>
