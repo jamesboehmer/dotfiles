@@ -8,6 +8,9 @@ then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+# ensure brew is in the path first, otherwise first-time installations fail
+eval $(/opt/homebrew/bin/brew shellenv);
+
 HOMEBREW_DIR="$(brew --prefix)";
 CASKROOM_DIR="${HOMEBREW_DIR}/Caskroom";
 CELLAR_DIR="${HOMEBREW_DIR}/Cellar";
