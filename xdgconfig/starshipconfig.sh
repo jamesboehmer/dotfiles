@@ -13,3 +13,5 @@ starship config directory.truncation_length 100
 starship config directory.truncate_to_repo false
 starship config container.disabled true
 starship config nodejs.format "via [🤖 \$version](bold green) "
+starship config gcloud.detect_env_vars "[\"STARSHIP_GCLOUD\"]"
+starship config python.detect_extensions "[]"
