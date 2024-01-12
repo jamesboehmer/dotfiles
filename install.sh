@@ -8,6 +8,16 @@ CLEANUPFILE="$(mktemp)";
 echo "${BASEDIRS[0]}/brew/install.sh ${CLEANUPFILE}";
 "${BASEDIRS[0]}/brew/install.sh" "${CLEANUPFILE}";
 
+# ensure brew is in the path first, otherwise first-time installations fail
+eval $(/opt/homebrew/bin/brew shellenv);
+
+HOMEBREW_DIR="$(brew --prefix)";
+CASKROOM_DIR="${HOMEBREW_DIR}/Caskroom";
+CELLAR_DIR="${HOMEBREW_DIR}/Cellar";
+export PATH="${HOMEBREW_DIR}/bin:$PATH";
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+
 # First remove the old .gitconfig symlink
 if [[ -s ~/.gitconfig ]]; then
     ls -laF ~/.gitconfig | grep "${BASEDIRS[0]}/.gitconfig" &>/dev/null;

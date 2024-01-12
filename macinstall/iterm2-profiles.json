@@ -69,7 +69,6 @@
         "Red Component": 0.7725490196078432,
         "Blue Component": 0.7764705882352941
       },
-      "Working Directory": "/Users/jim",
       "Blinking Cursor": false,
       "Disable Window Resizing": true,
       "Sync Title": false,
@@ -94,7 +93,7 @@
       },
       "Custom Command": "No",
       "ASCII Anti Aliased": true,
-      "Non Ascii Font": "Monaco 12",
+      "Non Ascii Font": "FiraCode-Regular 11",
       "Vertical Spacing": 1,
       "Use Bold Font": true,
       "Option Key Sends": 0,
@@ -300,7 +299,7 @@
         "Red Component": 0.5230981707572937,
         "Blue Component": 0.9940510988235474
       },
-      "Name": "Default",
+      "Name": "Dotfiles Default",
       "Cursor Text Color": {
         "Green Component": 0.08235294371843338,
         "Red Component": 0.08235294371843338,
@@ -344,7 +343,7 @@
         "Red Component": 0.5230981707572937,
         "Blue Component": 0.9940510988235474
       },
-      "Normal Font": "FiraCodeRoman-Regular 11",
+      "Normal Font": "FiraCode-Regular 11",
       "Custom Directory": "No",
       "Ansi 0 Color": {
         "Green Component": 0,
@@ -354,7 +353,6 @@
       "Guid": "847729B9-C737-43CC-86BF-88689DD4DC8D"
     },
     {
-      "Working Directory": "/Users/jim",
       "Prompt Before Closing 2": false,
       "Selected Text Color": {
         "Green Component": 0.7843137254901961,
@@ -671,7 +669,7 @@
         "Blue Component": 0
       },
       "Blur": true,
-      "Normal Font": "FiraCodeRoman-Regular 11",
+      "Normal Font": "FiraCode-Regular 11",
       "Vertical Spacing": 1,
       "Ansi 7 Color": {
         "Green Component": 0.8780335783958435,
@@ -706,7 +704,7 @@
       },
       "Screen": -1,
       "HotKey Characters Ignoring Modifiers": "`",
-      "Non Ascii Font": "Monaco 12",
+      "Non Ascii Font": "FiraCode-Regular 11",
       "Ansi 13 Color": {
         "Green Component": 0.7128009796142578,
         "Red Component": 0.7272258400917053,

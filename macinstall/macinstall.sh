@@ -32,27 +32,21 @@ mkdir -p "${DYNAMIC_PROFILES_DIR}";
 
 ln -sf "$(pwd)/iterm2-profiles.json" "${DYNAMIC_PROFILES_DIR}/iterm2-profiles.json";
 
-defaults read com.googlecode.iterm2.plist >/dev/null
-defaults read -app iTerm >/dev/null
+echo "Enabling iTerm2 automatic update checks...";
+defaults write com.googlecode.iterm2 SUEnableAutomaticChecks -bool true
+
+echo "Enabling iTerm2 sudo thumbprint...";
+defaults write com.googlecode.iterm2 BootstrapDaemon -bool false #makes sudo thumbprint ID work
 
 echo "Setting up iTerm2 profiles...";
-OLD_DEFAULT_PROFILE_GUID="$(defaults read com.googlecode.iterm2.plist "Default Bookmark Guid" 2>/dev/null)";
-DEFAULT_PROFILE_GUID="$(cat iterm2-profiles.json | jq -r '.Profiles[] | select(.Name=="Default") | .Guid' | head -1)";
+OLD_DEFAULT_PROFILE_GUID="$(defaults read com.googlecode.iterm2 "Default Bookmark Guid" 2>/dev/null)";
+DEFAULT_PROFILE_GUID="$(cat iterm2-profiles.json | jq -r '.Profiles[] | select(.Name=="Dotfiles Default") | .Guid' | head -1)";
 if [[ "${DEFAULT_PROFILE_GUID}" == "" ]]; then
     echo "No Default profile found in iterm2-profiles.json.  You'll need to switch manually in iTerm2.";
 elif [[ "${OLD_DEFAULT_PROFILE_GUID}" != "${DEFAULT_PROFILE_GUID}" ]]; then
-    defaults write com.googlecode.iterm2.plist "Default Bookmark Guid" -string "${DEFAULT_PROFILE_GUID}";
-    echo "Default profile is set, but you'll need to restart iTerm2.  Do not open preferences until after you restart";
+    defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "${DEFAULT_PROFILE_GUID}";
+    echo "Default profile is set, but you'll need to restart iTerm2.  Do not open preferences until after you restart iTerm2.";
 fi
-
-echo "Enabling iTerm2 automatic update checks...";
-defaults write com.googlecode.iterm2.plist SUEnableAutomaticChecks -bool true
-
-echo "Enabling iTerm2 sudo thumbprint...";
-defaults write com.googlecode.iterm2.plist BootstrapDaemon -bool false #makes sudo thumbprint ID work
-# defaults read com.googlecode.iterm2.plist >/dev/null
-# defaults read -app iTerm >/dev/null
-
 
 echo "Disabling Game Center...";
 defaults write com.apple.gamed Disabled -bool true

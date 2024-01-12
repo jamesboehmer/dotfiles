@@ -2,10 +2,11 @@
 
 [[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping brew." && exit 0; }
 
-which brew &>/dev/null
-if [[ $? -ne 0 ]]
+if [[ ! -e /opt/homebrew/bin/brew ]]
 then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+	echo "Brew is already installed.";
 fi
 
 # ensure brew is in the path first, otherwise first-time installations fail
