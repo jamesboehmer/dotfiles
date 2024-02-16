@@ -28,7 +28,7 @@ outputfile="$(mktemp)";
 
 echo "Generating new PGP key...";
 
-gpg --status-file="${statusfile}" --command-file="${commandfile}" --no-tty --full-generate-key &> "${outputfile}";
+gpg --status-file="${statusfile}" --command-file="${commandfile}" --no-tty --full-generate-key --allow-freeform-uid &> "${outputfile}";
 
 tail +5 "${outputfile}";
 
