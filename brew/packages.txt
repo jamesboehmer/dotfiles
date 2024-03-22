@@ -70,3 +70,4 @@ watch
 youtube-dl
 zlib
 zsh
+ynqa/tap/jnv
