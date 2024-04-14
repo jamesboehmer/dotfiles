@@ -57,7 +57,7 @@ function gpg-config {
 		openpgp )
 			echo "Pick a GPG key to use for openpgp git commit signatures:";
 
-			select KEYID in $(gpg -K | grep -E -A2 '^sec.+expires:' | grep -v '^sec' | grep -v '\-\-' | xargs -L2 | tr -d '<>' | awk '{print $1 ":" $NF}' | tr '\n' ' ')
+			select KEYID in $(gpg -K | grep -E -A2 '^sec.+expires:'  | grep -v '\--' | xargs -L3 | tr -d '<>[]' | awk '{print $7 ":" $NF ":" $6}' | tr '\n' ' ')
 			do
 				break
 			done
