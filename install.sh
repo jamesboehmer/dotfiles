@@ -50,6 +50,7 @@ GITINCLUDESTMP="$(mktemp)";
 git config --file ~/.gitconfig --get-all include.path | grep -v '~/.dotfiles.gitconfig' | grep -v '${HOME}/.dotfiles.gitconfig' | grep -v "${HOME}/.dotfiles.gitconfig" > "${GITINCLUDESTMP}";
 git config --file ~/.gitconfig --unset-all include.path;
 git config --file ~/.gitconfig include.path '~/.dotfiles.gitconfig';
+git config --file ~/.gitconfig credential.usehttppath true
 cat "${GITINCLUDESTMP}" | while read include; do
     git config --file ~/.gitconfig --add include.path "${include}";
 done
