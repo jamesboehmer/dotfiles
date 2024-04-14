@@ -13,9 +13,8 @@ coreutils
 ctop
 deno
 direnv
+docker
 dry
-dvc
-exa
 findutils
 fx
 gawk

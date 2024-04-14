@@ -3,7 +3,6 @@ bartender
 bettertouchtool
 charles
 diffmerge
-docker
 dropbox
 firefox
 gpg-suite
