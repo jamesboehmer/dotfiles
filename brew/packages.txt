@@ -37,6 +37,8 @@ jenv
 jq
 jsawk
 jwt-cli
+kubecolor
+kubernetes-cli
 maven
 micro
 moreutils

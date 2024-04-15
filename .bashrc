@@ -5,6 +5,7 @@ function loadAliases {
     which gsed &>/dev/null && alias sed='gsed';
     which gawk &>/dev/null && alias awk='gawk';
     [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
+    which kubecolor &>/dev/null && alias kubectl='kubecolor';
 }
 
 # Only if this is a login shell
