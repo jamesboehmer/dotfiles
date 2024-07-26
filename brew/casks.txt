@@ -5,6 +5,7 @@ charles
 diffmerge
 dropbox
 firefox
+git-credential-manager
 gpg-suite
 iina
 iterm2
