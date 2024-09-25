@@ -14,11 +14,11 @@ karabiner-elements
 keepassxc
 little-snitch
 lunar
-macmediakeyforwarder
 meld
 mullvadvpn
 muzzle
 ngrok
+notunes
 postman
 secretive
 signal
