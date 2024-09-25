@@ -74,3 +74,8 @@ then
 else
     echo '{}' | jq '.credsStore="osxkeychain"' | sponge ${DOCKERCONFIG}
 fi
+
+if [[ -d /Applications/Spotify.app ]]; then
+    echo "Setting Spotify as the default media key app for noTunes...";
+    defaults write digital.twisted.noTunes replacement /Applications/Spotify.app
+fi
