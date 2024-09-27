@@ -1,23 +1,11 @@
 [credential]
 	helper = osxkeychain
-[difftool "diffmerge"]
-	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
-[diff]
-	tool = meld
-[difftool]
-	prompt = false
-[difftool "meld"]
-	trustExitCode = true
-	cmd = meld \"$LOCAL\" \"$REMOTE\"
 [merge]
-	tool = meld
+	tool = smerge
 [mergetool]
 	prompt = false
-[mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\\\" \"$REMOTE\""
-	trustExitCode = true
-[mergetool "meld"]
-	trustExitCode = true
-	cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output=\"$MERGED\"
 [core]
 	pager = delta
+[mergetool "smerge"]
+	cmd = smerge mergetool \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+	trustExitCode = true
