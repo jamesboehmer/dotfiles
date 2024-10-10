@@ -2,6 +2,7 @@
 bartender
 bettertouchtool
 charles
+deskpad
 diffmerge
 dropbox
 firefox
