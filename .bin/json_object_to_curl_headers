@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+from __future__ import print_function
+import sys
+import json
+
+# alternative: jq -r  '. | to_entries[] | "-H '"'"'" + .key + ": " + (.value|tostring ) + "'"'"'"' | tr '\n' ' ';
+
+def convert():
+    try:
+        args = sys.argv[1:]
+        if args:
+            kv = json.loads(args[0])
+        else:
+            kv = json.loads(sys.stdin.read().strip())
+       	print(' '.join([f"-H '{key}: {value}'" for key, value in kv.items()]))
+    except KeyboardInterrupt as ki:
+        pass
+
+
+if __name__ == '__main__':
+    convert()
+
