@@ -8,7 +8,7 @@ export_function() {
     if declare -f "$name" >/dev/null; then
       echo "#!/usr/bin/env ${SHELL}" > "$target"
       declare -f "$name" >> "$target" 2>/dev/null
-      echo "$name" >> "$target"
+      echo "$name \${@}" >> "$target"
       chmod +x "$target"
     fi
   done
