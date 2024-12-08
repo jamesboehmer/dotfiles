@@ -15,3 +15,6 @@ starship config container.disabled true
 starship config nodejs.format "via [🤖 \$version](bold green) "
 starship config gcloud.detect_env_vars "[\"STARSHIP_GCLOUD\"]"
 starship config python.detect_extensions "[]"
+starship config battery.full_symbol "🔋 "
+starship config battery.charging_symbol "⚡️ "
+starship config battery.discharging_symbol "💦 "
