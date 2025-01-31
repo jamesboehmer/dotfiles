@@ -25,6 +25,7 @@ secretive
 signal
 slack
 spotify
+stats
 sublime-merge
 sublime-text
 telegram
