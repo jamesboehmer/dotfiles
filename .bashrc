@@ -6,6 +6,7 @@ function loadAliases {
     which gawk &>/dev/null && alias awk='gawk';
     [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
     which kubecolor &>/dev/null && alias kubectl='kubecolor';
+    alias jenvinit='eval "$(jenv init - --no-rehash)"';
 }
 
 # Only if this is a login shell
