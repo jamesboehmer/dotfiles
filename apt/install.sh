@@ -31,10 +31,18 @@ fi
 if [[ ! -e ~/.pyenv ]]
 then
 	mkdir -p ~/.local
-	git clone https://github.com/pyenv/pyenv.git ~/.pyenv;
+	git clone https://github.com/go-nv/goenv.git ~/.goenv
 	git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
 	echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.local/pyenvrc
 	echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.local/pyenvrc
+fi
+
+if [[ ! -e ~/.goenv ]]
+then
+	mkdir -p ~/.local
+	git clone https://github.com/pyenv/pyenv.git ~/.pyenv;
+	echo 'export GOENV_ROOT="$HOME/.goenv"' > ~/.local/goenvrc;
+	echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.local/goenvrc;
 fi
 
 if [[ ! -e ~/.tfenv ]]

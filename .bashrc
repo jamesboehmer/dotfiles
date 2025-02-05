@@ -7,6 +7,7 @@ function loadAliases {
     [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
     which kubecolor &>/dev/null && alias kubectl='kubecolor';
     alias jenvinit='eval "$(jenv init - --no-rehash)"';
+    alias goenvinit='eval "$(goenv init - --no-rehash)"';
 }
 
 # Only if this is a login shell
