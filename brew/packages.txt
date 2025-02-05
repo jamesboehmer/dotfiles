@@ -3,6 +3,8 @@ asciinema
 autoconf
 awscli
 aws-shell
+aws-sso-util
+aws-vault
 awslogs
 basex
 bat

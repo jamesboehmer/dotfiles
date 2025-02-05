@@ -10,6 +10,7 @@ then
     SUDO="sudo";
 fi
 export DEBIAN_FRONTEND=noninteractive;
+ARCH="$(dpkg --print-architecture)";
 
 $SUDO apt update;
 $SUDO apt-get install -y $(grep -vE "^\s*#" "${BASEDIR}/packages.txt"  | tr "\n" " ")
@@ -59,4 +60,13 @@ then
 	mkdir -p ~/.nodenv/plugins
 	git clone https://github.com/nodenv/node-build.git ~/.nodenv/plugins/node-build
 	echo 'export PATH="$HOME/.nodenv/bin:$PATH"' > ~/.local/nodenvrc 
+fi
+
+which aws-vault &>/dev/null
+if [[ $? -ne 0 ]]
+then
+	echo "Installing aws-vault...";
+	AWS_VAULT_VERSION="v7.2.0";
+	AWS_VAULT_URL="https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-${ARCH}";
+	curl -fsSL "${AWS_VAULT_URL}" -o "${HOME}/.local/bin/aws-vault" && chmod +x "${HOME}/.local/bin/aws-vault";
 fi
