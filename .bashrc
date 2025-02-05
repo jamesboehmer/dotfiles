@@ -8,6 +8,7 @@ function loadAliases {
     which kubecolor &>/dev/null && alias kubectl='kubecolor';
     alias jenvinit='eval "$(jenv init - --no-rehash)"';
     alias goenvinit='eval "$(goenv init - --no-rehash)"';
+    alias pyenvinit='eval "$(pyenv init - --no-rehash)" && eval "$(pyenv virtualenv-init init - --no-rehash)"';
 }
 
 # Only if this is a login shell
