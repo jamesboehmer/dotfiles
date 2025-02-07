@@ -68,5 +68,5 @@ then
 	echo "Installing aws-vault...";
 	AWS_VAULT_VERSION="v7.2.0";
 	AWS_VAULT_URL="https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-${ARCH}";
-	curl -fsSL "${AWS_VAULT_URL}" -o "${HOME}/.local/bin/aws-vault" && chmod +x "${HOME}/.local/bin/aws-vault";
+	mkdir -p "${HOME}/.local/bin" && curl -fsSL "${AWS_VAULT_URL}" -o "${HOME}/.local/bin/aws-vault" && chmod +x "${HOME}/.local/bin/aws-vault";
 fi
