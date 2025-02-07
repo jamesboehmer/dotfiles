@@ -4,18 +4,22 @@ function ensurelocal {
 	mkdir -p ~/.local;
 }
 
-function ensuregithubkey {
-	GITHUB_KEY_ID="4AEE18F83AFDEB23"; # update this if it changes
-	gpg -k "${GITHUB_KEY_ID}" &>/dev/null;
-	
-	if [[ $? -ne 0 ]]; then
-		printf "\n";
-		curl -s https://github.com/web-flow.gpg | gpg --import;
-		printf "\n";
-	fi
+function import-github-key {
+	GITHUB_WEBFLOW_KEY_URL="https://github.com/web-flow.gpg";
+	QUIET="${1}";
+	for GITHUB_KEY_ID in "4AEE18F83AFDEB23" "B5690EEEBB952194"; do # update this if it changes
+		gpg -k "${GITHUB_KEY_ID}" &>/dev/null;
+		
+		if [[ $? -ne 0 ]]; then
+			printf "Importing ${GITHUB_WEBFLOW_KEY_URL} ${GITHUB_KEY_ID}\n";
+			curl -s "${GITHUB_WEBFLOW_KEY_URL}" | gpg --import;
+			printf "\n";
+		fi
 
-	# ensure it's fully trusted too
-	echo -e "4\ny\n" | gpg --command-fd 0 --status-fd 3  --edit-key "${GITHUB_KEY_ID}" trust &>/dev/null
+		# ensure it's fully trusted too
+		[[ -z "${QUIET}" ]] && printf "Trusting Github Web Flow Key ${GITHUB_KEY_ID}\n";
+		printf '4\n' | gpg --command-fd 0 --no-tty --edit-key "${GITHUB_KEY_ID}" trust >/dev/null 2>&1
+	done
 }
 
 function local-config {
@@ -52,7 +56,7 @@ function gpg-config {
 		done
 	fi
 
-	ensuregithubkey
+	import-github-key q
 	case $METHOD in
 		openpgp )
 			echo "Pick a GPG key to use for openpgp git commit signatures:";
@@ -158,26 +162,28 @@ function ssh-config {
 }
 
 BASENAME="$(basename $0)";
-GITCOMMAND="${BASENAME/git-/}";
+GITCOMMAND="${BASENAME#*-}";
 
 type ${GITCOMMAND} &>/dev/null;
 [[ $? -ne 0 ]] && echo "Unknown command: ${GITCOMMAND}" && exit 1;
 
-if [[ $# -ge 1 ]]; then
-	NAMESPACE="${1}";
-	shift;
-else
-	read -p "Namespace [local]: " NAMESPACE
-	NAMESPACE=${NAMESPACE:-local}
-fi
+if [[ "${GITCOMMAND}" != "import-github-key" ]]; then
+	if [[ $# -ge 1 ]]; then
+		NAMESPACE="${1}";
+		shift;
+	else
+		read -p "Namespace [local]: " NAMESPACE
+		NAMESPACE=${NAMESPACE:-local}
+	fi
 
-if [[ "${NAMESPACE}" != "local" ]]; then
-	PREFIX=".${NAMESPACE}";
-	DIRPATTERN="**/${NAMESPACE}/**";
-fi
+	if [[ "${NAMESPACE}" != "local" ]]; then
+		PREFIX=".${NAMESPACE}";
+		DIRPATTERN="**/${NAMESPACE}/**";
+	fi
 
-CONFIGFILE="${HOME}/.local/${PREFIX}.gitconfig";
-echo -e "Configuring ${CONFIGFILE}\n";
+	CONFIGFILE="${HOME}/.local/${PREFIX}.gitconfig";
+	echo -e "Configuring ${CONFIGFILE}\n";
+fi
 
 ${GITCOMMAND} ${@};
 
