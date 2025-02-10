@@ -70,3 +70,12 @@ then
 	AWS_VAULT_URL="https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-${ARCH}";
 	mkdir -p "${HOME}/.local/bin" && curl -fsSL "${AWS_VAULT_URL}" -o "${HOME}/.local/bin/aws-vault" && chmod +x "${HOME}/.local/bin/aws-vault";
 fi
+
+which yq &>/dev/null
+if [[ $? -ne 0 ]]
+then
+	echo "Installing yq...";
+	YQ_VERSION="v4.45.1";
+	YQ_URL="https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_${ARCH}";
+	mkdir -p "${HOME}/.local/bin" && curl -fsSL "${YQ_URL}" -o "${HOME}/.local/bin/yq" && chmod +x "${HOME}/.local/bin/yq";
+fi
