@@ -15,7 +15,6 @@ karabiner-elements
 keepassxc
 little-snitch
 lunar
-meld
 mullvadvpn
 muzzle
 ngrok
