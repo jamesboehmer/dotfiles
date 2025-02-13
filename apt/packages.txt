@@ -19,7 +19,9 @@ libsqlite3-dev
 libssl-dev
 moreutils
 net-tools
+netcat
 socat
+telnet
 time
 tree
 uuid-runtime
