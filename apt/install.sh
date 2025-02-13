@@ -34,24 +34,25 @@ then
 	mkdir -p ~/.local
 	git clone https://github.com/pyenv/pyenv.git ~/.pyenv;
 	git clone https://github.com/pyenv/pyenv-virtualenv.git $HOME/.pyenv/plugins/pyenv-virtualenv
-	echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.local/pyenvrc
-	echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.local/pyenvrc
 fi
+echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.local/pyenvrc
+echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.local/pyenvrc
+echo 'export PIPX_DEFAULT_PYTHON="$PYENV_ROOT/shims/python"' >> ~/.local/pyenvrc
 
 if [[ ! -e ~/.goenv ]]
 then
 	mkdir -p ~/.local
 	git clone https://github.com/go-nv/goenv.git ~/.goenv
-	echo 'export GOENV_ROOT="$HOME/.goenv"' > ~/.local/goenvrc;
-	echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.local/goenvrc;
 fi
+echo 'export GOENV_ROOT="$HOME/.goenv"' > ~/.local/goenvrc;
+echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.local/goenvrc;
 
 if [[ ! -e ~/.tfenv ]]
 then
 	mkdir -p ~/.local
 	git clone https://github.com/tfutils/tfenv.git ~/.tfenv;
-	echo 'export PATH="$HOME/.tfenv/bin:$PATH"' > ~/.local/tfenvrc
 fi
+echo 'export PATH="$HOME/.tfenv/bin:$PATH"' > ~/.local/tfenvrc
 
 if [[ ! -e ~/.nodenv ]]
 then
@@ -59,8 +60,8 @@ then
 	git clone https://github.com/nodenv/nodenv.git ~/.nodenv
 	mkdir -p ~/.nodenv/plugins
 	git clone https://github.com/nodenv/node-build.git ~/.nodenv/plugins/node-build
-	echo 'export PATH="$HOME/.nodenv/bin:$PATH"' > ~/.local/nodenvrc 
 fi
+echo 'export PATH="$HOME/.nodenv/bin:$PATH"' > ~/.local/nodenvrc 
 
 which aws-vault &>/dev/null
 if [[ $? -ne 0 ]]
