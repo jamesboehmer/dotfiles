@@ -28,8 +28,8 @@ select-word-style bash
 
 alias -s json='jq .'
 
-[[ -e ~/.profile ]] && . ~/.profile;
-[[ -e ~/.bashrc ]] && . ~/.bashrc;
+[[ -e ~/.shell_profile ]] && . ~/.shell_profile &>/dev/null;
+[[ -e ~/.shellrc ]] && . ~/.shellrc &>/dev/null;
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select
