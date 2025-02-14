@@ -53,6 +53,7 @@ openssh
 pcre
 perl-build
 pgpdump
+pipx
 plantuml
 plenv
 pyenv
