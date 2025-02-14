@@ -80,3 +80,22 @@ then
 	YQ_URL="https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_${ARCH}";
 	mkdir -p "${HOME}/.local/bin" && curl -fsSL "${YQ_URL}" -o "${HOME}/.local/bin/yq" && chmod +x "${HOME}/.local/bin/yq";
 fi
+
+which pipx &>/dev/null;
+if [[ $? -ne 0 ]]
+then
+
+	PIP="/usr/local/bin/pip3";
+	[[ ! -e "${PIP}" ]] && PIP="/usr/bin/pip3";
+	[[ ! -e "${PIP}" ]] && $SUDO apt-get install -y python3-pip python3-venv;
+
+	PIP="/usr/local/bin/pip3";
+	[[ ! -e "${PIP}" ]] && PIP="/usr/bin/pip3";
+	$PIP install pipx;
+fi
+
+which poetry &>/dev/null;
+if [[ $? -ne 0 ]]
+then
+	pipx install poetry && poetry self add poetry-dynamic-versioning;
+fi
