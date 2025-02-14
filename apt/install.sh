@@ -92,10 +92,11 @@ then
 	PIP="/usr/local/bin/pip3";
 	[[ ! -e "${PIP}" ]] && PIP="/usr/bin/pip3";
 	$PIP install pipx;
+	export PIPX_DEFAULT_PYTHON="${PIP/pip3/python3}";
 fi
 
 which poetry &>/dev/null;
 if [[ $? -ne 0 ]]
 then
-	pipx install poetry && poetry self add poetry-dynamic-versioning;
+	pipx install poetry && ${HOME}/.local/bin/poetry self add poetry-dynamic-versioning;
 fi
