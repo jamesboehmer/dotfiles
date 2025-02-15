@@ -100,3 +100,9 @@ if [[ $? -ne 0 ]]
 then
 	pipx install poetry && ${HOME}/.local/bin/poetry self add poetry-dynamic-versioning;
 fi
+
+which tflint &>/dev/null;
+if [[ $? -ne 0 ]]
+then
+	curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash;
+fi

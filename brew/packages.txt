@@ -69,6 +69,7 @@ serveit
 socat
 speedtest
 starship
+tflint
 tree
 vim
 watch
