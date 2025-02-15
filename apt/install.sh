@@ -106,3 +106,9 @@ if [[ $? -ne 0 ]]
 then
 	curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash;
 fi
+
+which tfsec &>/dev/null;
+if [[ $? -ne 0 ]]
+then
+	curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash;
+fi
