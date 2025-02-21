@@ -17,12 +17,14 @@ layout_uv() {
   fi
   local uv_version="${1}";
   local uv_layout_path="$(direnv_layout_dir)/uv/${uv_version}";
-  if ! uv -q --no-config venv -p ${uv_version} "${uv_layout_path}"; then
-    log_error "uv venv failed";
-    return 1
+  if [[ ! -x "${uv_layout_path}" ]]; then
+    if ! uv -q --no-config venv -p ${uv_version} "${uv_layout_path}"; then
+      log_error "uv venv failed";
+      return 1
+    fi
   fi
   export VIRTUAL_ENV="$(readlink -f ${uv_layout_path})";
   export UV_PROJECT_ENVIRONMENT="${VIRTUAL_ENV}";
-  export UV_PYTHON="${uv_version}";
+  export UV_PYTHON="${VIRTUAL_ENV}/bin/python";
   PATH_add "${VIRTUAL_ENV}/bin";
 }
