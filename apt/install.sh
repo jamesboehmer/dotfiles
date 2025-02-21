@@ -112,3 +112,9 @@ if [[ $? -ne 0 ]]
 then
 	curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash;
 fi
+
+which uv &>/dev/null;
+if [[ $? -ne 0 ]]
+then
+	curl -LsSf https://astral.sh/uv/install.sh | sh;
+fi

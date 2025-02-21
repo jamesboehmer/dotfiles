@@ -72,6 +72,7 @@ starship
 tflint
 tfsec
 tree
+uv
 vim
 watch
 youtube-dl
