@@ -12,12 +12,15 @@ fi
 # ensure brew is in the path first, otherwise first-time installations fail
 eval $(/opt/homebrew/bin/brew shellenv);
 
+BREWIGNORE_FILE="${HOME}/.local/brewignore";
+[[ ! -x "${BREWIGNORE_FILE} " ]] && mkdir -p "~/.local" && touch "${BREWIGNORE_FILE}";
+
 HOMEBREW_DIR="$(brew --prefix)";
 CASKROOM_DIR="${HOMEBREW_DIR}/Caskroom";
 CELLAR_DIR="${HOMEBREW_DIR}/Cellar";
 export PATH="${HOMEBREW_DIR}/bin:$PATH";
-export HOMEBREW_NO_ENV_HINTS=1
-export HOMEBREW_NO_INSTALL_CLEANUP=1
+export HOMEBREW_NO_ENV_HINTS=1;
+export HOMEBREW_NO_INSTALL_CLEANUP=1;
 
 brew install git;
 
@@ -31,21 +34,27 @@ do
 done < ${BASEDIR}/taps.txt
 
 existingcasks=($(brew ls --cask))
-cat "${BASEDIR}/casks.txt" | while read cask
+grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/casks.txt" | while read cask
 do
 	if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
 	then
 		echo "#### Cask: ${cask} ####";
 		brew install --cask "${cask}";
+		if [[ $? -ne 0 ]]; then
+			echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
+		fi
 	fi
 done
 
-for package in $(cat "${BASEDIR}/packages.txt")
+for package in $(grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt")
 do
 	if [[ ! -e $(brew --prefix ${package}) ]]
 	then
 		echo "#### Installing Package: ${package} ####";
 		brew install "${package}";
+		if [[ $? -ne 0 ]]; then
+			echo "Installation of ${package} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
+		fi
 	else
 		echo "#### Already installed: ${package} ####"
 	fi
