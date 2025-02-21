@@ -26,5 +26,6 @@ layout_uv() {
   export VIRTUAL_ENV="$(readlink -f ${uv_layout_path})";
   export UV_PROJECT_ENVIRONMENT="${VIRTUAL_ENV}";
   export UV_PYTHON="${VIRTUAL_ENV}/bin/python";
+  export UV_LINK_MODE="symlink";
   PATH_add "${VIRTUAL_ENV}/bin";
 }
