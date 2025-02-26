@@ -40,6 +40,7 @@ jenv
 jq
 jsawk
 jwt-cli
+kcat
 kubecolor
 kubernetes-cli
 maven

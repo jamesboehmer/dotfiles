@@ -13,6 +13,7 @@ graphviz
 grep
 htop
 jq
+kafkacat
 libbz2-dev
 libreadline-dev
 libsqlite3-dev
