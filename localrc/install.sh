@@ -82,5 +82,7 @@ FILENAME=~/.local/pyenvrc;
 newrcfile ${FILENAME};
 echo 'export PYENV_ROOT="$HOME/.pyenv"' > ${FILENAME}
 echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ${FILENAME}
-echo 'export PIPX_DEFAULT_PYTHON="$PYENV_ROOT/shims/python"' >> ${FILENAME}
 
+FILENAME=~/.local/pipxrc;
+newrcfile ${FILENAME};
+echo 'export PIPX_DEFAULT_PYTHON="python"' > ${FILENAME}

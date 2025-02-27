@@ -37,7 +37,6 @@ then
 fi
 echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.local/pyenvrc
 echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.local/pyenvrc
-echo 'export PIPX_DEFAULT_PYTHON="$PYENV_ROOT/shims/python"' >> ~/.local/pyenvrc
 
 if [[ ! -e ~/.goenv ]]
 then
@@ -94,6 +93,8 @@ then
 	$PIP install pipx;
 	export PIPX_DEFAULT_PYTHON="${PIP/pip3/python3}";
 fi
+echo 'export PIPX_DEFAULT_PYTHON="python"' >> ~/.local/pipxrc
+
 
 which poetry &>/dev/null;
 if [[ $? -ne 0 ]]
