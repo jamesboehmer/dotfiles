@@ -10,10 +10,11 @@ function newlocalrcfile() {
 	echo "Configuring ${FILENAME}";
 	mkdir -p "${HOME}/.local" && rm -f "${FILENAME}" && echo "# CREATED BY ${THIS} at ${WHEN}.  DO NOT EDIT" > "${FILENAME}";
 	shift;
-	while [ $# -gt 0 ]; do
+	while [ $# -gt 1 ]; do
 		varname="$1";
 		value="$2";
-		shift 2;
+		shift;
+		shift;
 		if [[ $(declare -F "${varname}" &>/dev/null; echo $?) -eq 0 ]]; then
 			declare -f "${varname}" >> "${FILENAME}";
 			[[ $(declare -F "${value}" &>/dev/null; echo $?) -eq 0 ]] && declare -f "${value}" >> "${FILENAME}";
@@ -41,7 +42,6 @@ setbluetoothaptx() {
 
 [[ "$(uname -s)" == "Darwin" ]] && [[ -e "${LOGITECHPLIST}" ]] && newlocalrcfile logitechrc logiload logiunload && echo 'logiunload &>/dev/null' >> "${HOME}/.local/logitechrc";
 [[ "$(uname -s)" == "Darwin" ]] && [[ -e /usr/bin/defaults ]] && newlocalrcfile bluetoothrc setbluetoothaptx;
-
 [[ "$(uname -s)" == "Darwin" ]] && [[ $(which brew &>/dev/null; echo $?) -eq 0 ]] && newlocalrcfile devrc \
 OPENBLAS "$(brew --prefix openblas)" \
 OPENSSL "$(brew --prefix openssl@1.1)" \
