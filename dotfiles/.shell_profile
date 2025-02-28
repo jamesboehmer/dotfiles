@@ -9,9 +9,9 @@ export PATH="${HOME}/.local/bin:${HOME}/.private/.bin:${HOME}/.bin:${HOME}/.luae
 export STARSHIP_CONFIG="${HOME}/.config/starship.toml";
 export SDKMAN_DIR="${HOME}/.sdkman";
 # Set EDITOR from least to most preferable.
-which nano &>/dev/null && export VISUAL="nano";
-which vim &>/dev/null && export VISUAL="vim";
-which subl &>/dev/null && export VISUAL="subl -w";
+type nano &>/dev/null && export VISUAL="nano";
+type vim &>/dev/null && export VISUAL="vim";
+type subl &>/dev/null && export VISUAL="subl -w";
 [[ -x /usr/local/bin/code ]] &>/dev/null && export VISUAL="code -w";
 export EDITOR="${VISUAL}";
 export GIT_EDITOR="${EDITOR}";

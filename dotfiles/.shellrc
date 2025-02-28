@@ -1,11 +1,11 @@
 # .bashrc must NOT output anything
 
 function loadAliases {
-    which ggrep &>/dev/null && alias grep='ggrep --color=auto';
-    which gsed &>/dev/null && alias sed='gsed';
-    which gawk &>/dev/null && alias awk='gawk';
+    type ggrep &>/dev/null && alias grep='ggrep --color=auto';
+    type gsed &>/dev/null && alias sed='gsed';
+    type gawk &>/dev/null && alias awk='gawk';
     [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
-    which kubecolor &>/dev/null && alias kubectl='kubecolor';
+    type kubecolor &>/dev/null && alias kubectl='kubecolor';
     alias jenvinit='eval "$(jenv init - --no-rehash)"';
     alias goenvinit='eval "$(goenv init - --no-rehash)"';
     alias pyenvinit='eval "$(pyenv init - --no-rehash)" && eval "$(pyenv virtualenv-init init - --no-rehash)"';
@@ -33,6 +33,6 @@ then
     [[ -e ~/.private ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.private/*rc 2>/dev/null)";
     [[ -e ~/.local ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.local/*rc 2>/dev/null)";
     [[ -n ${ZSH_VERSION-} ]] && setopt NOMATCH;
-    [[ -n ${SHELL-} ]] && which direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
-    [[ -n ${SHELL-} ]] && which starship &>/dev/null && eval "$(starship init ${SHELL})";
+    [[ -n ${SHELL-} ]] && type direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
+    [[ -n ${SHELL-} ]] && type starship &>/dev/null && eval "$(starship init ${SHELL})";
 fi
