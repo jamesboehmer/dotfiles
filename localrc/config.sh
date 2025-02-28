@@ -4,14 +4,16 @@ THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BA
 WHEN="$(date)";
 
 
-function newrcfile() {
-	# Usage: newrcfile ${filename} [varname value [varname value [...]]]
-	mkdir -p ~/.local;
-	FILENAME=$1;
+function newlocalrcfile() {
+	# Usage: newlocalrcfile ${basename} [varname value [varname value [...]]]
+	FILENAME="${HOME}/.local/$1";
 	echo "Configuring ${FILENAME}";
-	mkdir -p ~/.local && rm -f "${FILENAME}" && echo "# CREATED BY ${THIS} at ${WHEN}.  DO NOT EDIT" > "${FILENAME}";
+	mkdir -p "${HOME}/.local" && rm -f "${FILENAME}" && echo "# CREATED BY ${THIS} at ${WHEN}.  DO NOT EDIT" > "${FILENAME}";
 	shift;
-	echo "$@" | while read varname value; do
+	while [ $# -gt 0 ]; do
+		varname="$1";
+		value="$2";
+		shift 2;
 		if [[ $(declare -F "${varname}" &>/dev/null; echo $?) -eq 0 ]]; then
 			declare -f "${varname}" >> "${FILENAME}";
 			[[ $(declare -F "${value}" &>/dev/null; echo $?) -eq 0 ]] && declare -f "${value}" >> "${FILENAME}";
@@ -37,10 +39,10 @@ setbluetoothaptx() {
 	sudo defaults read bluetoothaudiod
 }
 
-[[ "$(uname -s)" == "Darwin" ]] && [[ -e "${LOGITECHPLIST}" ]] && newrcfile ~/.local/logitechrc logiload logiunload && echo 'logiunload &>/dev/null' >> ~/.local/logitechrc;
-[[ "$(uname -s)" == "Darwin" ]] && [[ -e /usr/bin/defaults ]] && newrcfile ~/.local/bluetoothrc setbluetoothaptx;
+[[ "$(uname -s)" == "Darwin" ]] && [[ -e "${LOGITECHPLIST}" ]] && newlocalrcfile logitechrc logiload logiunload && echo 'logiunload &>/dev/null' >> "${HOME}/.local/logitechrc";
+[[ "$(uname -s)" == "Darwin" ]] && [[ -e /usr/bin/defaults ]] && newlocalrcfile bluetoothrc setbluetoothaptx;
 
-[[ "$(uname -s)" == "Darwin" ]] && [[ $(which brew &>/dev/null; echo $?) -eq 0 ]] && newrcfile ~/.local/devrc \
+[[ "$(uname -s)" == "Darwin" ]] && [[ $(which brew &>/dev/null; echo $?) -eq 0 ]] && newlocalrcfile devrc \
 OPENBLAS "$(brew --prefix openblas)" \
 OPENSSL "$(brew --prefix openssl@1.1)" \
 ZLIB "$(brew --prefix zlib)" \
@@ -51,10 +53,10 @@ CFLAGS '${CPPFLAGS}' \
 HDF5_DIR "$(brew --prefix hdf5)" \
 PKG_CONFIG_PATH '-L${OPENSSL}/lib/pkgconfig:${ZLIB}/lib/pkgconfig'
 
-[[ "$(uname -s)" == "Darwin" ]] && newrcfile ~/.local/grpcpythonrc 'GRPC_PYTHON_BUILD_SYSTEM_OPENSSL' '1' 'GRPC_PYTHON_BUILD_SYSTEM_ZLIB' '1';
+[[ "$(uname -s)" == "Darwin" ]] && newlocalrcfile grpcpythonrc 'GRPC_PYTHON_BUILD_SYSTEM_OPENSSL' '1' 'GRPC_PYTHON_BUILD_SYSTEM_ZLIB' '1';
 
-newrcfile ~/.local/pyenvrc 'PYENV_ROOT' '$HOME/.pyenv' 'PATH' '$PYENV_ROOT/bin:$PATH"';
-newrcfile ~/.local/goenvrc 'GOENV_ROOT' '$HOME/.goenv' 'PATH' '$GOENV_ROOT/bin:$PATH';
-newrcfile ~/.local/tfenvrc 'PATH' '$HOME/.tfenv/bin:$PATH';
-newrcfile ~/.local/nodenvrc 'PATH' '$HOME/.nodenv/bin:$PATH';
-newrcfile ~/.local/pipxrc 'PIPX_DEFAULT_PYTHON' 'python';
+newlocalrcfile pyenvrc 'PYENV_ROOT' '$HOME/.pyenv' 'PATH' '$PYENV_ROOT/bin:$PATH';
+newlocalrcfile goenvrc 'GOENV_ROOT' '$HOME/.goenv' 'PATH' '$GOENV_ROOT/bin:$PATH';
+newlocalrcfile tfenvrc 'PATH' '$HOME/.tfenv/bin:$PATH';
+newlocalrcfile nodenvrc 'PATH' '$HOME/.nodenv/bin:$PATH';
+newlocalrcfile pipxrc 'PIPX_DEFAULT_PYTHON' 'python';
