@@ -2,6 +2,7 @@ autoconf
 awscli
 build-essential
 coreutils
+curl
 direnv
 findutils
 fonts-firacode
@@ -20,11 +21,14 @@ libsqlite3-dev
 libssl-dev
 moreutils
 net-tools
-netcat
+netcat-openbsd
+pipx
 socat
+sudo
 telnet
 time
 tree
+unzip
 uuid-runtime
 vim
 zlib1g-dev

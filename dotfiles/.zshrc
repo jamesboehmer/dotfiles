@@ -36,3 +36,6 @@ zstyle ':completion:*' menu select
 fpath+=~/.zfunc
 fpath+=~/.local/.zfunc
 fpath+=~/.private/.zfunc
+
+
+. "$HOME/.local/bin/env"

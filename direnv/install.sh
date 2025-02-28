@@ -3,13 +3,9 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 THIS="$(pwd)/$(basename ${BASH_SOURCE[0]})";
 
-TIME="$(date +%Y%m%d%H%M%S)";
-CLEANUPFILE="${1}";
-[[ -z $CLEANUPFILE ]] && CLEANUPFILE="/dev/null";
-
 LIBDIR="${HOME}/.config/direnv/lib";
 
-pushd direnv/lib;
+pushd lib;
 THISDIR="$(pwd)";
 
 mkdir -p "${LIBDIR}"

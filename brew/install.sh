@@ -4,6 +4,7 @@
 
 if [[ ! -e /opt/homebrew/bin/brew ]]
 then
+	echo "Installing brew...";
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
 	echo "Brew is already installed.";
@@ -13,7 +14,7 @@ fi
 eval $(/opt/homebrew/bin/brew shellenv);
 
 BREWIGNORE_FILE="${HOME}/.local/brewignore";
-[[ ! -x "${BREWIGNORE_FILE} " ]] && mkdir -p "~/.local" && touch "${BREWIGNORE_FILE}";
+[[ ! -x "${BREWIGNORE_FILE} " ]] && mkdir -p ~/.local && touch "${BREWIGNORE_FILE}";
 
 HOMEBREW_DIR="$(brew --prefix)";
 CASKROOM_DIR="${HOMEBREW_DIR}/Caskroom";
