@@ -1,0 +1,19 @@
+#!/bin/bash
+
+LOGITECHPLIST="/Library/LaunchAgents/com.logitech.manager.daemon.plist";
+
+[[ ! -e "${LOGITECHPLIST}" ]] && echo "Logitech manager not installed" && exit;
+
+function _load() {
+	launchctl load ${LOGITECHPLIST}
+}
+
+function _unload() {
+	launchctl unload ${LOGITECHPLIST}
+}
+
+BASENAME="$(basename $0)";
+LOGICOMMAND="${BASENAME/logi/}";
+
+_${LOGICOMMAND} ${@};
+

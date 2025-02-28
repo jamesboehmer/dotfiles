@@ -62,26 +62,9 @@ do
 done
 exit
 
-# only install mas on high sierra
-defaults read loginwindow SystemVersionStampAsString | grep "10.13" &>/dev/null && brew install mas;
-
-# Sonos for some reason isn't installable without using brew cask
-# brew cask install sonos;
-
-# Sublime convenience script
-# ln -sf "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" "/usr/local/bin/subl";
-
-# Little Snitch
-if [[ ! -e "/Applications/Little Snitch.app" ]]
-then
-	LITTLESNITCH_VERSION="$(/bin/ls -1 ${CASKROOM_DIR}/little-snitch/ | sort | tail -1)";
-	LITTLESNITCH_INSTALLER="${CASKROOM_DIR}/little-snitch/${LITTLESNITCH_VERSION}/LittleSnitch-${LITTLESNITCH_VERSION}.dmg";
-	open "${LITTLESNITCH_INSTALLER}";
-fi
 
 # Configure homebrew permissions to allow multiple users on MAC OSX.
 # Any user from the admin group will be able to manage the homebrew and cask installation on the machine.
-
 for brewdir in "${CELLAR_DIR}" "${CASKROOM_DIR}" "/Library/Caches/Homebrew"
 do
 	[[ -e "${brewdir}" ]] || sudo mkdir -p "${brewdir}" &>/dev/null;
@@ -90,6 +73,3 @@ do
 	writeable="$(/bin/ls -ld "${brewdir}" | awk '{print substr($1,5,3)}')";
 	[[ "${writeable}" == "rwx" ]] || sudo chmod -R g+w "${brewdir}";
 done
-
-#disable DVC analytics
-which dvc &>/dev/null && dvc config --global core.analytics false

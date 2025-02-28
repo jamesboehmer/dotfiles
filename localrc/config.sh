@@ -25,23 +25,8 @@ function newlocalrcfile() {
 }
 
 #disable DVC analytics
-which dvc &>/dev/null && dvc config --global core.analytics false
+type dvc &>/dev/null && dvc config --global core.analytics false
 
-LOGITECHPLIST="/Library/LaunchAgents/com.logitech.manager.daemon.plist";
-logiload() {
-	launchctl load ${LOGITECHPLIST}
-}
-logiunload() {
-	launchctl unload ${LOGITECHPLIST}
-}
-setbluetoothaptx() {
-	sudo defaults write bluetoothaudiod "Enable AptX codec" -bool true
-	sudo defaults write bluetoothaudiod "Enable AAC codec" -bool true
-	sudo defaults read bluetoothaudiod
-}
-
-[[ "$(uname -s)" == "Darwin" ]] && [[ -e "${LOGITECHPLIST}" ]] && newlocalrcfile logitechrc logiload logiunload && echo 'logiunload &>/dev/null' >> "${HOME}/.local/logitechrc";
-[[ "$(uname -s)" == "Darwin" ]] && [[ -e /usr/bin/defaults ]] && newlocalrcfile bluetoothrc setbluetoothaptx;
 [[ "$(uname -s)" == "Darwin" ]] && [[ $(which brew &>/dev/null; echo $?) -eq 0 ]] && newlocalrcfile devrc \
 OPENBLAS "$(brew --prefix openblas)" \
 OPENSSL "$(brew --prefix openssl@1.1)" \
