@@ -48,11 +48,11 @@ function cleanup(){
 ${THISDIR}/dotfiles/install.sh "${CLEANUPFILE}";
 ${THISDIR}/brew/install.sh && ensurebrewpath;
 ${THISDIR}/debian/install.sh;
-${THISDIR}/git/install.sh;
-${THISDIR}/mac/install.sh
+${THISDIR}/git/config.sh;
+${THISDIR}/mac/config.sh
 ${THISDIR}/starship/config.sh
-${THISDIR}/direnv/install.sh
-${THISDIR}/localrc/install.sh;
+${THISDIR}/direnv/config.sh
+${THISDIR}/localrc/config.sh;
 
 fix_zsh_compinit_perms;
 ensure_codespace_gpg;

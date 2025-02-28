@@ -37,6 +37,7 @@ hub
 hugo
 imagemagick
 jenv
+jnv
 jq
 jsawk
 jwt-cli
@@ -62,7 +63,7 @@ pyenv-virtualenv
 rbenv
 readline
 redis
-rg
+ripgrep
 sbtenv
 scalaenv
 sdkman-cli
@@ -79,4 +80,3 @@ watch
 youtube-dl
 zlib
 zsh
-ynqa/tap/jnv

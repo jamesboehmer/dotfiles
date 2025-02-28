@@ -4,3 +4,4 @@ moncho/dry
 dbcli/tap
 sdkman/tap
 teamookla/speedtest
+ynqa/tap

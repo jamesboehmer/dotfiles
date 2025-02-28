@@ -49,7 +49,7 @@ done
 
 for package in $(grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt")
 do
-	if [[ ! -e $(brew --prefix ${package}) ]]
+	if [[ ! -e "${CELLAR_DIR}/${package}" ]]
 	then
 		echo "#### Installing Package: ${package} ####";
 		brew install "${package}";
