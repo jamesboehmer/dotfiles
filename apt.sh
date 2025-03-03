@@ -2,7 +2,9 @@
 
 [[ -e /usr/bin/apt-get ]] || { echo "Not Debian.  Skipping apt" && exit 0; }
 
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
+THISDIR="$(dirname "${THIS}")";
+BASEDIR="${THISDIR}/apt";
 
 SUDO="";
 if [[ $EUID -ne 0 ]]

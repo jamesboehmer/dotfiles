@@ -2,6 +2,9 @@
 
 [[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping brew." && exit 0; }
 
+THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
+THISDIR="$(dirname "${THIS}")";
+
 if [[ ! -e /opt/homebrew/bin/brew ]]
 then
 	echo "Installing brew...";
@@ -23,7 +26,7 @@ export PATH="${HOMEBREW_DIR}/bin:$PATH";
 export HOMEBREW_NO_ENV_HINTS=1;
 export HOMEBREW_NO_INSTALL_CLEANUP=1;
 
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="${THISDIR}/brew";
 
 while read tap
 do

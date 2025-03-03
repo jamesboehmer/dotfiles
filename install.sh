@@ -5,23 +5,8 @@ THISDIR="$(dirname "${THIS}")";
 
 CLEANUPFILE="$(mktemp)";
 
-function ensurebrewpath() {
-    # ensure brew is in the path first, otherwise first-time installations fail
-    if [[ -e /opt/homebrew/bin/brew ]]; then
-        eval $(/opt/homebrew/bin/brew shellenv);
-
-        HOMEBREW_DIR="$(brew --prefix)";
-        CASKROOM_DIR="${HOMEBREW_DIR}/Caskroom";
-        CELLAR_DIR="${HOMEBREW_DIR}/Cellar";
-        export PATH="${HOMEBREW_DIR}/bin:$PATH";
-        export HOMEBREW_NO_ENV_HINTS=1
-        export HOMEBREW_NO_INSTALL_CLEANUP=1
-    fi
-}
-
-
-${THISDIR}/brew/install.sh && ensurebrewpath;
-${THISDIR}/apt/install.sh;
+${THISDIR}/brew.sh && [[ -e /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv);
+${THISDIR}/apt.sh;
 ${THISDIR}/debian.sh;
 ${THISDIR}/ssh.sh;
 ${THISDIR}/starship.sh;
@@ -29,8 +14,8 @@ ${THISDIR}/direnv.sh;
 ${THISDIR}/iterm.sh;
 ${THISDIR}/localrc.sh;
 ${THISDIR}/git.sh;
-${THISDIR}/mactouchid.sh
-${THISDIR}/macdocker.sh
+${THISDIR}/mactouchid.sh;
+${THISDIR}/macdocker.sh;
 ${THISDIR}/macdefaults.sh;
 ${THISDIR}/dotfiles/install.sh "${CLEANUPFILE}";
 
