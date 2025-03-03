@@ -2,6 +2,8 @@
 
 [[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping mac defaults." && exit 0; }
 
+echo "Configuring mac defaults...";
+
 if [[ $(defaults read com.apple.gamed Disabled 2>/dev/null) -ne 1 ]]; then
 	echo "Disabling Game Center...";
 	defaults write com.apple.gamed Disabled -bool true;

@@ -2,6 +2,8 @@
 
 [[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping mac docker config." && exit 0; }
 
+echo "Configuring docker...";
+
 DOCKERCONFIG="${HOME}/.docker/config.json";
 echo "Setting ${DOCKERCONFIG} credsStore to osxkeychain";
 mkdir -p $(dirname ${DOCKERCONFIG});

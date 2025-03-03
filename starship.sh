@@ -2,8 +2,9 @@
 
 type starship &>/dev/null || { echo "No Starship.  Skipping starship config." && exit 0; }
 
+echo "Configuring starship...";
+
 export STARSHIP_CONFIG="${HOME}/.config/starship.toml";
-echo "Configuring ${STARSHIP_CONFIG}";
 
 mkdir -p "$(dirname "${STARSHIP_CONFIG}")";
 touch "${STARSHIP_CONFIG}";

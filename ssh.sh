@@ -4,8 +4,7 @@ THIS="$(pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
 
 TIME="$(date +%Y%m%d%H%M%S)";
-CLEANUPFILE="${1}";
-[[ -z $CLEANUPFILE ]] && CLEANUPFILE="/dev/null";
+CLEANUPFILE="${1:-${CLEANUPFILE:-/dev/null}}"
 
 SSHDIR="${HOME}/.ssh";
 SSHCONFIG="${SSHDIR}/config";

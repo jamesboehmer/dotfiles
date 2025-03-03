@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Configuring direnv...";
+
 THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
 TIME="$(date +%Y%m%d%H%M%S)";

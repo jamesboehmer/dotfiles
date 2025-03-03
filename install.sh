@@ -3,7 +3,8 @@
 THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
 
-CLEANUPFILE="$(mktemp)";
+CLEANUPFILE="${1:-${CLEANUPFILE:-$(mktemp)}}"
+export CLEANUPFILE;
 
 ${THISDIR}/brew.sh && [[ -e /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv);
 ${THISDIR}/apt.sh;
@@ -17,7 +18,7 @@ ${THISDIR}/git.sh;
 ${THISDIR}/touchid.sh;
 ${THISDIR}/docker.sh;
 ${THISDIR}/defaults.sh;
-${THISDIR}/dotfiles.sh "${CLEANUPFILE}";
+${THISDIR}/dotfiles.sh;
 
 # Ensure GPG git signatures in codespaces
 [[ "${CODESPACES}" == "true" && -e "${HOME}/.bin/git-gpg-config" ]] && "${HOME}/.bin/git-gpg-config" local codespace;
