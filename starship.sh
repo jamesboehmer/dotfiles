@@ -1,11 +1,11 @@
 #!/bin/bash
 
-which starship &>/dev/null || { echo "No Starship.  Skipping starship config." && exit 0; }
+type starship &>/dev/null || { echo "No Starship.  Skipping starship config." && exit 0; }
 
 export STARSHIP_CONFIG="${HOME}/.config/starship.toml";
 echo "Configuring ${STARSHIP_CONFIG}";
 
-mkdir -p "${HOME}/.config";
+mkdir -p "$(dirname "${STARSHIP_CONFIG}")";
 touch "${STARSHIP_CONFIG}";
 
 starship config command_timeout 600

@@ -23,8 +23,6 @@ export PATH="${HOMEBREW_DIR}/bin:$PATH";
 export HOMEBREW_NO_ENV_HINTS=1;
 export HOMEBREW_NO_INSTALL_CLEANUP=1;
 
-brew install git;
-
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 while read tap

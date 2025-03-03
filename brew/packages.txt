@@ -21,6 +21,7 @@ dry
 findutils
 fx
 gawk
+git
 git-crypt
 git-delta
 gh

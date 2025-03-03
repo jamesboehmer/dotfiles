@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ -e /usr/bin/apt-get ]] || { echo "Not Debian.  Skipping apt" && exit 0; }
+[[ -e /usr/bin/apt-get ]] || { echo "Not Debian.  Skipping Debian config" && exit 0; }
 
 THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
 
@@ -28,7 +28,7 @@ function gitcloneinstall() {
 }
 
 function curlbininstall() {
-	# Usage: localbininstall URL targetfile
+	# Usage: curlbininstall URL targetfile
 	if [[ -e "${2}" ]]; then
 		echo "${2} exists.  Skipping install.";
 		return;
@@ -46,9 +46,6 @@ function dangerous() {
 	shift;
 	curl -fsSL "${URL}" | ${@}
 }
-
-"${THISDIR}"/../apt/install.sh;
-
 
 gitcloneinstall "https://github.com/pyenv/pyenv.git" "$HOME/.pyenv";
 gitcloneinstall "https://github.com/pyenv/pyenv-virtualenv.git" "$HOME/.pyenv/plugins/pyenv-virtualenv";

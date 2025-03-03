@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd "$( dirname "${BASH_SOURCE[0]}" )"
 THIS="$(pwd)/$(basename ${BASH_SOURCE[0]})";
+THISDIR="$(dirname "${THIS}")";
 
 TIME="$(date +%Y%m%d%H%M%S)";
 CLEANUPFILE="${1}";
@@ -9,10 +9,12 @@ CLEANUPFILE="${1}";
 
 SSHDIR="${HOME}/.ssh";
 SSHCONFIG="${SSHDIR}/config";
+SSHCONFIGD="${SSHDIR}/config.d";
+THISSSHCONFIGD="${THISDIR}/ssh/config.d"
 
-echo "Creating ssh config...";
+echo "Configuring ssh...";
 
-mkdir -p "${SSHDIR}/config.d";
+mkdir -p "${SSHDIR}";
 mkdir -p "${HOME}/.local/.ssh/config.d"
 touch "${SSHCONFIG}";
 
@@ -29,10 +31,12 @@ Include ~/.local/.ssh/config.d/*
 
 ### END DOTFILES CONFIG ###
 EOF
-set -x
-if [[ -d "${SSHDIR}/config.d" && ! -L "${SSHDIR}/config.d" ]]; then
-    mv "${SSHDIR}/config.d" "${SSHDIR}/config.d.dotfilebak.${TIME}";
-    echo "Your SSH config files were moved to ${SSHDIR}/config.d.dotfilebak.${TIME}.  You should put those files in ${HOME}/.local/.ssh/config.d instead";
+
+if [[ -d "${SSHCONFIGD}" && ! -L "${SSHCONFIGD}" ]]; then
+    mv "${SSHCONFIGD}" "${SSHCONFIGD}.dotfilebak.${TIME}";
+    echo "Your SSH config files were moved to ${SSHCONFIGD}.dotfilebak.${TIME}.  You should put those files in ${HOME}/.local/.ssh/config.d instead";
 fi
 
-ln -sf "$(pwd)/config.d" "${SSHDIR}/";
+echo "Linking ${SSHCONFIGD} -> ${THISSSHCONFIGD}";
+
+ln -sfn "${THISSSHCONFIGD}" "${SSHCONFIGD}";

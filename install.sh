@@ -19,44 +19,29 @@ function ensurebrewpath() {
     fi
 }
 
-function fix_zsh_compinit_perms() {
-    # Fix zsh compinit permission issue
-    zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
-}
 
-function ensure_codespace_gpg() {
-    # Automatically enabled git PGP signing in codespaces
-    if [[ "${CODESPACES}" == "true" ]]
-    then
-        [[ -e ~/.bin/git-gpg-config ]] && ~/.bin/git-gpg-config local codespace
-        # echo 'export EDITOR=code' > ~/.private/codespacerc
-    fi
-}
-
-function cleanup(){
-    if [[ -s "${CLEANUPFILE}" ]]
-    then
-        echo "Cleaning up backed up files...";
-        cat "${CLEANUPFILE}" | while read line
-        do
-            echo -e "Removing ${line}";
-            rm "${line}";
-        done
-    fi
-}
-
-${THISDIR}/dotfiles/install.sh "${CLEANUPFILE}";
 ${THISDIR}/brew/install.sh && ensurebrewpath;
-${THISDIR}/debian/install.sh;
-${THISDIR}/git/config.sh;
-${THISDIR}/mac/config.sh
-${THISDIR}/starship/config.sh
-${THISDIR}/direnv/config.sh
-${THISDIR}/localrc/config.sh;
+${THISDIR}/apt/install.sh;
+${THISDIR}/debian.sh;
+${THISDIR}/ssh.sh;
+${THISDIR}/starship.sh;
+${THISDIR}/direnv.sh;
+${THISDIR}/iterm.sh;
+${THISDIR}/localrc.sh;
+${THISDIR}/git.sh;
+${THISDIR}/mactouchid.sh
+${THISDIR}/macdocker.sh
+${THISDIR}/macdefaults.sh;
+${THISDIR}/dotfiles/install.sh "${CLEANUPFILE}";
 
-fix_zsh_compinit_perms;
-ensure_codespace_gpg;
-cleanup;
+# Ensure GPG git signatures in codespaces
+[[ "${CODESPACES}" == "true" && -e "${HOME}/.bin/git-gpg-config" ]] && "${HOME}/.bin/git-gpg-config" local codespace;
+
+# Fix zsh compinit permission issue
+type zsh &>/dev/null && zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
+
+# Clean up the old symlinks
+xargs -t -I {} rm {} < "${CLEANUPFILE}";
 
 
 
