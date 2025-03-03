@@ -14,10 +14,10 @@ ${THISDIR}/direnv.sh;
 ${THISDIR}/iterm.sh;
 ${THISDIR}/localrc.sh;
 ${THISDIR}/git.sh;
-${THISDIR}/mactouchid.sh;
-${THISDIR}/macdocker.sh;
-${THISDIR}/macdefaults.sh;
-${THISDIR}/dotfiles/install.sh "${CLEANUPFILE}";
+${THISDIR}/touchid.sh;
+${THISDIR}/docker.sh;
+${THISDIR}/defaults.sh;
+${THISDIR}/dotfiles.sh "${CLEANUPFILE}";
 
 # Ensure GPG git signatures in codespaces
 [[ "${CODESPACES}" == "true" && -e "${HOME}/.bin/git-gpg-config" ]] && "${HOME}/.bin/git-gpg-config" local codespace;
