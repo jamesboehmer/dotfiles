@@ -6,6 +6,19 @@ THISDIR="$(dirname "${THIS}")";
 CLEANUPFILE="${1:-${CLEANUPFILE:-$(mktemp)}}"
 export CLEANUPFILE;
 
+function cleanup() {
+	# Clean up the old symlinks
+	if [[ -z "${SKIPCLEANUP}" ]]; then
+		echo "*** Cleaning old files.  Set SKIPCLEANUP=true to skip cleanup next time. ***";
+		xargs -t -I {} rm {} < "${CLEANUPFILE}";
+	else
+		echo "*** CLEANUP SKIPPED: ***";
+		cat "${CLEANUPFILE}";
+	fi
+}
+
+trap cleanup EXIT SIGINT SIGQUIT SIGHUP;
+
 ${THISDIR}/brew.sh && [[ -e /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv);
 ${THISDIR}/apt.sh;
 ${THISDIR}/debian.sh;
@@ -25,9 +38,3 @@ ${THISDIR}/dotfiles.sh;
 
 # Fix zsh compinit permission issue
 type zsh &>/dev/null && zsh -ic 'compaudit' | while read f; do chmod g-w "$f"; done
-
-# Clean up the old symlinks
-xargs -t -I {} rm {} < "${CLEANUPFILE}";
-
-
-

@@ -4,7 +4,7 @@ THIS="$(pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
 
 TIME="$(date +%Y%m%d%H%M%S)";
-CLEANUPFILE="${1:-${CLEANUPFILE:-/dev/null}}"
+CLEANUPFILE="${1:-${CLEANUPFILE}}"
 
 SSHDIR="${HOME}/.ssh";
 SSHCONFIG="${SSHDIR}/config";
@@ -18,7 +18,7 @@ mkdir -p "${HOME}/.local/.ssh/config.d"
 touch "${SSHCONFIG}";
 
 sed -i.dotfilebak.${TIME} -e '/^$/N;/^\n$/D' -e '/### START DOTFILES CONFIG ###/,/### END DOTFILES CONFIG ###/d' "${SSHCONFIG}";
-echo "${SSHCONFIG}.dotfilebak.${TIME}" >> "${CLEANUPFILE}";
+[[ -n "${CLEANUPFILE}" ]] && echo "${SSHCONFIG}.dotfilebak.${TIME}" >> "${CLEANUPFILE}";
 
 cat << EOF >> "${SSHCONFIG}"
 
