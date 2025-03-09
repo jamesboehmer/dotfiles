@@ -1,10 +1,10 @@
 # .bashrc must NOT output anything
 
 function loadAliases {
-    type ggrep &>/dev/null && alias grep='ggrep --color=auto';
+    type ggrep &>/dev/null && alias grep='ggrep --color=auto' || alias grep='grep --color=auto';
     type gsed &>/dev/null && alias sed='gsed';
     type gawk &>/dev/null && alias awk='gawk';
-    [[ -e "/Applications" ]] && alias ls='ls -laFG' || alias ls='ls -laF --color'
+    alias ls='ls -laF --color';
     type kubecolor &>/dev/null && alias kubectl='kubecolor';
     alias jenvinit='eval "$(jenv init - --no-rehash)"';
     alias goenvinit='eval "$(goenv init - --no-rehash)"';
