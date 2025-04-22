@@ -39,17 +39,24 @@ function curlbininstall() {
 
 function curlzipinstall() {
 	# Usage: curlzipinstall URL targetdir file1 [file2...fileN]
+	if [[ "${TARGZ}" == "true" ]]; then
+		EXT=".tar.gz";
+		CMD="tar xzvf";
+	else
+		EXT=".zip";
+		CMD="unzip";
+	fi
 	URL="${1}";
 	shift;
 	TARGETDIR="${1}";
 	mkdir -p "${TARGETDIR}";
 	shift;
 	DLDIR="$(mktemp -d)";
-	DLFILE="$$.zip";
+	DLFILE="$$${EXT}";
 	cd "${DLDIR}";
 	echo "Downloading ${URL} to ${DLDIR}/${DLFILE}";
-	curl -fsSL "${URL}" -o "$$.zip";
-	unzip "${DLFILE}";
+	curl -fsSL "${URL}" -o "${DLFILE}";
+	${CMD} "${DLFILE}";
 	for fname in "${@}"; do
 		if [[ -e "${fname}" ]]; then
 			echo "Copying ${fname} to ${TARGETDIR}";

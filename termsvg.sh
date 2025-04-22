@@ -8,5 +8,9 @@ THISDIR="$(dirname "${THIS}")";
 
 VERSION="0.9.2";
 
-URL="https://github.com/MrMarble/termsvg/releases/download/v${VERSION}/termsvg-${VERSION}-${KERNEL}-${ARCH}.zip";
-which termsvg &>/dev/null || curlzipinstall "${URL}" "${HOME}/.local/bin/" "termsvg-${VERSION}-${KERNEL}-${ARCH}/termsvg";
+EXT=".zip";
+TARGZ="";
+[[ "${KERNEL}" == "linux" ]] && EXT=".tar.gz" && TARGZ="true";
+
+URL="https://github.com/MrMarble/termsvg/releases/download/v${VERSION}/termsvg-${VERSION}-${KERNEL}-${ARCH}${EXT}";
+which termsvg &>/dev/null || TARGZ="${TARGZ}" curlzipinstall "${URL}" "${HOME}/.local/bin/" "termsvg-${VERSION}-${KERNEL}-${ARCH}/termsvg";
