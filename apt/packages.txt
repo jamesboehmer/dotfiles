@@ -24,6 +24,7 @@ net-tools
 netcat-openbsd
 pipx
 socat
+sqlite3
 sudo
 telnet
 time

@@ -71,6 +71,7 @@ sdkman-cli
 serveit
 socat
 speedtest
+sqlite
 starship
 tflint
 tfsec
