@@ -1,3 +1,4 @@
+asciinema
 autoconf
 awscli
 build-essential

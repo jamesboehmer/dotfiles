@@ -6,46 +6,9 @@ THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BA
 
 THISDIR="$(dirname "${THIS}")";
 
-SUDO="";
-if [[ $EUID -ne 0 ]]
-then
-    SUDO="sudo";
-fi
+. "${THISDIR}/functions.sh";
+
 export DEBIAN_FRONTEND=noninteractive;
-ARCH="$(dpkg --print-architecture)";
-
-
-function gitcloneinstall() {
-	# Usage: gitcloneinstall URL dir
-	if [[ -e "${2}" ]]; then
-		echo "${2} exists.  Skipping install.";
-		return;
-	fi
-	echo "Cloning ${1} to ${2}...";
-	PARENTDIR="$(dirname ${2})";
-	mkdir -p "${PARENTDIR}";
-	git clone "${1}" "${2}";
-}
-
-function curlbininstall() {
-	# Usage: curlbininstall URL targetfile
-	if [[ -e "${2}" ]]; then
-		echo "${2} exists.  Skipping install.";
-		return;
-	fi
-	echo "Downloading ${1} to ${2}...";
-	PARENTDIR="$(dirname ${2})";
-	mkdir -p "${PARENTDIR}";
-	curl -fsSL "${1}" -o "${2}" && chmod +x "${2}";
-}
-
-function dangerous() {
-	# Usage: dangerous url $args (e.g. "bash" "FORCE=yes sh" etc)
-	echo "Installing from ${1}...";
-	URL="${1}";
-	shift;
-	curl -fsSL "${URL}" | ${@}
-}
 
 gitcloneinstall "https://github.com/pyenv/pyenv.git" "$HOME/.pyenv";
 gitcloneinstall "https://github.com/pyenv/pyenv-virtualenv.git" "$HOME/.pyenv/plugins/pyenv-virtualenv";

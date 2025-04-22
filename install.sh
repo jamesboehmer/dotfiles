@@ -31,6 +31,7 @@ ${THISDIR}/git.sh;
 ${THISDIR}/touchid.sh;
 ${THISDIR}/docker.sh;
 ${THISDIR}/defaults.sh;
+${THISDIR}/termsvg.sh;
 ${THISDIR}/dotfiles.sh;
 
 # Ensure GPG git signatures in codespaces
