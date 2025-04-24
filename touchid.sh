@@ -9,7 +9,8 @@ THISDIR="$(dirname "${THIS}")";
 
 TIME="$(date +%Y%m%d%H%M%S)";
 
-PAM_SUDO="/etc/pam.d/sudo";
+PAM_SUDO="/etc/pam.d/sudo_local";
+[[ ! -e "${PAM_SUDO}" ]] && sudo touch "${PAM_SUDO}" && sudo chmod 444 "${PAM_SUDO}";
 grep "pam_tid.so" "${PAM_SUDO}" &>/dev/null
 if [[ $? -ne 0 ]]
 then
