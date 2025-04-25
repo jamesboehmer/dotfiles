@@ -132,7 +132,7 @@
 	stupid = status
 	lock = !git crypt lock
 	unlock = !git crypt unlock
-	dotfiles = !git pull && ./install.sh && [[ -e brew ]] && brew upgrade
+	dotfiles = !git pull && ./install.sh
 [credential]
 	helper = cache --timeout=30000
 [pull]
