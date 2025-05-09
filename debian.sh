@@ -37,11 +37,12 @@ then
 	export PIPX_DEFAULT_PYTHON="${PIP/pip3/python3}";
 fi
 
-[[ "$(which poetry &>/dev/null; echo $?)" -ne 0 ]] && pipx install poetry && ${HOME}/.local/bin/poetry self add poetry-dynamic-versioning;
-[[ "$(which aws &>/dev/null; echo $?)" -ne 0 ]] && pipx install aws;
+{ ! checkfor poetry || [[  ${DOUPDATE} == "true" ]] } && pipx install poetry && ${HOME}/.local/bin/poetry self add poetry-dynamic-versioning;
+{ ! checkfor aws || [[  ${DOUPDATE} == "true" ]] } && pipx install aws;
 
-which tflint &>/dev/null || dangerous "https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh" "bash";
-which tfsec &>/dev/null || dangerous "https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh" "bash";
-which uv &>/dev/null || dangerous "https://astral.sh/uv/install.sh" "sh";
-which starship &>/dev/null || dangerous "https://starship.rs/install.sh" "$SUDO" "FORCE=yes" "sh";
+CHECKFOR="tflint" dangerous "https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh" "bash";
+CHECKFOR="tfsec" dangerous "https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh" "bash";
+CHECKFOR="uv" dangerous "https://astral.sh/uv/install.sh" "sh";
+CHECKFOR="starship" dangerous "https://starship.rs/install.sh" "$SUDO" "FORCE=yes" "sh";
 
+[[ "${DOUPDATE}" != "true" ]] && echo "Run again with DOUPDATE=true to force installation of all debian packages.";

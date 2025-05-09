@@ -16,7 +16,13 @@ export MACHINE="$(uname -m | tr '[:upper:]' '[:lower:]')";
 function gitcloneinstall() {
 	# Usage: gitcloneinstall URL dir
 	if [[ -e "${2}" ]]; then
-		echo "${2} exists.  Skipping install.";
+		if [[ "${DOUPDATE}" == "true" ]]; then
+			cd "${2}";
+			echo "Updating ${2}...";
+			git pull;
+		else
+			echo "${2} exists.  Skipping install.";
+		fi
 		return;
 	fi
 	echo "Cloning ${1} to ${2}...";
@@ -28,8 +34,10 @@ function gitcloneinstall() {
 function curlbininstall() {
 	# Usage: curlbininstall URL targetfile
 	if [[ -e "${2}" ]]; then
-		echo "${2} exists.  Skipping install.";
-		return;
+		if [[ "${DOUPDATE}" != "true" ]]; then
+			echo "${2} exists.  Skipping install.";
+			return;
+		fi
 	fi
 	echo "Downloading ${1} to ${2}...";
 	PARENTDIR="$(dirname ${2})";
@@ -67,8 +75,28 @@ function curlzipinstall() {
 	done
 }
 
+function checkfor() {
+	# Usage: checkfor program
+	which ${1} &>/dev/null;
+	return $?;
+}
 function dangerous() {
 	# Usage: dangerous url $args (e.g. "bash" "FORCE=yes sh" etc)
+
+	DOINSTALL="true"; # be default always install
+	if [[ ! -z "${CHECKFOR}" ]]; then
+		# if we're asked to check for a program, do so and set DOINSTALL to false if it exists
+		checkfor "${CHECKFOR}" && DOINSTALL="false";
+	fi
+
+	# ensure we DOINSTALL no matter what if DOUPDATE is set, even if the program exists
+	[[ "${DOUPDATE}" == "true" ]] && DOINSTALL="true";
+
+	if [[ "${DOINSTALL}" != "true" ]]; then
+		echo "${CHECKFOR:-$1} already installed.  Skipping.";
+		return;
+	fi
+
 	echo "Installing from ${1}...";
 	URL="${1}";
 	shift;
