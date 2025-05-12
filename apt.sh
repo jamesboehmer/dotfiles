@@ -20,7 +20,7 @@ APTIGNORE_FILE="${HOME}/.local/aptignore";
 
 $SUDO apt-get update;
 grep -v -f "${APTIGNORE_FILE}" "${BASEDIR}/packages.txt" | while read package; do
-	dpkg -l "${package}" &>/dev/null;
+	dpkg -l "${package}" | grep "ii" &>/dev/null;
 	if [[ $? -ne 0 ]]; then
 		echo "#### Installing ${package}"
 		$SUDO apt-get install -y --ignore-missing "${package}";
