@@ -37,8 +37,9 @@ then
 	export PIPX_DEFAULT_PYTHON="${PIP/pip3/python3}";
 fi
 
-{ ! checkfor poetry || [[  ${DOUPDATE} == "true" ]] } && pipx install poetry && ${HOME}/.local/bin/poetry self add poetry-dynamic-versioning;
-{ ! checkfor aws || [[  ${DOUPDATE} == "true" ]] } && pipx install aws;
+! checkfor poetry && pipx install poetry;
+poetry self show plugins 2>/dev/null | grep poetry-dynamic-versioning &>/dev/null || poetry self add poetry-dynamic-versioning;
+! checkfor aws && pipx install aws;
 
 CHECKFOR="tflint" dangerous "https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh" "bash";
 CHECKFOR="tfsec" dangerous "https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh" "bash";
