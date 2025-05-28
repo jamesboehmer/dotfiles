@@ -42,6 +42,7 @@ jnv
 jq
 jsawk
 jwt-cli
+k9s
 kcat
 kubecolor
 kubernetes-cli
