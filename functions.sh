@@ -103,6 +103,29 @@ function dangerous() {
 	curl -fsSL "${URL}" | ${@}
 }
 
+function curldpkginstall() {
+	DOINSTALL="true"; # be default always install
+	if [[ ! -z "${CHECKFOR}" ]]; then
+		# if we're asked to check for a program, do so and set DOINSTALL to false if it exists
+		checkfor "${CHECKFOR}" && DOINSTALL="false";
+	fi
+
+	# ensure we DOINSTALL no matter what if DOUPDATE is set, even if the program exists
+	[[ "${DOUPDATE}" == "true" ]] && DOINSTALL="true";
+
+	if [[ "${DOINSTALL}" != "true" ]]; then
+		echo "${CHECKFOR:-$1} already installed.  Skipping.";
+		return;
+	fi
+
+	echo "Installing from ${1}...";
+	URL="${1}";
+	shift;
+	tmpfile="$(mktemp)";
+	curl -fsSL "${URL}" > "${tmpfile}";
+	${SUDO} dpkg -i "${tmpfile}";
+}
+
 export gitcloneinstall;
 export curlbininstall;
 export curlzipinstall;
