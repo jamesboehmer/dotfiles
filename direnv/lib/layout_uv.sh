@@ -28,4 +28,7 @@ layout_uv() {
   export UV_PYTHON="${VIRTUAL_ENV}/bin/python";
   export UV_LINK_MODE="symlink";
   PATH_add "${VIRTUAL_ENV}/bin";
+  if [[ "${2}" == "sync" ]]; then
+    uv sync;
+  fi
 }
