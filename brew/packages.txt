@@ -16,6 +16,7 @@ ctop
 deno
 direnv
 docker
+docker-compose
 docker-credential-helper
 dry
 findutils
