@@ -11,7 +11,7 @@ find "${BASEDIR}" -maxdepth 1 -name '.*' | egrep -ve '.DS_Store|.gitignore|.git$
 do
     [[ -e "${HOME}/${dotfile}" && -n "${CLEANUPFILE}" ]] && mv "${HOME}/${dotfile}" "${HOME}/${dotfile}.dotfilebak.${TIME}" && echo "${HOME}/${dotfile}.dotfilebak.${TIME}" >> "${CLEANUPFILE}";
     echo -e "Linking ${HOME}/${dotfile} -> ${BASEDIR}/${dotfile}";
-    ln -sf "${BASEDIR}/${dotfile}" "${HOME}/${dotfile}";
+    ln -sF "${BASEDIR}/${dotfile}" "${HOME}/${dotfile}";
 done
 
 case "${KERNEL}" in
