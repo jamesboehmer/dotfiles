@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping launchagents." && exit 0; }
+
 THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
 BASEDIR="${THISDIR}/launchagents";
