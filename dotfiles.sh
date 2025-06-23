@@ -16,14 +16,15 @@ done
 
 case "${KERNEL}" in
   linux)
-    echo "Linking ${HOME}/.local/bin/pbcopy -> ${THISDIR}/dotfiles/.bin/_pbcopy.sh";
-    ln -sf "${THISDIR}/dotfiles/.bin/_pbcopy.sh" "${HOME}/.local/bin/pbcopy";
-    echo "Linking ${HOME}/.local/bin/pbpaste -> ${THISDIR}/dotfiles/.bin/_pbpaste.sh";
-    ln -sf "${THISDIR}/dotfiles/.bin/_pbpaste.sh" "${HOME}/.local/bin/pbpaste";
+    for x in pbcopy pbpaste; do
+      echo "Linking ${HOME}/.local/bin/${x} -> ${THISDIR}/dotfiles/.bin/_pbutils.sh";
+      ln -sf "${THISDIR}/dotfiles/.bin/_pbutils.sh" "${HOME}/.local/bin/${x}";
+    done
     ;;
   darwin)
-  # TODO make a pbserver launch agent
-    exit 0;
+    # This is now a launchagent
+    # echo "Linking ${HOME}/.local/bin/pbserver -> ${THISDIR}/dotfiles/.bin/_pbutils.sh";
+    # ln -sf "${THISDIR}/dotfiles/.bin/_pbutils.sh" "${HOME}/.local/bin/pbserver";
     ;;
   *)
     # Unsupported OS
