@@ -6,8 +6,7 @@ function _pbserver() {
 }
 
 function _pbpaste() {
-	echo "" | nc host.docker.internal 8122;
-	echo "";
+	socat -u tcp:host.docker.internal:8122 STDIO;
 }
 
 function _pbcopy() {
