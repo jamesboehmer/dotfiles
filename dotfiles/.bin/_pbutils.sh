@@ -10,7 +10,7 @@ function _pbpaste() {
 }
 
 function _pbcopy() {
-	tee <&0 | socat - tcp:host.docker.internal:8121 2>/dev/null;
+	socat -u STDIO tcp:host.docker.internal:8121;
 }
 
 THIS="$(basename ${BASH_SOURCE[0]})";
