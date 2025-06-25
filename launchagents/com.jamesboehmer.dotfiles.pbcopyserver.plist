@@ -7,6 +7,7 @@
     <key>ProgramArguments</key>
     <array>
       <string>/opt/homebrew/bin/socat</string>
+      <string>-u</string>
       <string>tcp-listen:8121,fork,bind=localhost</string>
       <string>EXEC:'pbcopy'</string>
     </array>
