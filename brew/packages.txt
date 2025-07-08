@@ -67,6 +67,7 @@ rbenv
 readline
 redis
 ripgrep
+rust
 sbtenv
 scalaenv
 sdkman-cli

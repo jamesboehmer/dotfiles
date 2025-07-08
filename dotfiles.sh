@@ -28,7 +28,7 @@ case "${KERNEL}" in
     ;;
   *)
     # Unsupported OS
-    echo "Unsupported OS: ${KERNEL}"
-    exit 1
+    # echo "Unsupported OS: ${KERNEL}"
+    # exit 1
     ;;
 esac

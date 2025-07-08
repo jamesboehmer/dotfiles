@@ -22,6 +22,7 @@ trap cleanup EXIT SIGINT SIGQUIT SIGHUP;
 ${THISDIR}/brew.sh && [[ -e /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv);
 ${THISDIR}/apt.sh;
 ${THISDIR}/debian.sh;
+${THISDIR}/cargo.sh;
 ${THISDIR}/ssh.sh;
 ${THISDIR}/starship.sh;
 ${THISDIR}/direnv.sh;

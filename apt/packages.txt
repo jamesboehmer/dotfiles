@@ -2,6 +2,7 @@ asciinema
 autoconf
 awscli
 build-essential
+cargo
 coreutils
 curl
 direnv
