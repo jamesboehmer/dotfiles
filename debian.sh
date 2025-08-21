@@ -23,6 +23,9 @@ curlbininstall "https://github.com/99designs/aws-vault/releases/download/${AWS_V
 YQ_VERSION="v4.45.1";
 curlbininstall "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_${ARCH}" "${HOME}/.local/bin/yq";
 
+OPA_VERSION="latest";
+curlbininstall "https://openpolicyagent.org/downloads/${OPA_VERSION}/opa_{$KERNEL}_{$ARCH}_static" "${HOME}/.local/bin/opa";
+
 K9S_VERSION="v0.50.6";
 CHECKFOR="k9s" curldpkginstall "https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_linux_arm64.deb";
 

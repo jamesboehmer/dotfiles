@@ -54,6 +54,7 @@ ndenv
 netcat
 node
 nodenv
+opa
 openssh
 pcre
 perl-build
