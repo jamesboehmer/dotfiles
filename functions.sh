@@ -130,3 +130,4 @@ export gitcloneinstall;
 export curlbininstall;
 export curlzipinstall;
 export dangerous;
+export curldpkginstall;

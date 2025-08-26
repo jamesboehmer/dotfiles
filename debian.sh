@@ -51,5 +51,6 @@ CHECKFOR="tflint" dangerous "https://raw.githubusercontent.com/terraform-linters
 CHECKFOR="tfsec" dangerous "https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh" "bash";
 CHECKFOR="uv" dangerous "https://astral.sh/uv/install.sh" "sh";
 CHECKFOR="starship" dangerous "https://starship.rs/install.sh" "$SUDO" "FORCE=yes" "sh";
+CHECKFOR="helm" dangerous "https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3" "bash";
 
 [[ "${DOUPDATE}" != "true" ]] && echo "Run again with DOUPDATE=true to force installation of all debian packages.";

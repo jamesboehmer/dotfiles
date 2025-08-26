@@ -33,6 +33,7 @@ go
 goenv
 graphviz
 grep
+helm
 htop
 httpstat
 hub
