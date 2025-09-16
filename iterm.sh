@@ -25,7 +25,7 @@ fi
 
 echo "Setting up iTerm2 profiles...";
 OLD_DEFAULT_PROFILE_GUID="$(defaults read com.googlecode.iterm2 "Default Bookmark Guid" 2>/dev/null)";
-DEFAULT_PROFILE_GUID="$(cat "${THISDIR}/iterm/${PROFILES_JSON}" | jq -r '.Profiles[] | select(.Name=="Dotfiles Default") | .Guid' | head -1)";
+DEFAULT_PROFILE_GUID="$(cat "${THISDIR}/iterm/${PROFILES_JSON}" | jq -r '.Profiles[] | select(.Name=="Dotfiles Atom One Dark") | .Guid' | head -1)";
 if [[ "${DEFAULT_PROFILE_GUID}" == "" ]]; then
     echo "No default iTerm2 profile found in ${PROFILES_JSON}.  You'll need to switch manually.";
 elif [[ "${OLD_DEFAULT_PROFILE_GUID}" != "${DEFAULT_PROFILE_GUID}" ]]; then
