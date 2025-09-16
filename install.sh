@@ -32,6 +32,7 @@ ${THISDIR}/git.sh;
 ${THISDIR}/touchid.sh;
 ${THISDIR}/docker.sh;
 ${THISDIR}/defaults.sh;
+${THISDIR}/asciinema.sh;
 ${THISDIR}/termsvg.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/launchagents.sh;
