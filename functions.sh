@@ -51,6 +51,9 @@ function curlzipinstall() {
 	if [[ "${TARGZ}" == "true" ]]; then
 		EXT=".tar.gz";
 		CMD="tar xzvf";
+	elif [[ "${TARXZ}" == "true" ]]; then
+		EXT=".tar.xz";
+		CMD="tar xvf";
 	else
 		EXT=".zip";
 		CMD="unzip";

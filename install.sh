@@ -34,6 +34,7 @@ ${THISDIR}/docker.sh;
 ${THISDIR}/defaults.sh;
 ${THISDIR}/asciinema.sh;
 ${THISDIR}/termsvg.sh;
+${THISDIR}/jnv.sh;
 ${THISDIR}/jqp.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/launchagents.sh;
