@@ -4,7 +4,8 @@ then
     export SUDO="sudo";
 fi
 
-export KERNEL="$(uname -s | tr '[:upper:]' '[:lower:]')";
+export OKERNEL="$(uname -s)";
+export KERNEL="$(echo ${OKERNEL} | tr '[:upper:]' '[:lower:]')";
 if [[ "${KERNEL}" == "linux" ]]; then
 	export ARCH="$(dpkg --print-architecture)";
 elif [[ "${KERNEL}" == "darwin" ]]; then

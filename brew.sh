@@ -48,9 +48,9 @@ do
 	fi
 done
 
-for package in $(grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt")
+grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt" | while read package
 do
-	if [[ ! -e "${CELLAR_DIR}/${package}" ]]
+	if [[ ! -e "${CELLAR_DIR}/$(echo ${package} | awk -F/ '{print $NF}')" ]]
 	then
 		echo "#### Installing Package: ${package} ####";
 		brew install "${package}";

@@ -41,6 +41,7 @@ imagemagick
 jenv
 jnv
 jq
+noahgorstein/tap/jqp
 jsawk
 jwt-cli
 k9s
