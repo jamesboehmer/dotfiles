@@ -37,6 +37,7 @@ ${THISDIR}/termsvg.sh;
 ${THISDIR}/jnv.sh;
 ${THISDIR}/jqp.sh;
 ${THISDIR}/gh.sh;
+${THISDIR}/gnupg.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/launchagents.sh;
 

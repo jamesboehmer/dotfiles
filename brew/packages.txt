@@ -27,6 +27,7 @@ git-delta
 gh
 glances
 gnu-sed
+gnupg
 gnuplot
 go
 goenv
@@ -60,6 +61,7 @@ openssh
 pcre
 perl-build
 pgpdump
+pinentry-mac
 pipx
 plantuml
 plenv
