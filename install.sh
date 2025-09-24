@@ -27,6 +27,7 @@ ${THISDIR}/ssh.sh;
 ${THISDIR}/starship.sh;
 ${THISDIR}/direnv.sh;
 ${THISDIR}/iterm.sh;
+${THISDIR}/ghostty.sh;
 ${THISDIR}/localrc.sh;
 ${THISDIR}/git.sh;
 ${THISDIR}/touchid.sh;

@@ -6,8 +6,8 @@ deskpad
 diffmerge
 dropbox
 firefox
+ghostty
 git-credential-manager
-gpg-suite
 iina
 iterm2
 jetbrains-toolbox
