@@ -5,3 +5,4 @@ dbcli/tap
 sdkman/tap
 teamookla/speedtest
 ynqa/tap
+noahgorstein/tap

@@ -41,22 +41,16 @@ do
 	if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
 	then
 		echo "#### Cask: ${cask} ####";
-		brew install --cask "${cask}";
-		if [[ $? -ne 0 ]]; then
-			echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
-		fi
+		brew install --cask "${cask}" || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
 	fi
 done
 
 grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt" | while read package
 do
-	if [[ ! -e "${CELLAR_DIR}/$(echo ${package} | awk -F/ '{print $NF}')" ]]
+	if [[ ! -e "${CELLAR_DIR}/${package}" ]]
 	then
 		echo "#### Installing Package: ${package} ####";
-		brew install "${package}";
-		if [[ $? -ne 0 ]]; then
-			echo "Installation of ${package} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
-		fi
+		brew install "${package}" || echo "Installation of ${package} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
 	else
 		echo "#### Already installed: ${package} ####"
 	fi
