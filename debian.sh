@@ -17,8 +17,9 @@ gitcloneinstall "https://github.com/tfutils/tfenv.git" "${HOME}/.tfenv";
 gitcloneinstall "https://github.com/nodenv/nodenv.git" "${HOME}/.nodenv";
 gitcloneinstall "https://github.com/nodenv/node-build.git" "${HOME}/.nodenv/plugins/node-build";
 
-AWS_VAULT_VERSION="v7.2.0";
-curlbininstall "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-${ARCH}" "${HOME}/.local/bin/aws-vault";
+AWS_VAULT_VERSION="v7.7.1";
+curlbininstall "https://github.com/ByteNess/aws-vault/releases/download//${AWS_VAULT_VERSION}/aws-vault-linux-${ARCH}" "${HOME}/.local/bin/aws-vault";
+# curlbininstall "https://github.com/99designs/aws-vault/releases/download/${AWS_VAULT_VERSION}/aws-vault-linux-${ARCH}" "${HOME}/.local/bin/aws-vault";
 
 YQ_VERSION="v4.45.1";
 curlbininstall "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_${ARCH}" "${HOME}/.local/bin/yq";
