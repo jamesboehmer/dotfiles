@@ -7,9 +7,11 @@ TIME="$(date +%Y%m%d%H%M%S)";
 CLEANUPFILE="${1:-${CLEANUPFILE}}"
 
 SSHDIR="${HOME}/.ssh";
+LOCALSSHDIR="${HOME}/.local/.ssh";
 SSHCONFIG="${SSHDIR}/config";
 SSHCONFIGD="${SSHDIR}/config.d";
 THISSSHCONFIGD="${THISDIR}/ssh/config.d"
+LOCALSSHCONFIGD="${LOCALSSHDIR}/config.d"
 
 echo "Configuring ssh...";
 
@@ -34,6 +36,22 @@ EOF
 if [[ -d "${SSHCONFIGD}" && ! -L "${SSHCONFIGD}" ]]; then
     mv "${SSHCONFIGD}" "${SSHCONFIGD}.dotfilebak.${TIME}";
     echo "Your SSH config files were moved to ${SSHCONFIGD}.dotfilebak.${TIME}.  You should put those files in ${HOME}/.local/.ssh/config.d instead";
+fi
+
+if [[ -d "${HOME}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data" ]]; then
+    echo "Creating ${LOCALSSHCONFIGD}/secretiverc...";
+    cat << EOF > "${LOCALSSHCONFIGD}/secretiverc"
+### START DOTFILES CONFIG ###
+### Added by ${THIS} $(date "+%Y-%m-%d %H:%M:%S") ###
+
+Host *
+	IdentityAgent ~/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+	ControlMaster auto
+	ControlPersist 15m
+
+### END DOTFILES CONFIG ###
+EOF
+
 fi
 
 echo "Linking ${SSHCONFIGD} -> ${THISSSHCONFIGD}";
