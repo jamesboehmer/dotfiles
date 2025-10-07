@@ -26,8 +26,7 @@ bindkey -e
 autoload -U select-word-style
 select-word-style bash
 
-alias -s json='jq .'
-
+export SHELL=/bin/zsh
 [[ -e ~/.shell_profile ]] && . ~/.shell_profile &>/dev/null;
 [[ -e ~/.shellrc ]] && . ~/.shellrc &>/dev/null;
 
