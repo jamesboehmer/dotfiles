@@ -2,4 +2,3 @@ copy-on-select = clipboard
 window-height = 34
 window-width = 134
 keybind = shift+enter=text:\x1b\r
-command = "bash"
