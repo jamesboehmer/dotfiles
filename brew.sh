@@ -1,11 +1,15 @@
 #!/bin/bash
 
-[[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping brew." && exit 0; }
+#[[ "$(uname -s)" == "Darwin" ]] || { echo "Not OSX.  Skipping brew." && exit 0; }
 
 THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
+. "${THISDIR}/functions.sh";
 
-if [[ ! -e /opt/homebrew/bin/brew ]]
+[[ $KERNEL == "linux" ]] && BREW="/home/linuxbrew/.linuxbrew/bin/brew";
+[[ $KERNEL == "darwin" ]] && BREW="/opt/homebrew/bin/brew";
+
+if [[ ! -e ${BREW} ]]
 then
 	echo "Installing brew...";
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -14,7 +18,7 @@ else
 fi
 
 # ensure brew is in the path first, otherwise first-time installations fail
-eval $(/opt/homebrew/bin/brew shellenv);
+eval $(${BREW} shellenv);
 
 BREWIGNORE_FILE="${HOME}/.local/brewignore";
 [[ ! -x "${BREWIGNORE_FILE} " ]] && mkdir -p ~/.local && touch "${BREWIGNORE_FILE}";
@@ -35,15 +39,18 @@ do
 	[[ -e "${tapdir}" ]] && echo "Already tapped: ${tap}" || brew tap "${tap}";
 done < ${BASEDIR}/taps.txt
 
-existingcasks=($(brew ls --cask))
-grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/casks.txt" | while read cask
-do
-	if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
-	then
-		echo "#### Cask: ${cask} ####";
-		brew install --cask "${cask}" || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
-	fi
-done
+if [[ "${KERNEL}" == "darwin" ]]
+then
+	existingcasks=($(brew ls --cask))
+	grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/casks.txt" | while read cask
+	do
+		if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
+		then
+			echo "#### Cask: ${cask} ####";
+			brew install --cask "${cask}" || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
+		fi
+	done
+fi
 
 grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt" | while read package
 do
@@ -60,11 +67,14 @@ exit
 
 # Configure homebrew permissions to allow multiple users on MAC OSX.
 # Any user from the admin group will be able to manage the homebrew and cask installation on the machine.
-for brewdir in "${CELLAR_DIR}" "${CASKROOM_DIR}" "/Library/Caches/Homebrew"
-do
-	[[ -e "${brewdir}" ]] || sudo mkdir -p "${brewdir}" &>/dev/null;
-	group="$(/bin/ls -ld "${brewdir}" | awk '{print $4}')";
-	[[ "${group}" == "admin" ]] || sudo chgrp -R admin "${brewdir}";
-	writeable="$(/bin/ls -ld "${brewdir}" | awk '{print substr($1,5,3)}')";
-	[[ "${writeable}" == "rwx" ]] || sudo chmod -R g+w "${brewdir}";
-done
+if [[ "${KERNEL}" == "darwin" ]]
+then
+	for brewdir in "${CELLAR_DIR}" "${CASKROOM_DIR}" "/Library/Caches/Homebrew"
+	do
+		[[ -e "${brewdir}" ]] || sudo mkdir -p "${brewdir}" &>/dev/null;
+		group="$(/bin/ls -ld "${brewdir}" | awk '{print $4}')";
+		[[ "${group}" == "admin" ]] || sudo chgrp -R admin "${brewdir}";
+		writeable="$(/bin/ls -ld "${brewdir}" | awk '{print substr($1,5,3)}')";
+		[[ "${writeable}" == "rwx" ]] || sudo chmod -R g+w "${brewdir}";
+	done
+fi
