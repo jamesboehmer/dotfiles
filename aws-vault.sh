@@ -6,4 +6,4 @@ THISDIR="$(dirname "${THIS}")";
 
 . "${THISDIR}/functions.sh";
 
-checkfor aws-vault || URL="$(get_gh_latest_release ByteNess/aws-vault "aws-vault-linux-${ARCH}")" curlbininstall "${URL}" "${HOME}/.local/bin/aws-vault";
+checkfor aws-vault || curlbininstall "$(get_gh_latest_release ByteNess/aws-vault "aws-vault-${KERNEL}-${ARCH}")" "${HOME}/.local/bin/aws-vault";
