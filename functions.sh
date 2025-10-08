@@ -133,7 +133,6 @@ function curldpkginstall() {
 
 function get_gh_latest_release() {
 	[[ $# -lt 1 ]] && echo "Usage $0 <org/repo> [name_regex]" && return 1;
-
 	REPO="${1}";
 	GH_URL="https://api.github.com/repos/${REPO}/releases/latest";
 	tmpfile="$(mktemp)";
@@ -142,6 +141,7 @@ function get_gh_latest_release() {
 		NAME_PATTERN="${2}";
 		DLURL="$(cat "${tmpfile}" | jq -r ".assets[] | select(.name | test(\"${NAME_PATTERN}\")) | .browser_download_url")";
 		[[ -z "${DLURL}" ]] && echo "No Github download URL for ${REPO} found matching ${NAME_PATTERN}" >&2 && return 1;
+		echo $DLURL;
 	else
 		cat "${tmpfile}";
 	fi
