@@ -21,6 +21,7 @@ fi
 eval $(${BREW} shellenv);
 
 BREWIGNORE_FILE="${HOME}/.local/brewignore";
+
 [[ ! -x "${BREWIGNORE_FILE} " ]] && mkdir -p ~/.local && touch "${BREWIGNORE_FILE}";
 
 HOMEBREW_DIR="$(brew --prefix)";
@@ -31,7 +32,7 @@ export HOMEBREW_NO_ENV_HINTS=1;
 export HOMEBREW_NO_INSTALL_CLEANUP=1;
 
 BASEDIR="${THISDIR}/brew";
-
+LINUXIGNORE_FILE="${BASEDIR}/linuxignore";
 while read tap
 do
 	basetap="$(basename ${tap})";
@@ -52,7 +53,8 @@ then
 	done
 fi
 
-grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/packages.txt" | while read package
+[[ "${KERNEL}" == "linux" ]] && ADDL_IGNORE_ARGS="-v -f ${LINUXIGNORE_FILE}"
+grep -v -f "${BREWIGNORE_FILE}" ${ADDL_IGNORE_ARGS} "${BASEDIR}/packages.txt" | while read package
 do
 	if [[ ! -e "${CELLAR_DIR}/${package}" ]]
 	then
