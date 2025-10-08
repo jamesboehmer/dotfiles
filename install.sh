@@ -22,11 +22,12 @@ function cleanup() {
 trap cleanup EXIT SIGINT SIGQUIT SIGHUP;
 case $KERNEL in
 	linux)  BREW="/home/linuxbrew/.linuxbrew/bin/brew";;
-	darwin) BREW="/opt/homebrew/bin/brew";
+	darwin) BREW="/opt/homebrew/bin/brew";;
 	*) echo "Unsupported kernel :${KERNEL}" && exit 1;;
 esac
 
-${THISDIR}/brew.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
+${THISDIR}/brewinstall.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
+${BREW} install git jq starship direnv
 # ${THISDIR}/apt.sh;
 # ${THISDIR}/debian.sh;
 # ${THISDIR}/cargo.sh;
@@ -49,6 +50,7 @@ ${THISDIR}/gh.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/launchagents.sh;
+${THISDIR}/brewpackages.sh
 
 # Ensure GPG git signatures in codespaces
 [[ "${CODESPACES}" == "true" && -e "${HOME}/.bin/git-gpg-config" ]] && "${HOME}/.bin/git-gpg-config" local codespace;
