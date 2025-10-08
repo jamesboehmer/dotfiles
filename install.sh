@@ -28,8 +28,6 @@ esac
 
 ${THISDIR}/brewinstall.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
 for x in starship direnv jq git; do checkfor $x || ${BREW} install $x; done;
-# ${THISDIR}/apt.sh;
-# ${THISDIR}/cargo.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/starship.sh;
 ${THISDIR}/direnv.sh;
