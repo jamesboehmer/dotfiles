@@ -88,6 +88,5 @@ tree
 uv
 vim
 watch
-youtube-dl
 zlib
 zsh
