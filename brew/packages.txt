@@ -1,5 +1,6 @@
 ansible
 asciinema
+auth0
 autoconf
 awscli
 aws-shell
