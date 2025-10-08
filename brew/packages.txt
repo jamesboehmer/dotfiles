@@ -71,7 +71,6 @@ pyenv
 pyenv-virtualenv
 rbenv
 readline
-redis
 ripgrep
 rust
 sbtenv

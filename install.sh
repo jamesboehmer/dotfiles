@@ -27,14 +27,13 @@ case $KERNEL in
 esac
 
 ${THISDIR}/brewinstall.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
-${BREW} install starship direnv 2>/dev/null;
+for x in starship direnv jq git; do checkfor $x || ${BREW} install $x; done;
 # ${THISDIR}/apt.sh;
 # ${THISDIR}/cargo.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/starship.sh;
 ${THISDIR}/direnv.sh;
 ${THISDIR}/localrc.sh;
-${BREW} install jq git >/dev/null 2>&1; # ensure jq and git are installed for the next scripts
 ${THISDIR}/ssh.sh;
 ${THISDIR}/iterm.sh;
 ${THISDIR}/ghostty.sh;
