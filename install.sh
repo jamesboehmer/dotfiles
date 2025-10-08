@@ -3,6 +3,8 @@
 THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
 THISDIR="$(dirname "${THIS}")";
 
+. "${THISDIR}/functions.sh";
+
 CLEANUPFILE="${1:-${CLEANUPFILE:-$(mktemp)}}"
 export CLEANUPFILE;
 
@@ -18,10 +20,15 @@ function cleanup() {
 }
 
 trap cleanup EXIT SIGINT SIGQUIT SIGHUP;
+case $KERNEL in
+	linux)  BREW="/home/linuxbrew/.linuxbrew/bin/brew";;
+	darwin) BREW="/opt/homebrew/bin/brew";
+	*) echo "Unsupported kernel :${KERNEL}" && exit 1;;
+esac
 
-${THISDIR}/brew.sh && [[ -e /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv);
+${THISDIR}/brew.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
 # ${THISDIR}/apt.sh;
-#${THISDIR}/debian.sh;
+# ${THISDIR}/debian.sh;
 # ${THISDIR}/cargo.sh;
 ${THISDIR}/ssh.sh;
 ${THISDIR}/starship.sh;

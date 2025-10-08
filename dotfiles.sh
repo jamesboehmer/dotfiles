@@ -7,11 +7,18 @@ TIME="$(date +%Y%m%d%H%M%S)";
 CLEANUPFILE="${1:-${CLEANUPFILE}}"
 . "${THISDIR}/functions.sh";
 
-find "${BASEDIR}" -maxdepth 1 -name '.*' | egrep -ve '.DS_Store|.gitignore|.git$' | awk -F'/' '{print $NF}' | while read dotfile
+ln --version 2>/dev/null | grep GNU &>/dev/null;
+
+case "$?" in
+  0) LNARGS="-sTf";; # GNU
+  1) LNARGS="-sF" ;; # BSD
+esac
+
+find "${BASEDIR}" -maxdepth 1 -name '.*' | egrep -ve '.DS_Store|.gitignore|.git$' 2>/dev/null | awk -F'/' '{print $NF}' | while read dotfile
 do
     [[ -e "${HOME}/${dotfile}" && -n "${CLEANUPFILE}" ]] && mv "${HOME}/${dotfile}" "${HOME}/${dotfile}.dotfilebak.${TIME}" && echo "${HOME}/${dotfile}.dotfilebak.${TIME}" >> "${CLEANUPFILE}";
     echo -e "Linking ${HOME}/${dotfile} -> ${BASEDIR}/${dotfile}";
-    ln -sF "${BASEDIR}/${dotfile}" "${HOME}/${dotfile}";
+    ln "${LNARGS}" "${BASEDIR}/${dotfile}" "${HOME}/${dotfile}";
 done
 
 case "${KERNEL}" in

@@ -5,7 +5,7 @@ export COPY_EXTENDED_ATTRIBUTES_DISABLE=true
 export COPYFILE_DISABLE=true
 export ANSIBLE_HOST_KEY_CHECKING=False
 export BASH_SILENCE_DEPRECATION_WARNING=1;
-export PATH="${HOME}/.local/bin:${HOME}/.private/.bin:${HOME}/.bin:/opt/homebrew/bin:$PATH";
+export PATH="${HOME}/.local/bin:${HOME}/.private/.bin:${HOME}/.bin:/opt/homebrew/bin:/home/linuxbrew/.linuxbrew/bin:$PATH";
 export STARSHIP_CONFIG="${HOME}/.config/starship.toml";
 export SDKMAN_DIR="${HOME}/.sdkman";
 # Set EDITOR from least to most preferable.
