@@ -46,7 +46,6 @@ ${THISDIR}/gh.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
-${THISDIR}/asciinema.sh;
 ${THISDIR}/aws-vault.sh;
 ${THISDIR}/flux.sh;
 ${THISDIR}/tflint.sh;
