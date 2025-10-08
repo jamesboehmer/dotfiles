@@ -42,7 +42,6 @@ ${THISDIR}/touchid.sh;
 ${THISDIR}/docker.sh;
 ${THISDIR}/kubectl.sh;
 ${THISDIR}/defaults.sh;
-${THISDIR}/gh.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
