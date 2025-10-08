@@ -29,7 +29,6 @@ esac
 ${THISDIR}/brewinstall.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
 ${BREW} install starship direnv 2>/dev/null;
 # ${THISDIR}/apt.sh;
-# ${THISDIR}/debian.sh;
 # ${THISDIR}/cargo.sh;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/starship.sh;
@@ -51,7 +50,11 @@ ${THISDIR}/jqp.sh;
 ${THISDIR}/gh.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
-${THISDIR}/brewpackages.sh
+${THISDIR}/brewpackages.sh;
+${THISDIR}/aws-vault.sh;
+${THISDIR}/flux.sh;
+${THISDIR}/tflint.sh;
+
 
 # Ensure GPG git signatures in codespaces
 [[ "${CODESPACES}" == "true" && -e "${HOME}/.bin/git-gpg-config" ]] && "${HOME}/.bin/git-gpg-config" local codespace;

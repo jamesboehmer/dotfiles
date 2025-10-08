@@ -6,8 +6,4 @@ THISDIR="$(dirname "${THIS}")";
 
 . "${THISDIR}/functions.sh";
 
-VERSION="2.79.0";
-
-URL="https://github.com/cli/cli/releases/download/v${VERSION}/gh_${VERSION}_${KERNEL}_${ARCH}.tar.gz"
-
-which gh &>/dev/null || TARGZ=true curlzipinstall "${URL}" "${HOME}/.local/bin" "gh_${VERSION}_${KERNEL}_${ARCH}/bin/gh";
+checkfor gh || URL="$(get_gh_latest_release cli/cli "gh_.+_${KERNEL}_${ARCH}.tar.gz")" TARGZ=true curlzipinstall "${URL}" "${HOME}/.local/bin" "gh_${VERSION}_${KERNEL}_${ARCH}/bin/gh";

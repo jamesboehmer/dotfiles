@@ -10,7 +10,6 @@ function loadAliases {
     alias goenvinit='eval "$(goenv init - --no-rehash)"';
     alias pyenvinit='eval "$(pyenv init - --no-rehash)" && eval "$(pyenv virtualenv-init init - --no-rehash)"';
     alias sm='smerge mergetool';
-    alias yq='docker run -i --rm mikefarah/yq';
     type /opt/homebrew/opt/nvm/nvm.sh &>/dev/null && alias nvminit='source /opt/homebrew/opt/nvm/nvm.sh';
 }
 

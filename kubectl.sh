@@ -9,4 +9,4 @@ THISDIR="$(dirname "${THIS}")";
 VERSION="$(curl -L -s https://dl.k8s.io/release/stable.txt)";
 URL="https://dl.k8s.io/release/${VERSION}/bin/${KERNEL}/${ARCH}/kubectl";
 
-checkfor kubectl && [[ $DOUPDATE != "true" ]] || curlbininstall "${URL}" "${HOME}/.local/bin/kubectl"
+checkfor kubectl || curlbininstall "${URL}" "${HOME}/.local/bin/kubectl";

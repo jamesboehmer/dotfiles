@@ -1,6 +1,10 @@
 #!/bin/bash
 
-type starship &>/dev/null || { echo "No Starship.  Skipping starship config." && exit 0; }
+THIS="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/$(basename ${BASH_SOURCE[0]})";
+THISDIR="$(dirname "${THIS}")";
+. "${THISDIR}/functions.sh";
+
+checkfor starship || dangerous "https://starship.rs/install.sh" "$SUDO" "FORCE=yes" "sh";
 
 echo "Configuring starship...";
 

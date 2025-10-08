@@ -19,6 +19,7 @@ docker-compose
 docker-credential-helper
 dry
 findutils
+flux
 fx
 gawk
 git
@@ -63,6 +64,7 @@ perl-build
 pgpdump
 pinentry-mac
 pipx
+poetry
 plantuml
 plenv
 pyenv
@@ -80,6 +82,7 @@ socat
 speedtest
 sqlite
 starship
+tfenv
 tflint
 tfsec
 tree
