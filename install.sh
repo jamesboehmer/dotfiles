@@ -32,6 +32,7 @@ ${THISDIR}/localrc.sh;
 ${THISDIR}/git.sh;
 ${THISDIR}/touchid.sh;
 ${THISDIR}/docker.sh;
+${THISDIR}/kubectl.sh;
 ${THISDIR}/defaults.sh;
 ${THISDIR}/asciinema.sh;
 ${THISDIR}/termsvg.sh;
