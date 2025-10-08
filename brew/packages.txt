@@ -68,6 +68,7 @@ pgpdump
 pinentry-mac
 pipx
 poetry
+postgresql@18
 plantuml
 plenv
 pyenv
