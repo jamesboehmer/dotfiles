@@ -27,16 +27,17 @@ case $KERNEL in
 esac
 
 ${THISDIR}/brewinstall.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
-${BREW} install git jq starship direnv
+${BREW} install starship direnv 2>/dev/null;
 # ${THISDIR}/apt.sh;
 # ${THISDIR}/debian.sh;
 # ${THISDIR}/cargo.sh;
-${THISDIR}/ssh.sh;
+${THISDIR}/dotfiles.sh;
 ${THISDIR}/starship.sh;
 ${THISDIR}/direnv.sh;
+${THISDIR}/localrc.sh;
+${THISDIR}/ssh.sh;
 ${THISDIR}/iterm.sh;
 ${THISDIR}/ghostty.sh;
-${THISDIR}/localrc.sh;
 ${THISDIR}/git.sh;
 ${THISDIR}/touchid.sh;
 ${THISDIR}/docker.sh;
@@ -48,7 +49,6 @@ ${THISDIR}/jnv.sh;
 ${THISDIR}/jqp.sh;
 ${THISDIR}/gh.sh;
 ${THISDIR}/gnupg.sh;
-${THISDIR}/dotfiles.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh
 
