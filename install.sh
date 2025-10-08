@@ -35,6 +35,7 @@ ${THISDIR}/dotfiles.sh;
 ${THISDIR}/starship.sh;
 ${THISDIR}/direnv.sh;
 ${THISDIR}/localrc.sh;
+${BREW} install jq git >/dev/null 2>&1; # ensure jq and git are installed for the next scripts
 ${THISDIR}/ssh.sh;
 ${THISDIR}/iterm.sh;
 ${THISDIR}/ghostty.sh;
