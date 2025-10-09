@@ -48,7 +48,7 @@ then
 		if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
 		then
 			echo "#### Cask: ${cask} ####";
-			brew install --cask "${cask}" || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
+			brew install --cask "${cask}"  < /dev/null; # brew consumes from stdin so give it null || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
 		fi
 	done
 fi
@@ -56,10 +56,11 @@ fi
 [[ "${KERNEL}" == "linux" ]] && ADDL_IGNORE_ARGS="-v -f ${LINUXIGNORE_FILE}"
 grep -v -f "${BREWIGNORE_FILE}" ${ADDL_IGNORE_ARGS} "${BASEDIR}/packages.txt" | while read package
 do
-	if [[ ! -e "${CELLAR_DIR}/${package}" ]]
+	if [[ ! -e "${CELLAR_DIR}/$(basename ${package})" ]]
 	then
 		echo "#### Installing Package: ${package} ####";
-		brew install "${package}" || echo "Installation of ${package} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
+		brew install "${package}" < /dev/null; # brew consumes from stdin so give it null
+		[[ $? -ne 0 ]] && echo "Installation of ${package} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
 	else
 		echo "#### Already installed: ${package} ####"
 	fi

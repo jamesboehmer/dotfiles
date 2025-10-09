@@ -23,7 +23,7 @@ docker-compose
 docker-credential-helper
 dry
 findutils
-flux
+fluxcd/tap/flux
 fx
 gawk
 git
