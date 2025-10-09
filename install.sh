@@ -43,7 +43,6 @@ ${THISDIR}/defaults.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
-${THISDIR}/aws-vault.sh;
 
 
 # Ensure GPG git signatures in codespaces
