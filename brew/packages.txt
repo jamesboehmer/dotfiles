@@ -10,6 +10,7 @@ aws-vault
 awslogs
 basex
 bat
+bind
 btop
 calc
 colima
