@@ -44,7 +44,6 @@ ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
 ${THISDIR}/aws-vault.sh;
-${THISDIR}/tflint.sh;
 
 
 # Ensure GPG git signatures in codespaces

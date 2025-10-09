@@ -33,6 +33,7 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1;
 
 BASEDIR="${THISDIR}/brew";
 LINUXIGNORE_FILE="${BASEDIR}/linuxignore";
+LINUXBUILDBOTTLE_FILE="${BASEDIR}/linuxbuildbottle";
 while read tap
 do
 	basetap="$(basename ${tap})";
@@ -53,13 +54,15 @@ then
 	done
 fi
 
-[[ "${KERNEL}" == "linux" ]] && ADDL_IGNORE_ARGS="-v -f ${LINUXIGNORE_FILE}"
+[[ "${KERNEL}" == "linux" ]] && ADDL_IGNORE_ARGS="-v -f ${LINUXIGNORE_FILE}" && BUILDBOTTLE_FILE="${LINUXBUILDBOTTLE_FILE}";
 grep -v -f "${BREWIGNORE_FILE}" ${ADDL_IGNORE_ARGS} "${BASEDIR}/packages.txt" | while read package
 do
+	BUILDBOTTLEARG=""
 	if [[ ! -e "${CELLAR_DIR}/$(basename ${package})" ]]
 	then
 		echo "#### Installing Package: ${package} ####";
-		brew install "${package}" < /dev/null; # brew consumes from stdin so give it null
+		[[ -e "${BUILDBOTTLE_FILE}" ]] && grep -e "^${package}$" "${BUILDBOTTLE_FILE}" &>/dev/null && BUILDBOTTLEARG="--build-bottle";
+		brew install ${BUILDBOTTLEARG} "${package}" < /dev/null; # brew consumes from stdin so give it null
 		[[ $? -ne 0 ]] && echo "Installation of ${package} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
 	else
 		echo "#### Already installed: ${package} ####"
