@@ -93,5 +93,6 @@ tree
 uv
 vim
 watch
+yq
 zlib
 zsh
