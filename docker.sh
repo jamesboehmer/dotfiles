@@ -19,5 +19,5 @@ DOCKERCONFIGTMP="$(mktemp)";
 [[ "${KERNEL}" == "darwin" ]] && echo "Setting credsStore to osxkeychain" && cat "${DOCKERCONFIG}" | jq '.credsStore="osxkeychain"' > "${DOCKERCONFIGTMP}" && mv "${DOCKERCONFIGTMP}" "${DOCKERCONFIG}";
 
 for PLUGINDIR in ${PLUGINDIRS[@]}; do
-    [[ -e "${PLUGINDIR}" ]] && echo "Adding ${PLUGINDIR} to cliPluginsExtraDirs" && cat "${DOCKERCONFIG}" | jq --arg PLUGINDIR "${PLUGINDIR}" '.cliPluginsExtraDirs=((.cliPluginsExtraDirs // [])  + [$PLUGINDIR] | sort | unique)' > "${DOCKERCONFIGTMP}"; mv "${DOCKERCONFIGTMP}" "${DOCKERCONFIG}";
+    [[ -e "${PLUGINDIR}" ]] && echo "Adding ${PLUGINDIR} to cliPluginsExtraDirs" && cat "${DOCKERCONFIG}" | jq --arg PLUGINDIR "${PLUGINDIR}" '.cliPluginsExtraDirs=((.cliPluginsExtraDirs // [])  + [$PLUGINDIR] | sort | unique)' > "${DOCKERCONFIGTMP}" && mv "${DOCKERCONFIGTMP}" "${DOCKERCONFIG}";
 done
