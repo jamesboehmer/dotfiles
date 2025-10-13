@@ -13,8 +13,9 @@ PLUGINDIRS=("${BREWPREFIX}/lib/docker/cli-plugins" "/usr/libexec/docker/cli-plug
 
 mkdir -p $(dirname ${DOCKERCONFIG});
 
-[[ ! -e ${DOCKERCONFIG} ]] && echo '{}' > "${DOCKERCONFIG}";
+[[ ! -e ${DOCKERCONFIG} || "$(cat ~/.docker/config.json)" == "" ]] && echo '{}' > "${DOCKERCONFIG}";
 
+set -x
 DOCKERCONFIGTMP="$(mktemp)";
 [[ "${KERNEL}" == "darwin" ]] && echo "Setting credsStore to osxkeychain" && cat "${DOCKERCONFIG}" | jq '.credsStore="osxkeychain"' > "${DOCKERCONFIGTMP}" && mv "${DOCKERCONFIGTMP}" "${DOCKERCONFIG}";
 
