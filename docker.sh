@@ -15,7 +15,6 @@ mkdir -p $(dirname ${DOCKERCONFIG});
 
 [[ ! -e ${DOCKERCONFIG} || "$(cat ~/.docker/config.json)" == "" ]] && echo '{}' > "${DOCKERCONFIG}";
 
-set -x
 DOCKERCONFIGTMP="$(mktemp)";
 [[ "${KERNEL}" == "darwin" ]] && echo "Setting credsStore to osxkeychain" && cat "${DOCKERCONFIG}" | jq '.credsStore="osxkeychain"' > "${DOCKERCONFIGTMP}" && mv "${DOCKERCONFIGTMP}" "${DOCKERCONFIG}";
 
