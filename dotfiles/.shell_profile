@@ -12,6 +12,7 @@ export SDKMAN_DIR="${HOME}/.sdkman";
 type nano &>/dev/null && export VISUAL="nano";
 type vim &>/dev/null && export VISUAL="vim";
 type subl &>/dev/null && export VISUAL="subl -w";
+[[ "${TERM_PROGRAM}" == "zed" ]] && export VISUAL="zed -w";
 [[ -x /usr/local/bin/code ]] &>/dev/null && export VISUAL="code -w";
 export EDITOR="${VISUAL}";
 export GIT_EDITOR="${EDITOR}";
