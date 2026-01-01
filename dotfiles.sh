@@ -14,6 +14,8 @@ case "$?" in
   1) LNARGS="-sF" ;; # BSD
 esac
 
+mkdir -p ${HOME}/.local/bin;
+
 find "${BASEDIR}" -maxdepth 1 -name '.*' | egrep -ve '.DS_Store|.gitignore|.git$' 2>/dev/null | awk -F'/' '{print $NF}' | while read dotfile
 do
     [[ -e "${HOME}/${dotfile}" && -n "${CLEANUPFILE}" ]] && mv "${HOME}/${dotfile}" "${HOME}/${dotfile}.dotfilebak.${TIME}" && echo "${HOME}/${dotfile}.dotfilebak.${TIME}" >> "${CLEANUPFILE}";
