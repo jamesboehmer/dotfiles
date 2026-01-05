@@ -21,3 +21,5 @@
 .sdkmanrc
 .vscode
 __pycache__
+.terraform.*
+*.tfstate
