@@ -5,7 +5,7 @@ case $(uname -s) in
 		for i in $(seq 1 10); do /usr/bin/time -h $SHELL -i -c exit; done
 		;;
 	Linux )
-		for i in $(seq 1 10); do /usr/bin/time -f "\t%E real\t%U user\t%S sys" $SHELL -i -c exit; done
+		for i in $(seq 1 10); do time $SHELL -i -c exit; done
 		;;
 	* )
 		"Unsupported system"
