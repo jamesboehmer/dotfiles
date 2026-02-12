@@ -45,3 +45,13 @@ newlocalrcfile goenvrc 'GOENV_ROOT' '$HOME/.goenv' 'PATH' '$GOENV_ROOT/bin:$PATH
 newlocalrcfile tfenvrc 'PATH' '$HOME/.tfenv/bin:$PATH';
 newlocalrcfile nodenvrc 'PATH' '$HOME/.nodenv/bin:$PATH';
 newlocalrcfile pipxrc 'PIPX_DEFAULT_PYTHON' 'python';
+newlocalrcfile kubectlrc && cat >> "${HOME}/.local/kubectlrc" <<EOF
+alias k='kubectl';
+EOF
+
+newlocalrcfile terraformrc && cat >> "${HOME}/.local/terraformrc" <<'EOF'
+alias t='terraform'
+export TF_PLUGIN_CACHE_DIR="$HOME/.config/terraform.d/plugin-cache";
+[[ -e $TF_PLUGIN_CACHE_DIR ]] || mkdir -p $TF_PLUGIN_CACHE_DIR;
+EOF
+
