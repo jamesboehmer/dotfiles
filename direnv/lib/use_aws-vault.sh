@@ -3,8 +3,6 @@ use_aws-vault() {
 #
 # Invokes aws-vault to create  AWS environment variables for the specified profile.
 # The environment variables are stored in a file under the direnv layout directory.
-    # which aws-vault &>/dev/null;
-    # [[ $? -ne 0 ]] && 
     has aws-vault || { log_error "aws-vault is not installed" && return 1; }
     [[ $# -lt 1 ]] && log_error "Usage: aws-vault <profile>" && return 1;
     profile=$1;
