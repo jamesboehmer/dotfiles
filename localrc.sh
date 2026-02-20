@@ -55,3 +55,12 @@ export TF_PLUGIN_CACHE_DIR="$HOME/.config/terraform.d/plugin-cache";
 [[ -e $TF_PLUGIN_CACHE_DIR ]] || mkdir -p $TF_PLUGIN_CACHE_DIR;
 EOF
 
+if [[ "${USER}" == "vscode" ]]; then
+	newlocalrcfile sshauthsockrc && cat >> "${HOME}/.local/sshauthsockrc" << 'EOF'
+mkdir -p $HOME/.ssh;
+ln -sf "$(/bin/ls -t /tmp/vscode-ssh-auth-* 2>/dev/null | head -1)" "$HOME/.ssh/vscode-agent.sock" 2>/dev/null
+if [[ -e "$HOME/.ssh/vscode-agent.sock" ]]; then
+	export SSH_AUTH_SOCK="$HOME/.ssh/vscode-agent.sock"
+fi
+EOF
+fi
