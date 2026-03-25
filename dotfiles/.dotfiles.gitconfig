@@ -133,7 +133,7 @@
 	lock = !git crypt lock
 	unlock = !git crypt unlock
 	dotfiles = !git pull && ./install.sh
-	main = !git switch main && git pull
+	main = !git fetch origin main:main && git switch main
 [credential]
 	helper = cache --timeout=30000
 [pull]
