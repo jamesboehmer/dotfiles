@@ -52,7 +52,11 @@ use_aws-vault() {
         }
         cat > "${bin_dir}/${cmd}" <<WRAPPER
 #!/usr/bin/env bash
-exec aws-vault exec "${cmd_profile}" -- "${original}" "\$@"
+if [[ -n "\${AWS_PROFILE:-}" ]] || { [[ -n "\${AWS_ACCESS_KEY_ID:-}" ]] && [[ -n "\${AWS_SECRET_ACCESS_KEY:-}" ]]; }; then
+    exec "${original}" "\$@"
+else
+    exec aws-vault exec "${cmd_profile}" -- "${original}" "\$@"
+fi
 WRAPPER
         chmod +x "${bin_dir}/${cmd}"
     done
