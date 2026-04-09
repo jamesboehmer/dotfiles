@@ -29,6 +29,11 @@ case "${KERNEL}" in
       echo "Linking ${HOME}/.local/bin/${x} -> ${THISDIR}/dotfiles/.bin/_pbutils.sh";
       ln -sf "${THISDIR}/dotfiles/.bin/_pbutils.sh" "${HOME}/.local/bin/${x}";
     done
+    # ensure if we're in a devcontainer that's not a github codespace that we intercept gpg-agent so that socat can run and tunnel the agent socket to the host
+    if [[ ("${DEVCONTAINER}" == "true" || "${REMOTE_CONTAINERS}" == "true") && ("${ENABLE_GPG_AGENT}" != "true" && "${CODESPACES}" != "true" && "${GITHUB_CODESPACES}" != "true")]]; then
+      echo "Linking ${HOME}/.local/bin/gpg-agent -> ${THISDIR}/dotfiles/.bin/_gpg-agent.sh (set ENABLE_GPG_AGENT=true to disable)";
+      ln -sf "${THISDIR}/dotfiles/.bin/_gpg-agent.sh" "${HOME}/.local/bin/gpg-agent";
+    fi
     ;;
   darwin)
     # This is now a launchagent
