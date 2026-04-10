@@ -33,6 +33,8 @@ case "${KERNEL}" in
     if [[ ("${DEVCONTAINER}" == "true" || "${REMOTE_CONTAINERS}" == "true") && ("${ENABLE_GPG_AGENT}" != "true" && "${CODESPACES}" != "true" && "${GITHUB_CODESPACES}" != "true")]]; then
       echo "Linking ${HOME}/.local/bin/gpg-agent -> ${THISDIR}/dotfiles/.bin/_gpg-agent.sh (set ENABLE_GPG_AGENT=true to disable)";
       ln -sf "${THISDIR}/dotfiles/.bin/_gpg-agent.sh" "${HOME}/.local/bin/gpg-agent";
+      echo "Creating ${HOME}/.local/gpgagentrc";
+      echo '$HOME/.local/bin/gpg-agent' > ${HOME}/.local/gpgagentrc;
     fi
     ;;
   darwin)
