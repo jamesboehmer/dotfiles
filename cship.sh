@@ -6,7 +6,7 @@ THISDIR="$(dirname "${THIS}")";
 
 checkfor cship || dangerous "https://cship.dev/install.sh" "bash";
 
-CLAUDECONFIG="${HOME}/.claude/config.json";
+CLAUDECONFIG="${HOME}/.claude/settings.json";
 [[ ! -e ${CLAUDECONFIG} || "$(cat ${CLAUDECONFIG})" == "" ]] && echo '{}' > "${CLAUDECONFIG}";
 
 CLAUDECONFIGTMP="$(mktemp)";
