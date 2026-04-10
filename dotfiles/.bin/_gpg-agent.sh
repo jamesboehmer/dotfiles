@@ -4,18 +4,35 @@ if [[ -n "${DEBUG}" ]]; then
     set -x
 fi
 
-# Kill any existing gpg-agent
-pkill -9 -x gpg-agent
-sleep 0.5
-
 # Set up GPG agent socket forwarding via socat
 SOCKET=$HOME/.gnupg/S.gpg-agent
 PROCESS="socat.*${SOCKET}.*:8125"
 
+# Kill any existing gpg-agent
+GPGAGENTPID="$(pgrep gpg-agent)";
+echo $GPGAGENTPID
+if [[ "${GPGAGENTPID}" != "" ]]; then
+    OLDPATH="$(dirname $(which gpg))/gpg-agent";
+    [[ -n "${DEBUG}" ]] && echo "Killing gpg-agent..."
+    kill -9 "${GPGAGENTPID}";
+    mv "${OLDPATH}" "${OLDPATH}.old";
+    if [[ -s "${OLDPATH}.old" ]]; then
+        OLDTARGETPATH="$(readlink -f "${OLDPATH}.old")";
+        mv "${OLDTARGETPATH}" "${OLDTARGETPATH}.old";
+    fi
+    SOCATPID="$(pgrep -f "${PROCESS}")";
+    if [[ "${SOCATPID}" != "" ]]; then
+        [[ -n "${DEBUG}" ]] && echo "Killing socat..."
+        kill -9 "${SOCATPID}";
+    fi
+fi
+
+
 # Check if socat is already running AND controlling the socket
-if pgrep -f "${PROCESS}" > /dev/null; then
+SOCATPID="$(pgrep -f "${PROCESS}")";
+if [[ "${SOCATPID}" != "" ]]; then
     # Socat process exists - check if it's actually controlling our socket
-    if [ -S "$SOCKET" ] && fuser "$SOCKET" > /dev/null 2>&1; then
+    if [ -S "$SOCKET" ] && [[ $(fuser $SOCKET | tail -1 | awk '{print $NF}') == "${SOCATPID}" ]] > /dev/null 2>&1; then
         [[ -n "${DEBUG}" ]] && echo "Socat already running and controlling $SOCKET, skipping restart"
         exit 0
     else
