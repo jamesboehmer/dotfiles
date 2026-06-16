@@ -9,6 +9,8 @@ TIME="$(date +%Y%m%d%H%M%S)";
 CLEANUPFILE="${1:-${CLEANUPFILE}}"
 . "${THISDIR}/functions.sh";
 
+mkdir -p ${HOME}/Library/LaunchAgents;
+
 find "${BASEDIR}" -maxdepth 1 -name '*.plist' | awk -F'/' '{print $NF}' | while read plistfile
 do
     [[ -e "${HOME}/${plistfile}" && -n "${CLEANUPFILE}" ]] && mv "${HOME}/${plistfile}" "${HOME}/${plistfile}.plistfilebak.${TIME}" && echo "${HOME}/${plistfile}.plistfilebak.${TIME}" >> "${CLEANUPFILE}";
