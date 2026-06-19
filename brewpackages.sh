@@ -39,6 +39,7 @@ do
 	basetap="$(basename ${tap})";
 	tapdir="${HOMEBREW_DIR}/Library/Taps/${tap/$basetap/homebrew-$basetap}"
 	[[ -e "${tapdir}" ]] && echo "Already tapped: ${tap}" || brew tap "${tap}";
+	[[ -e "${HOME}/.homebrew/trust.json" ]] && cat "${HOME}/.homebrew/trust.json" | grep terraform-linters/tap &>/dev/null && echo "Already trusted: ${tap}" || brew trust "${tap}";
 done < ${BASEDIR}/taps.txt
 
 if [[ "${KERNEL}" == "darwin" ]]

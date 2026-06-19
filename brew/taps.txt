@@ -8,3 +8,4 @@ teamookla/speedtest
 ynqa/tap
 noahgorstein/tap
 fluxcd/tap
+terraform-linters/tap
