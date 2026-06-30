@@ -40,4 +40,6 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
         git config --file ${LOCALGITCONFIGFILE} mergetool.smerge.trustExitCode true
         git config --file ${LOCALGITCONFIGFILE} merge.tool "smerge"
     fi
+elif [[ "${REMOTE_CONTAINERS}" == "true" ]]; then
+    git config --file ${LOCALGITCONFIGFILE} credential.helper "store"
 fi
