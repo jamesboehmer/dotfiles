@@ -9,6 +9,8 @@ THISDIR="$(dirname "${THIS}")";
 [[ $KERNEL == "linux" ]] && BREW="/home/linuxbrew/.linuxbrew/bin/brew";
 [[ $KERNEL == "darwin" ]] && BREW="/opt/homebrew/bin/brew";
 
+export NONINTERACTIVE=1;
+
 if [[ ! -e ${BREW} ]]
 then
 	echo "Installing brew...";
