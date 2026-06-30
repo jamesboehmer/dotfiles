@@ -33,6 +33,7 @@ findutils
 fluxcd/tap/flux
 fx
 gawk
+git-credential-libsecret
 glances
 gnu-sed
 gnupg

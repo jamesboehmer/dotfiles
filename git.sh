@@ -22,10 +22,13 @@ GITINCLUDESTMP="$(mktemp)";
 git config --file ${GITCONFIGFILE} --get-all include.path | grep -v "$(basename $DOTFILESGITCONFIGFILE)" > "${GITINCLUDESTMP}";
 git config --file ${GITCONFIGFILE} --unset-all include.path;
 git config --file ${GITCONFIGFILE} include.path "${DOTFILESGITCONFIGFILE}";
-git config --file ${GITCONFIGFILE} credential.usehttppath true
+git config --file ${GITCONFIGFILE} credential.usehttppath true;
 cat "${GITINCLUDESTMP}" | while read include; do
     git config --file ${GITCONFIGFILE} --add include.path "${include}";
 done
+
+which git-credential-libsecret &>/dev/null;
+[[ $? -eq 0 ]] && git config --file ${LOCALGITCONFIGFILE} credential.helper libsecret;
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     echo "Configuring ${LOCALGITCONFIGFILE}";
