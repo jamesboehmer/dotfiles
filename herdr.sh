@@ -34,8 +34,8 @@ jq --argjson newkeys "${NEW_KEYS}" '
 
 herdr server reload-config 2>/dev/null;
 
-[[ "${REINSTALL_PLUGINS}" == "true" || ! -f ${HOME}/.claude/skills/herdr/SKILL.md ]] && DISABLE_TELEMETRY=1 npx skills add ogulcancelik/herdr --skill herdr -g -a claude-code -y
-[[ "${REINSTALL_PLUGINS}" == "true" || ! -f ${HOME}/.agents/skills/herdr/SKILL.md ]] && DISABLE_TELEMETRY=1 npx skills add ogulcancelik/herdr --skill herdr -g -a codex -y
+[[ "${REINSTALL_PLUGINS}" == "true" || ! -f ${HOME}/.claude/skills/herdr/SKILL.md ]] && DISABLE_TELEMETRY=1 npx -y skills add ogulcancelik/herdr --skill herdr -g -a claude-code -y
+[[ "${REINSTALL_PLUGINS}" == "true" || ! -f ${HOME}/.agents/skills/herdr/SKILL.md ]] && DISABLE_TELEMETRY=1 npx -y skills add ogulcancelik/herdr --skill herdr -g -a codex -y
 
 [[ "${REINSTALL_PLUGINS}" == "true" ]] || echo "Set REINSTALL_PLUGINS=true to force update herdr plugins and skills";
 
