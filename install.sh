@@ -8,6 +8,9 @@ THISDIR="$(dirname "${THIS}")";
 CLEANUPFILE="${1:-${CLEANUPFILE:-$(mktemp)}}"
 export CLEANUPFILE;
 
+export HOMEBREW_NO_ASK=1;
+export NONINTERACTIVE=1;
+
 function cleanup() {
 	# Clean up the old symlinks
 	if [[ -z "${SKIPCLEANUP}" ]]; then
@@ -43,6 +46,7 @@ ${THISDIR}/defaults.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
+${THISDIR}/herdr.sh;
 
 
 # Ensure GPG git signatures in codespaces

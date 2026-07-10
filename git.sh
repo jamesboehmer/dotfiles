@@ -32,7 +32,7 @@ which git-credential-libsecret &>/dev/null;
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     echo "Configuring ${LOCALGITCONFIGFILE}";
-    git config --file ${LOCALGITCONFIGFILE} credential.helper "osxkeychain"
+    git config --file ${LOCALGITCONFIGFILE} credential.helper "manager"
     git config --file ${LOCALGITCONFIGFILE} mergetool.prompt false
     git config --file ${LOCALGITCONFIGFILE} core.pager "delta"
     if [[ $(type smerge &>/dev/null; echo $?) -eq 0 ]]; then

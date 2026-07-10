@@ -2,10 +2,13 @@
 bartender
 bettertouchtool
 charles
+codex
+copilot-cli
 deskpad
 diffmerge
 dropbox
 firefox
+font-fira-code
 ghostty
 git-credential-manager
 iina
@@ -32,4 +35,3 @@ telegram
 vlc
 wireshark
 zeplin
-font-fira-code
