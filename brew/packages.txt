@@ -92,7 +92,6 @@ speedtest
 sqlite
 starship
 tfenv
-tflint
 tfsec
 tmux
 tree

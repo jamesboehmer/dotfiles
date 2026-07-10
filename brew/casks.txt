@@ -32,6 +32,7 @@ stats
 sublime-merge
 sublime-text
 telegram
+tflint
 vlc
 wireshark
 zeplin
