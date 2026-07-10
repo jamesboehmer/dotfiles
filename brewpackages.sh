@@ -37,6 +37,7 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1;
 BASEDIR="${THISDIR}/brew";
 LINUXIGNORE_FILE="${BASEDIR}/linuxignore";
 LINUXBUILDBOTTLE_FILE="${BASEDIR}/linuxbuildbottle";
+LINUXCASKS_FILE="${BASEDIR}/linuxcasks.txt";
 while read tap
 do
 	basetap="$(basename ${tap})";
@@ -45,18 +46,19 @@ do
 	[[ -e "${HOME}/.homebrew/trust.json" ]] && cat "${HOME}/.homebrew/trust.json" | grep terraform-linters/tap &>/dev/null && echo "Already trusted: ${tap}" || brew trust "${tap}";
 done < ${BASEDIR}/taps.txt
 
-if [[ "${KERNEL}" == "darwin" ]]
-then
-	existingcasks=($(brew ls --cask))
-	grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/casks.txt" | while read cask
-	do
-		if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
-		then
-			echo "#### Cask: ${cask} ####";
-			brew install --cask "${cask}"  < /dev/null; # brew consumes from stdin so give it null || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
-		fi
-	done
-fi
+# Casks live in casks.txt (the master list). Most are macOS-only, so on Linux
+# we install only the compatible subset named in linuxcasks.txt (an allowlist).
+CASK_FILTER="cat";
+[[ "${KERNEL}" == "linux" ]] && CASK_FILTER="grep -x -f ${LINUXCASKS_FILE}";
+existingcasks=($(brew ls --cask))
+grep -v -f "${BREWIGNORE_FILE}" "${BASEDIR}/casks.txt" | ${CASK_FILTER} | while read cask
+do
+	if [[ ! -e ${CASKROOM_DIR}/${cask} ]]
+	then
+		echo "#### Cask: ${cask} ####";
+		brew install --cask "${cask}"  < /dev/null; # brew consumes from stdin so give it null || echo "Installation of ${cask} failed.  Consider adding it to ${BREWIGNORE_FILE} to ignore it next time.";
+	fi
+done
 
 [[ "${KERNEL}" == "linux" ]] && ADDL_IGNORE_ARGS="-v -f ${LINUXIGNORE_FILE}" && BUILDBOTTLE_FILE="${LINUXBUILDBOTTLE_FILE}";
 grep -v -f "${BREWIGNORE_FILE}" ${ADDL_IGNORE_ARGS} "${BASEDIR}/packages.txt" | while read package
