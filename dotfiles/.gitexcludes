@@ -26,3 +26,5 @@ __pycache__
 .sandbox
 .claude
 **/.claude/**
+**/.worktree/**
+**/.worktrees/**
