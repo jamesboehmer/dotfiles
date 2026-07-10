@@ -64,3 +64,8 @@ if [[ -e "$HOME/.ssh/vscode-agent.sock" ]]; then
 fi
 EOF
 fi
+
+newlocalrcfile vscoderc.poststarship && cat >> "${HOME}/.local/vscoderc.poststarship" << 'EOF'
+[[ -n ${SHELL-} ]] && type wt &>/dev/null && eval "$(command wt config shell init $(basename ${SHELL}))";
+export WORKTRUNK_WORKTREE_PATH=".worktrees/{{ branch | sanitize }}"
+EOF

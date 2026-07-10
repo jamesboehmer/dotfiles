@@ -37,4 +37,5 @@ then
     [[ -n ${ZSH_VERSION-} ]] && setopt NOMATCH;
     [[ -n ${SHELL-} ]] && type direnv &>/dev/null && eval "$(direnv hook ${SHELL})"
     [[ -n ${SHELL-} ]] && type starship &>/dev/null && eval "$(starship init ${SHELL})";
+    [[ -e ~/.local ]] && source /dev/stdin <<<"$(awk 'FNR==1{print ""}{print}' ~/.local/*rc.poststarship 2>/dev/null)";
 fi
