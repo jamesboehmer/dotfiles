@@ -66,6 +66,57 @@ EOF
 fi
 
 newlocalrcfile vscoderc.poststarship && cat >> "${HOME}/.local/vscoderc.poststarship" << 'EOF'
-[[ -n ${SHELL-} ]] && type wt &>/dev/null && eval "$(command wt config shell init $(basename ${SHELL}))";
-export WORKTRUNK_WORKTREE_PATH=".worktrees/{{ branch | sanitize }}"
+# --- VS Code IPC socket auto-heal (herdr/tmux long-lived shell fix) ---
+# Paste this block into both ~/.bashrc and ~/.zshrc.
+# It's a no-op unless run inside a VS Code devcontainer.
+
+_in_vscode_devcontainer() {
+  [ "$REMOTE_CONTAINERS" = "true" ] && return 0
+
+  if [ -f /.dockerenv ] || grep -qa 'docker\|containerd' /proc/1/cgroup 2>/dev/null; then
+    if [ -d "$HOME/.vscode-server" ] || [ -d "$HOME/.vscode-remote" ]; then
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+_vscode_ipc_heal() {
+  _in_vscode_devcontainer || return
+
+  local newest
+  newest=$(command ls -t /tmp/vscode-ipc-*.sock 2>/dev/null | head -n1)
+
+  if [ -n "$newest" ] && [ "$newest" != "$VSCODE_IPC_HOOK_CLI" ]; then
+    export VSCODE_IPC_HOOK_CLI="$newest"
+    unset VSCODE_SHELL_INTEGRATION
+
+    local shellname
+    if [ -n "$ZSH_VERSION" ]; then
+      shellname="zsh"
+    elif [ -n "$BASH_VERSION" ]; then
+      shellname="bash"
+    fi
+
+    # shellcheck disable=SC1090
+    source "$(code --locate-shell-integration-path "$shellname" 2>/dev/null)" 2>/dev/null
+  fi
+}
+
+if [ -n "$ZSH_VERSION" ]; then
+  autoload -Uz add-zsh-hook
+  add-zsh-hook precmd _vscode_ipc_heal
+elif [ -n "$BASH_VERSION" ]; then
+  if declare -p PROMPT_COMMAND 2>/dev/null | grep -q 'declare -a'; then
+    # bash 5.1+ array form — safe to append regardless of what else uses it
+    PROMPT_COMMAND+=(_vscode_ipc_heal)
+  else
+    case "$PROMPT_COMMAND" in
+      *_vscode_ipc_heal*) ;;
+      *) PROMPT_COMMAND="_vscode_ipc_heal${PROMPT_COMMAND:+; $PROMPT_COMMAND}" ;;
+    esac
+  fi
+fi
+# --- end VS Code IPC socket auto-heal ---
 EOF
