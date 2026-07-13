@@ -102,6 +102,35 @@ _vscode_ipc_heal() {
     # shellcheck disable=SC1090
     source "$(code --locate-shell-integration-path "$shellname" 2>/dev/null)" 2>/dev/null
   fi
+
+  local newest_git
+  newest_git=$(command ls -t /tmp/vscode-git-*.sock 2>/dev/null | head -n1)
+
+  if [ -n "$newest_git" ] && [ "$newest_git" != "$VSCODE_GIT_IPC_HANDLE" ]; then
+    export VSCODE_GIT_IPC_HANDLE="$newest_git"
+  fi
+
+  local newest_rc_ipc
+  newest_rc_ipc=$(command ls -t /tmp/vscode-remote-containers-ipc-*.sock 2>/dev/null | head -n1)
+
+  if [ -n "$newest_rc_ipc" ] && [ "$newest_rc_ipc" != "$REMOTE_CONTAINERS_IPC" ]; then
+    export REMOTE_CONTAINERS_IPC="$newest_rc_ipc"
+  fi
+
+  # REMOTE_CONTAINERS_SOCKETS is a JSON list: the (rotating) ssh-auth socket
+  # plus the stable gpg-agent and keyboxd sockets. Rebuild it from the newest
+  # ssh-auth socket and gpgconf's canonical socket paths.
+  local newest_ssh_auth gpg_agent_sock gpg_keyboxd_sock
+  newest_ssh_auth=$(command ls -t /tmp/vscode-ssh-auth-*.sock 2>/dev/null | head -n1)
+  gpg_agent_sock=$(gpgconf --list-dir agent-socket 2>/dev/null)
+  gpg_keyboxd_sock=$(gpgconf --list-dir keyboxd-socket 2>/dev/null)
+
+  if [ -n "$newest_ssh_auth" ] && [ -n "$gpg_agent_sock" ] && [ -n "$gpg_keyboxd_sock" ]; then
+    local rebuilt="[\"$newest_ssh_auth\",\"$gpg_agent_sock\",\"$gpg_keyboxd_sock\"]"
+    if [ "$rebuilt" != "$REMOTE_CONTAINERS_SOCKETS" ]; then
+      export REMOTE_CONTAINERS_SOCKETS="$rebuilt"
+    fi
+  fi
 }
 
 if [ -n "$ZSH_VERSION" ]; then
