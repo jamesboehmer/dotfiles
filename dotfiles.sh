@@ -29,6 +29,8 @@ case "${KERNEL}" in
       echo "Linking ${HOME}/.local/bin/${x} -> ${THISDIR}/dotfiles/.bin/_pbutils.sh";
       ln -sf "${THISDIR}/dotfiles/.bin/_pbutils.sh" "${HOME}/.local/bin/${x}";
     done
+    echo "Linking ${HOME}/.local/bin/herdr -> ${THISDIR}/dotfiles/.bin/_herdr.sh";
+    ln -sf "${THISDIR}/dotfiles/.bin/_herdr.sh" "${HOME}/.local/bin/herdr";
     # ensure if we're in a devcontainer that's not a github codespace that we intercept gpg-agent and keyboxd so that socat can run and tunnel the agent/keybox sockets to the host
     if [[ ("${DEVCONTAINER}" == "true" || "${REMOTE_CONTAINERS}" == "true") && ("${ENABLE_GPG_AGENT}" != "true" && "${CODESPACES}" != "true" && "${GITHUB_CODESPACES}" != "true")]]; then
       echo "Linking ${HOME}/.local/bin/gpg-agent -> ${THISDIR}/dotfiles/.bin/_gpg-agent.sh (set ENABLE_GPG_AGENT=true to disable)";
