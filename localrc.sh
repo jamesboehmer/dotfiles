@@ -71,43 +71,62 @@ _in_vscode_devcontainer() {
   return 1
 }
 
+# Echo the newest socket matching glob $1 that is actually being listened on,
+# using the `ss -lxn` snapshot passed as $2. A VS Code IPC socket *file* lingers
+# in /tmp after its window/connection closes; connecting to such a dead socket
+# yields ECONNREFUSED, and mtime cannot distinguish live from dead. So we only
+# ever pick sockets present in the listening set. Falls back to newest-by-mtime
+# when the snapshot is empty (e.g. ss unavailable) so behavior degrades safely.
+_vscode_newest_live_sock() {
+  local glob="$1" listening="$2" f newest=""
+  if [ -n "$listening" ]; then
+    for f in $(command ls -t $glob 2>/dev/null); do
+      case "$listening" in
+        *"$f"*) newest="$f"; break ;;
+      esac
+    done
+  fi
+  [ -z "$newest" ] && newest=$(command ls -t $glob 2>/dev/null | head -n1)
+  [ -n "$newest" ] && printf '%s\n' "$newest"
+}
+
 _vscode_ipc_heal() {
   _in_vscode_devcontainer || return
 
-  local newest
-  newest=$(command ls -t /tmp/vscode-ipc-*.sock 2>/dev/null | head -n1)
+  # One snapshot of all LISTENing unix sockets, reused for every family below.
+  local listening
+  listening=$(ss -lxn 2>/dev/null)
 
+  # Point env vars at the newest *live* socket of each kind. Update the env var
+  # only — do NOT re-source the VS Code shell integration script from here: it
+  # captures the current $PROMPT_COMMAND as its "original" and rewires
+  # PROMPT_COMMAND=__vsc_prompt_cmd_original, so re-sourcing from within
+  # PROMPT_COMMAND corrupts that chain into self-reference and crashes the shell.
+  # The `code`/git CLIs read these env vars at exec time, so the var update alone
+  # is enough to heal them.
+  local newest
+  newest=$(_vscode_newest_live_sock '/tmp/vscode-ipc-*.sock' "$listening")
   if [ -n "$newest" ] && [ "$newest" != "$VSCODE_IPC_HOOK_CLI" ]; then
-    # Update the env var only. Do NOT re-source the VS Code shell integration
-    # script from here: it captures the current $PROMPT_COMMAND as its "original"
-    # and rewires PROMPT_COMMAND=__vsc_prompt_cmd_original. Re-sourcing it from
-    # within PROMPT_COMMAND (after unsetting its re-entrancy guard) corrupts that
-    # chain into self-reference, so __vsc_prompt_cmd_original ends up eval'ing
-    # itself infinitely and the shell crashes on the next prompt. The `code` CLI
-    # reads VSCODE_IPC_HOOK_CLI at exec time, so updating the env var alone is
-    # enough to heal it.
     export VSCODE_IPC_HOOK_CLI="$newest"
   fi
 
   local newest_git
-  newest_git=$(command ls -t /tmp/vscode-git-*.sock 2>/dev/null | head -n1)
-
+  newest_git=$(_vscode_newest_live_sock '/tmp/vscode-git-*.sock' "$listening")
   if [ -n "$newest_git" ] && [ "$newest_git" != "$VSCODE_GIT_IPC_HANDLE" ]; then
     export VSCODE_GIT_IPC_HANDLE="$newest_git"
   fi
 
   local newest_rc_ipc
-  newest_rc_ipc=$(command ls -t /tmp/vscode-remote-containers-ipc-*.sock 2>/dev/null | head -n1)
-
+  newest_rc_ipc=$(_vscode_newest_live_sock '/tmp/vscode-remote-containers-ipc-*.sock' "$listening")
   if [ -n "$newest_rc_ipc" ] && [ "$newest_rc_ipc" != "$REMOTE_CONTAINERS_IPC" ]; then
     export REMOTE_CONTAINERS_IPC="$newest_rc_ipc"
   fi
 
   # REMOTE_CONTAINERS_SOCKETS is a JSON list: the (rotating) ssh-auth socket
   # plus the stable gpg-agent and keyboxd sockets. Rebuild it from the newest
-  # ssh-auth socket and gpgconf's canonical socket paths.
+  # live ssh-auth socket and gpgconf's canonical socket paths.
   local newest_ssh_auth gpg_agent_sock gpg_keyboxd_sock
-  newest_ssh_auth=$(command ls -t /tmp/vscode-ssh-auth-*.sock 2>/dev/null | head -n1)
+  newest_ssh_auth=$(_vscode_newest_live_sock '/tmp/vscode-ssh-auth-*.sock' "$listening")
   gpg_agent_sock=$(gpgconf --list-dir agent-socket 2>/dev/null)
   gpg_keyboxd_sock=$(gpgconf --list-dir keyboxd-socket 2>/dev/null)
 
@@ -132,6 +151,16 @@ elif [ -n "$BASH_VERSION" ]; then
       *) PROMPT_COMMAND="_vscode_ipc_heal${PROMPT_COMMAND:+; $PROMPT_COMMAND}" ;;
     esac
   fi
+fi
+
+# Also heal immediately before every `code` invocation. PROMPT_COMMAND/precmd
+# only fire when a prompt is drawn, so a long-idle shell (herdr/tmux pane) can
+# still be pointing at a socket that died since its last prompt — the classic
+# "Unable to connect to VS Code server ... ECONNREFUSED" from an old terminal.
+# Healing here guarantees `code <file>` targets a live socket. `command` bypasses
+# this function to reach the real CLI.
+if _in_vscode_devcontainer; then
+  code() { _vscode_ipc_heal; command code "$@"; }
 fi
 # --- end VS Code IPC socket auto-heal ---
 EOF
