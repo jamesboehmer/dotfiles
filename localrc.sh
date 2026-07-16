@@ -27,17 +27,6 @@ function newlocalrcfile() {
 #disable DVC analytics
 type dvc &>/dev/null && dvc config --global core.analytics false
 
-[[ "$(uname -s)" == "Darwin" ]] && [[ $(which brew &>/dev/null; echo $?) -eq 0 ]] && newlocalrcfile devrc \
-OPENBLAS "$(brew --prefix openblas)" \
-OPENSSL "$(brew --prefix openssl@1.1)" \
-ZLIB "$(brew --prefix zlib)" \
-PROTOBUF "$(brew --prefix protobuf)" \
-LDFLAGS '-L${OPENSSL}/lib:${ZLIB}/lib:${PROTOBUF}/lib' \
-CPPFLAGS '-I${OPENSSL}/include:${ZLIB}/include:${PROTOBUF}/include' \
-CFLAGS '${CPPFLAGS}' \
-HDF5_DIR "$(brew --prefix hdf5)" \
-PKG_CONFIG_PATH '-L${OPENSSL}/lib/pkgconfig:${ZLIB}/lib/pkgconfig'
-
 [[ "$(uname -s)" == "Darwin" ]] && newlocalrcfile grpcpythonrc 'GRPC_PYTHON_BUILD_SYSTEM_OPENSSL' '1' 'GRPC_PYTHON_BUILD_SYSTEM_ZLIB' '1';
 
 newlocalrcfile pyenvrc 'PYENV_ROOT' '$HOME/.pyenv' 'PATH' '$PYENV_ROOT/bin:$PATH';
