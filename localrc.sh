@@ -89,18 +89,15 @@ _vscode_ipc_heal() {
   newest=$(command ls -t /tmp/vscode-ipc-*.sock 2>/dev/null | head -n1)
 
   if [ -n "$newest" ] && [ "$newest" != "$VSCODE_IPC_HOOK_CLI" ]; then
+    # Update the env var only. Do NOT re-source the VS Code shell integration
+    # script from here: it captures the current $PROMPT_COMMAND as its "original"
+    # and rewires PROMPT_COMMAND=__vsc_prompt_cmd_original. Re-sourcing it from
+    # within PROMPT_COMMAND (after unsetting its re-entrancy guard) corrupts that
+    # chain into self-reference, so __vsc_prompt_cmd_original ends up eval'ing
+    # itself infinitely and the shell crashes on the next prompt. The `code` CLI
+    # reads VSCODE_IPC_HOOK_CLI at exec time, so updating the env var alone is
+    # enough to heal it.
     export VSCODE_IPC_HOOK_CLI="$newest"
-    unset VSCODE_SHELL_INTEGRATION
-
-    local shellname
-    if [ -n "$ZSH_VERSION" ]; then
-      shellname="zsh"
-    elif [ -n "$BASH_VERSION" ]; then
-      shellname="bash"
-    fi
-
-    # shellcheck disable=SC1090
-    source "$(code --locate-shell-integration-path "$shellname" 2>/dev/null)" 2>/dev/null
   fi
 
   local newest_git
