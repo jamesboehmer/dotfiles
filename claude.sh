@@ -62,10 +62,15 @@ fi
 
 # Install any enabled plugins that aren't installed yet. Each key under
 # .enabledPlugins is a "plugin@marketplace" id, matching the keys under
-# .plugins in installed_plugins.json. Only attempt this when running in a TTY:
-# `claude plugin install` needs an interactive login, so it fails when the
-# installer runs non-interactively (piped, CI, provisioning, etc.).
-if [ -t 0 ]; then
+# .plugins in installed_plugins.json. Only attempt this when running in a TTY
+# and already logged in: `claude plugin install` needs an authenticated,
+# interactive session, so it fails when the installer runs non-interactively
+# (piped, CI, provisioning, etc.) or before the user has signed in.
+if ! [ -t 0 ]; then
+    echo "Not running in a TTY.  Skipping plugin installation.";
+elif ! claude auth status --json 2>/dev/null | jq -e '.loggedIn == true' &>/dev/null; then
+    echo "claude is not logged in.  Skipping plugin installation.";
+else
     INSTALLED_PLUGINS="${CLAUDEDIR}/plugins/installed_plugins.json";
     jq -r '.enabledPlugins // {} | to_entries[] | select(.value) | .key' "${BASELINE}" 2>/dev/null | while read -r plugin; do
         [[ -z "${plugin}" ]] && continue;
@@ -76,8 +81,6 @@ if [ -t 0 ]; then
             claude plugin install "${plugin}";
         fi
     done
-else
-    echo "Not running in a TTY.  Skipping plugin installation.";
 fi
 
 # Symlink each hook under claude/hooks/ into ~/.claude/hooks/
