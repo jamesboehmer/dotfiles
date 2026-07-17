@@ -62,17 +62,23 @@ fi
 
 # Install any enabled plugins that aren't installed yet. Each key under
 # .enabledPlugins is a "plugin@marketplace" id, matching the keys under
-# .plugins in installed_plugins.json.
-INSTALLED_PLUGINS="${CLAUDEDIR}/plugins/installed_plugins.json";
-jq -r '.enabledPlugins // {} | to_entries[] | select(.value) | .key' "${BASELINE}" 2>/dev/null | while read -r plugin; do
-    [[ -z "${plugin}" ]] && continue;
-    if [[ -e "${INSTALLED_PLUGINS}" ]] && jq -e --arg p "${plugin}" '(.plugins // {}) | has($p)' "${INSTALLED_PLUGINS}" &>/dev/null; then
-        echo "Plugin ${plugin} already installed.  Skipping.";
-    else
-        echo "Installing plugin ${plugin}...";
-        claude plugin install "${plugin}";
-    fi
-done
+# .plugins in installed_plugins.json. Only attempt this when running in a TTY:
+# `claude plugin install` needs an interactive login, so it fails when the
+# installer runs non-interactively (piped, CI, provisioning, etc.).
+if [ -t 0 ]; then
+    INSTALLED_PLUGINS="${CLAUDEDIR}/plugins/installed_plugins.json";
+    jq -r '.enabledPlugins // {} | to_entries[] | select(.value) | .key' "${BASELINE}" 2>/dev/null | while read -r plugin; do
+        [[ -z "${plugin}" ]] && continue;
+        if [[ -e "${INSTALLED_PLUGINS}" ]] && jq -e --arg p "${plugin}" '(.plugins // {}) | has($p)' "${INSTALLED_PLUGINS}" &>/dev/null; then
+            echo "Plugin ${plugin} already installed.  Skipping.";
+        else
+            echo "Installing plugin ${plugin}...";
+            claude plugin install "${plugin}";
+        fi
+    done
+else
+    echo "Not running in a TTY.  Skipping plugin installation.";
+fi
 
 # Symlink each hook under claude/hooks/ into ~/.claude/hooks/
 if [[ -d "${HOOKSSRC}" ]]; then
