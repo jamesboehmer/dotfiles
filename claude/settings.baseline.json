@@ -1,0 +1,74 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(pwd)",
+      "Bash(echo:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh pr *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git fetch *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(gh api graphql -f 'query= *)",
+      "Bash(git remote)",
+      "Bash(git remote -v)",
+      "Bash(git remote show *)",
+      "Read(**)",
+      "Grep(**)",
+      "Glob(**)",
+      "Edit(**)"
+    ],
+    "ask": [
+      "Bash(gh api * -X POST *)",
+      "Bash(gh api * -X PUT *)",
+      "Bash(gh api * -X PATCH *)",
+      "Bash(gh api * -X DELETE *)",
+      "Bash(gh api * --method POST *)",
+      "Bash(gh api * --method PUT *)",
+      "Bash(gh api * --method PATCH *)",
+      "Bash(gh api * --method DELETE *)",
+      "Bash(git remote add *)",
+      "Bash(git remote set-url *)",
+      "Bash(git remote rename *)",
+      "Bash(git remote remove *)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/bash-guard.py"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "cship"
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "slack@claude-plugins-official": true,
+    "datadog@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  }
+}

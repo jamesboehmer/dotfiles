@@ -33,7 +33,6 @@ ${THISDIR}/brewinstall.sh && [[ -e ${BREW} ]] && eval $(${BREW} shellenv);
 for x in starship direnv jq git; do checkfor $x || ${BREW} install $x </dev/null; done;
 ${THISDIR}/dotfiles.sh;
 ${THISDIR}/starship.sh;
-${THISDIR}/cship.sh;
 ${THISDIR}/direnv.sh;
 ${THISDIR}/localrc.sh;
 ${THISDIR}/ssh.sh;
@@ -47,6 +46,7 @@ ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
 ${THISDIR}/herdr.sh;
+${THISDIR}/claude.sh;
 
 
 # Ensure GPG git signatures in codespaces
