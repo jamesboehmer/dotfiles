@@ -90,6 +90,22 @@ _vscode_newest_live_sock() {
   [ -n "$newest" ] && printf '%s\n' "$newest"
 }
 
+# Directory holding the stable symlinks the env vars point at.
+_VSCODE_HEAL_DIR="$HOME/.local/vscode-heal"
+
+# (Re)point stable symlink $2 at the newest live socket matching glob $1, then
+# echo the symlink path. The symlink gives a fixed path that survives socket
+# rotation, so env vars (and anything that captured them earlier) stay valid —
+# only the link target moves. Echoes nothing when no live socket is found, so
+# callers leave the existing env var untouched. $3 is the `ss -lxn` snapshot.
+_vscode_link_live_sock() {
+  local glob="$1" link="$2" listening="$3" target
+  target=$(_vscode_newest_live_sock "$glob" "$listening")
+  [ -n "$target" ] || return 0
+  [ "$(readlink "$link" 2>/dev/null)" = "$target" ] || ln -sfn "$target" "$link"
+  printf '%s\n' "$link"
+}
+
 _vscode_ipc_heal() {
   _in_vscode_devcontainer || return
 
@@ -97,41 +113,35 @@ _vscode_ipc_heal() {
   local listening
   listening=$(ss -lxn 2>/dev/null)
 
-  # Point env vars at the newest *live* socket of each kind. Update the env var
-  # only — do NOT re-source the VS Code shell integration script from here: it
-  # captures the current $PROMPT_COMMAND as its "original" and rewires
-  # PROMPT_COMMAND=__vsc_prompt_cmd_original, so re-sourcing from within
-  # PROMPT_COMMAND corrupts that chain into self-reference and crashes the shell.
-  # The `code`/git CLIs read these env vars at exec time, so the var update alone
-  # is enough to heal them.
-  local newest
-  newest=$(_vscode_newest_live_sock '/tmp/vscode-ipc-*.sock' "$listening")
-  if [ -n "$newest" ] && [ "$newest" != "$VSCODE_IPC_HOOK_CLI" ]; then
-    export VSCODE_IPC_HOOK_CLI="$newest"
-  fi
+  mkdir -p "$_VSCODE_HEAL_DIR" 2>/dev/null
 
-  local newest_git
-  newest_git=$(_vscode_newest_live_sock '/tmp/vscode-git-*.sock' "$listening")
-  if [ -n "$newest_git" ] && [ "$newest_git" != "$VSCODE_GIT_IPC_HANDLE" ]; then
-    export VSCODE_GIT_IPC_HANDLE="$newest_git"
-  fi
+  # Point each env var at a stable symlink under $_VSCODE_HEAL_DIR and re-aim the
+  # symlink at the newest *live* socket. Do NOT re-source the VS Code shell
+  # integration script from here: it captures the current $PROMPT_COMMAND as its
+  # "original" and rewires PROMPT_COMMAND=__vsc_prompt_cmd_original, so
+  # re-sourcing from within PROMPT_COMMAND corrupts that chain into
+  # self-reference and crashes the shell. The `code`/git CLIs read these env
+  # vars at exec time and follow the symlink, so updating the link is enough.
+  local link
+  link=$(_vscode_link_live_sock '/tmp/vscode-ipc-*.sock' "$_VSCODE_HEAL_DIR/ipc.sock" "$listening")
+  [ -n "$link" ] && export VSCODE_IPC_HOOK_CLI="$link"
 
-  local newest_rc_ipc
-  newest_rc_ipc=$(_vscode_newest_live_sock '/tmp/vscode-remote-containers-ipc-*.sock' "$listening")
-  if [ -n "$newest_rc_ipc" ] && [ "$newest_rc_ipc" != "$REMOTE_CONTAINERS_IPC" ]; then
-    export REMOTE_CONTAINERS_IPC="$newest_rc_ipc"
-  fi
+  link=$(_vscode_link_live_sock '/tmp/vscode-git-*.sock' "$_VSCODE_HEAL_DIR/git.sock" "$listening")
+  [ -n "$link" ] && export VSCODE_GIT_IPC_HANDLE="$link"
+
+  link=$(_vscode_link_live_sock '/tmp/vscode-remote-containers-ipc-*.sock' "$_VSCODE_HEAL_DIR/remote-containers-ipc.sock" "$listening")
+  [ -n "$link" ] && export REMOTE_CONTAINERS_IPC="$link"
 
   # REMOTE_CONTAINERS_SOCKETS is a JSON list: the (rotating) ssh-auth socket
-  # plus the stable gpg-agent and keyboxd sockets. Rebuild it from the newest
-  # live ssh-auth socket and gpgconf's canonical socket paths.
-  local newest_ssh_auth gpg_agent_sock gpg_keyboxd_sock
-  newest_ssh_auth=$(_vscode_newest_live_sock '/tmp/vscode-ssh-auth-*.sock' "$listening")
+  # plus the stable gpg-agent and keyboxd sockets. Use the ssh-auth symlink so
+  # the list value itself stays stable across rotation.
+  local ssh_auth_link gpg_agent_sock gpg_keyboxd_sock
+  ssh_auth_link=$(_vscode_link_live_sock '/tmp/vscode-ssh-auth-*.sock' "$_VSCODE_HEAL_DIR/ssh-auth.sock" "$listening")
   gpg_agent_sock=$(gpgconf --list-dir agent-socket 2>/dev/null)
   gpg_keyboxd_sock=$(gpgconf --list-dir keyboxd-socket 2>/dev/null)
 
-  if [ -n "$newest_ssh_auth" ] && [ -n "$gpg_agent_sock" ] && [ -n "$gpg_keyboxd_sock" ]; then
-    local rebuilt="[\"$newest_ssh_auth\",\"$gpg_agent_sock\",\"$gpg_keyboxd_sock\"]"
+  if [ -n "$ssh_auth_link" ] && [ -n "$gpg_agent_sock" ] && [ -n "$gpg_keyboxd_sock" ]; then
+    local rebuilt="[\"$ssh_auth_link\",\"$gpg_agent_sock\",\"$gpg_keyboxd_sock\"]"
     if [ "$rebuilt" != "$REMOTE_CONTAINERS_SOCKETS" ]; then
       export REMOTE_CONTAINERS_SOCKETS="$rebuilt"
     fi
