@@ -22,17 +22,12 @@ GITINCLUDESTMP="$(mktemp)";
 git config --file ${GITCONFIGFILE} --get-all include.path | grep -v "$(basename $DOTFILESGITCONFIGFILE)" > "${GITINCLUDESTMP}";
 git config --file ${GITCONFIGFILE} --unset-all include.path;
 git config --file ${GITCONFIGFILE} include.path "${DOTFILESGITCONFIGFILE}";
-git config --file ${GITCONFIGFILE} credential.usehttppath true;
 cat "${GITINCLUDESTMP}" | while read include; do
     git config --file ${GITCONFIGFILE} --add include.path "${include}";
 done
 
-which git-credential-libsecret &>/dev/null;
-[[ $? -eq 0 ]] && git config --file ${LOCALGITCONFIGFILE} credential.helper libsecret;
-
 if [[ "$(uname -s)" == "Darwin" ]]; then
     echo "Configuring ${LOCALGITCONFIGFILE}";
-    git config --file ${LOCALGITCONFIGFILE} credential.helper "manager"
     git config --file ${LOCALGITCONFIGFILE} mergetool.prompt false
     git config --file ${LOCALGITCONFIGFILE} core.pager "delta"
     if [[ $(type smerge &>/dev/null; echo $?) -eq 0 ]]; then
@@ -40,6 +35,4 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
         git config --file ${LOCALGITCONFIGFILE} mergetool.smerge.trustExitCode true
         git config --file ${LOCALGITCONFIGFILE} merge.tool "smerge"
     fi
-elif [[ "${REMOTE_CONTAINERS}" == "true" ]]; then
-    git config --file ${LOCALGITCONFIGFILE} credential.helper "store"
 fi
