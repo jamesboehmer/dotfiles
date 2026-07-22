@@ -19,11 +19,18 @@ NEW_KEYS='[
   {"key": "prefix+p", "type": "plugin_action", "command": "jt.command-palette.open", "description": "Plugin Command Palette"}
 ]'
 
+# Set a dedicated worktrees directory when running inside a devcontainer.
+WORKTREES_DIR="";
+if [[ -n "${REMOTE_CONTAINERS}" || -n "${CODESPACES}" || -f /.devcontainer ]] || { [[ -f /.dockerenv ]] && [[ -d /workspaces ]]; }; then
+	WORKTREES_DIR="/workspaces/herdr-worktrees";
+fi
+
 echo "Updating herdr config...";
 
 yq -p toml -o json '.' "${HERDR_CONFIG}" | \
-jq --argjson newkeys "${NEW_KEYS}" '
+jq --argjson newkeys "${NEW_KEYS}" --arg worktreesdir "${WORKTREES_DIR}" '
   .onboarding = false |
+  (if $worktreesdir != "" then .worktrees.directory = $worktreesdir else . end) |
   .keys.command = ((.keys.command // []) + $newkeys
     | reduce .[] as $item ([]; if any(.[]; .key == $item.key) then . else . + [$item] end))
 ' | yq -p json -o toml > "${HERDR_CONFIG}.tmp" && mv "${HERDR_CONFIG}.tmp" "${HERDR_CONFIG}"
