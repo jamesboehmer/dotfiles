@@ -8,7 +8,7 @@
     <array>
       <string>/bin/bash</string>
       <string>-c</string>
-      <string>/opt/homebrew/bin/socat TCP-LISTEN:8126,fork,bind=localhost UNIX-CONNECT:$(/opt/homebrew/bin/gpgconf --list-dirs keyboxd-socket)</string>
+      <string>/opt/homebrew/bin/gpgconf --launch keyboxd; exec /opt/homebrew/bin/socat TCP-LISTEN:8126,fork,bind=localhost UNIX-CONNECT:$(/opt/homebrew/bin/gpgconf --list-dirs keyboxd-socket)</string>
     </array>
     <key>KeepAlive</key>
     <true/>
