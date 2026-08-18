@@ -1,0 +1,14 @@
+[keys]
+remove_worktree = "prefix+ctrl+d"
+
+[[keys.command]]
+key = "prefix+shift+p"
+type = "plugin_action"
+command = "jamesboehmer.command-palette.open"
+description = "Command palette"
+
+[[keys.command]]
+key = "prefix+p"
+type = "plugin_action"
+command = "jamesboehmer.command-palette.open"
+description = "Plugin Command Palette"
