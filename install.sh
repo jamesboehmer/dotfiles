@@ -45,8 +45,10 @@ ${THISDIR}/defaults.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
 ${THISDIR}/brewpackages.sh;
+${THISDIR}/uvtools.sh;
 ${THISDIR}/herdr.sh;
 ${THISDIR}/claude.sh;
+${THISDIR}/pgcli.sh;
 
 
 # Ensure GPG git signatures in codespaces
