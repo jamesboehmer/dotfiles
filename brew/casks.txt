@@ -1,6 +1,5 @@
 1password
-bartender
-bettertouchtool
+brave-browser
 charles
 codex
 copilot-cli
@@ -11,9 +10,7 @@ firefox
 font-fira-code
 ghostty
 git-credential-manager
-iina
 iterm2
-jetbrains-toolbox
 karabiner-elements
 keepassxc
 little-snitch
@@ -33,6 +30,6 @@ sublime-merge
 sublime-text
 telegram
 tflint
+thaw
 vlc
 wireshark
-zeplin
