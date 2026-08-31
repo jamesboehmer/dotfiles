@@ -83,6 +83,9 @@ if [[ $? -ne 0 ]]; then
     killall gpg-agent;
 fi
 
+export HOMEBREW_TEMP="${HOME}/.brew-tmp";
+mkdir -p "${HOMEBREW_TEMP}";
+
 LINKED="$(brew info gnupg --json | jq '.[0].linked_keg')";
 if [[ "${LINKED}" == "null" ]]; then
     killall gpg-agent >/dev/null;

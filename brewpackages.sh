@@ -11,6 +11,8 @@ THISDIR="$(dirname "${THIS}")";
 
 export HOMEBREW_NO_ASK=1;
 export NONINTERACTIVE=1;
+export HOMEBREW_TEMP="${HOME}/.brew-tmp";
+mkdir -p "${HOMEBREW_TEMP}";
 
 if [[ ! -e ${BREW} ]]
 then

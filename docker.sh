@@ -8,6 +8,9 @@ echo "Configuring docker...";
 
 DOCKERCONFIG="${HOME}/.docker/config.json";
 
+export HOMEBREW_TEMP="${HOME}/.brew-tmp";
+mkdir -p "${HOMEBREW_TEMP}";
+
 BREWPREFIX="$(type brew &>/dev/null && brew --prefix || echo "")";
 PLUGINDIRS=("${BREWPREFIX}/lib/docker/cli-plugins" "/usr/libexec/docker/cli-plugins");
 

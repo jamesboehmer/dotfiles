@@ -44,6 +44,11 @@ export TF_PLUGIN_CACHE_DIR="$HOME/.config/terraform.d/plugin-cache";
 [[ -e $TF_PLUGIN_CACHE_DIR ]] || mkdir -p $TF_PLUGIN_CACHE_DIR;
 EOF
 
+newlocalrcfile brewrc && cat >> "${HOME}/.local/brewrc" <<'EOF'
+export HOMEBREW_TEMP="$HOME/.brew-tmp";
+[[ -e $HOMEBREW_TEMP ]] || mkdir -p $HOMEBREW_TEMP;
+EOF
+
 if [[ "${USER}" == "vscode" ]]; then
 	newlocalrcfile sshauthsockrc && cat >> "${HOME}/.local/sshauthsockrc" << 'EOF'
 mkdir -p $HOME/.ssh;
