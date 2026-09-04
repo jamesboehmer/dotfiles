@@ -10,6 +10,7 @@ firefox
 font-fira-code
 ghostty
 git-credential-manager
+hammerspoon
 iterm2
 karabiner-elements
 keepassxc
