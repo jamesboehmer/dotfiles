@@ -49,6 +49,61 @@ export HOMEBREW_TEMP="$HOME/.brew-tmp";
 [[ -e $HOMEBREW_TEMP ]] || mkdir -p $HOMEBREW_TEMP;
 EOF
 
+newlocalrcfile herdrguirc && cat >> "${HOME}/.local/herdrguirc" <<'EOF'
+# Launch the herdr-gui web client detached and print the URL to reach it at.
+#
+# Inside a devcontainer the browser lives out on the host, so the listener has
+# to leave the container's network namespace: bind every interface and let the
+# editor's port forwarding carry it to localhost. herdr-gui forces auth on any
+# non-loopback bind, and without --password it generates a token that the
+# &>/dev/null would swallow, so pin a fixed one. A pre-set HOST wins over the
+# 0.0.0.0 default.
+#
+# Outside a devcontainer, pass no arguments and override no environment at all
+# -- herdr-gui's own defaults (127.0.0.1, and therefore no auth) are already
+# what's wanted on a machine whose browser is right there.
+function herdrgui() {
+	local port="${PORT:-8787}" host="" password="" envhost="";
+
+	# Read HOST out of the real environment rather than $HOST: zsh predefines
+	# HOST as a (non-exported) shell parameter holding the machine's hostname,
+	# so ${HOST:-0.0.0.0} would never reach the fallback under zsh and would
+	# hand herdr-gui a hostname where a bind address belongs.
+	envhost="$(env | sed -n 's/^HOST=//p' | head -n1)";
+
+	# Detection mirrors herdr.sh so both agree on what counts as a devcontainer.
+	if [[ -n "${REMOTE_CONTAINERS}" || -n "${CODESPACES}" || -f /.devcontainer ]] || { [[ -f /.dockerenv ]] && [[ -d /workspaces ]]; }; then
+		host="${envhost:-0.0.0.0}";
+		password="pants";
+		herdr-gui --host "${host}" --password "${password}" &>/dev/null &
+	else
+		host="${envhost:-127.0.0.1}";
+		herdr-gui &>/dev/null &
+	fi
+
+	# A wildcard bind isn't an address you can type, so show the loopback name
+	# that the forwarded port answers on, plus the routable IP for reaching it
+	# from another device.
+	local shown="${host}" ip="";
+	case "${host}" in
+		0.0.0.0|::|'') shown="localhost";;
+	esac
+	echo "herdr-gui: http://${shown}:${port}${password:+ (password: ${password})}";
+
+	if [[ "${host}" == "0.0.0.0" || "${host}" == "::" ]]; then
+		if [[ "$(uname -s)" == "Darwin" ]]; then
+			local iface;
+			iface="$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')";
+			[[ -n "${iface}" ]] && ip="$(ipconfig getifaddr "${iface}" 2>/dev/null)";
+		else
+			ip="$(hostname -I 2>/dev/null | awk '{print $1}')";
+			[[ -z "${ip}" ]] && ip="$(ip -4 -o addr show scope global 2>/dev/null | awk 'NR==1{split($4,a,"/"); print a[1]}')";
+		fi
+		[[ -n "${ip}" ]] && echo "           http://${ip}:${port}";
+	fi
+}
+EOF
+
 if [[ "${USER}" == "vscode" ]]; then
 	newlocalrcfile sshauthsockrc && cat >> "${HOME}/.local/sshauthsockrc" << 'EOF'
 mkdir -p $HOME/.ssh;

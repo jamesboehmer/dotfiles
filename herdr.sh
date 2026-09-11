@@ -84,3 +84,5 @@ herdr server reload-config 2>/dev/null;
 
 [[ "${REINSTALL_PLUGINS}" == "true" ]] || echo "Set REINSTALL_PLUGINS=true to force update herdr plugins and skills";
 
+checkfor herdr-gui || dangerous "https://github.com/powerfooI/herdr-studio/releases/latest/download/install-herdr-gui.sh" "sh"
+
