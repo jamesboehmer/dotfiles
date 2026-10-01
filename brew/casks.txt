@@ -22,6 +22,7 @@ ngrok
 notunes
 obsidian
 postman
+rcmd
 secretive
 signal
 slack

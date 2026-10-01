@@ -88,6 +88,7 @@ scalaenv
 sdkman-cli
 serveit
 socat
+sofka
 speedtest
 sqlite
 starship
