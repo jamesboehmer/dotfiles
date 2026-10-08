@@ -5,8 +5,12 @@ PreToolUse hook for the Bash, Write, Edit, and MultiEdit tools.
 Policy (Bash):
   - allow: known read-only commands (ls, cat, grep, find -no mutating flags-, git status/log/diff/show/branch, gh pr view/list/diff/checks, gh api GET, etc.)
   - allow: commands whose ONLY file-writing effect is a shell redirection into /tmp/**
-  - ask:   gh api calls using a mutating HTTP method (POST/PUT/PATCH/DELETE, in either
-           `-X POST`, `-XPOST`, `--method POST`, or `--method=POST` form), gh pr merge/close
+  - allow: pull-request writes -- `gh pr create/edit/comment/review/...` and `gh api`
+           calls (any method) whose endpoint is PR-scoped. `gh pr merge` is NOT in
+           this set; merging still asks.
+  - ask:   gh pr merge; gh api calls using a mutating HTTP method (POST/PUT/PATCH/DELETE,
+           in either `-X POST`, `-XPOST`, `--method POST`, or `--method=POST` form) against
+           a non-PR endpoint
   - deny:  a short list of clearly destructive patterns (rm -rf /, sudo, fork bombs, etc.)
 
 Policy (Write / Edit / MultiEdit):
@@ -66,10 +70,27 @@ DENY_PATTERNS = [
     r"\bgit\s+push\s+.*--force\b.*\b(main|master)\b",
 ]
 
+# Only merging stays behind a prompt: it is the one PR action that lands code on a
+# shared branch. Everything else about a PR is editable/reversible.
 ASK_PATTERNS = [
-    r"\bgh\s+pr\s+(merge|close)\b",
-    r"\bgh\s+api\b.*\B(-X|--method)[\s=]*(POST|PUT|PATCH|DELETE)\b",
+    r"\bgh\s+pr\s+merge\b",
 ]
+
+# `gh pr` subcommands that mutate a PR but are auto-approved. `merge` is deliberately absent.
+GH_PR_WRITE_SUBCMDS = {
+    "create", "edit", "comment", "review", "ready", "reopen", "close",
+    "update-branch", "lock", "unlock",
+}
+
+# A `gh api` endpoint that only touches a pull request: the pulls/* tree, plus the
+# issues/<n>/* sub-resources GitHub shares between issues and PRs (comments, labels, ...).
+# Matched against a whole argument, so a path smuggled into a flag value does not count.
+PR_API_PATH_RE = re.compile(
+    r"^(?:https?://[^/]+)?/?repos/[^/]+/[^/]+/"
+    r"(?:pulls|issues/\d+/(?:comments|labels|assignees|reactions|timeline))"
+    r"(?:[/?].*)?$",
+    re.IGNORECASE,
+)
 
 
 def allow(reason):
@@ -110,6 +131,25 @@ def no_decision():
     sys.exit(0)
 
 
+def gh_api_method(tokens):
+    """HTTP method of a `gh api` invocation, or None if these tokens are not one.
+
+    GET is the default; only a method flag can make it mutate. Handles all four
+    forms: -X POST, -XPOST, --method POST, --method=POST.
+    """
+    if len(tokens) < 2 or tokens[0] != "gh" or tokens[1] != "api":
+        return None
+    rest = tokens[2:]
+    for i, t in enumerate(rest):
+        if t in ("-X", "--method"):
+            return rest[i + 1].upper() if i + 1 < len(rest) else ""
+        if t.startswith("-X") and t != "-X":
+            return t[2:].upper()
+        if t.startswith("--method="):
+            return t.split("=", 1)[1].upper()
+    return "GET"
+
+
 def is_read_only_gh(tokens):
     # tokens like ["gh", "pr", "view", "123"] or ["gh", "api", "repos/x/y"]
     if len(tokens) < 2 or tokens[0] != "gh":
@@ -119,20 +159,21 @@ def is_read_only_gh(tokens):
     }:
         return True
     if tokens[1] == "api":
-        rest = tokens[2:]
-        # GET is the default; only a method flag can make it mutate.
-        # Handles all four forms: -X POST, -XPOST, --method POST, --method=POST
-        for i, t in enumerate(rest):
-            method = None
-            if t in ("-X", "--method"):
-                method = rest[i + 1].upper() if i + 1 < len(rest) else ""
-            elif t.startswith("-X") and t != "-X":
-                method = t[2:].upper()
-            elif t.startswith("--method="):
-                method = t.split("=", 1)[1].upper()
-            if method is not None:
-                return method == "GET"
-        return True  # no method flag -> GET
+        return gh_api_method(tokens) == "GET"
+    return False
+
+
+def is_pr_write_gh(tokens):
+    """True for gh commands that only modify a pull request.
+
+    `gh pr merge` is excluded here and stays in ASK_PATTERNS.
+    """
+    if len(tokens) < 2 or tokens[0] != "gh":
+        return False
+    if tokens[1] == "pr":
+        return len(tokens) >= 3 and tokens[2] in GH_PR_WRITE_SUBCMDS
+    if tokens[1] == "api":
+        return any(PR_API_PATH_RE.match(t) for t in tokens[2:])
     return False
 
 
@@ -306,8 +347,17 @@ def handle_bash(data):
         allow("Read-only command auto-approved by bash-guard hook")
         return
 
+    if not has_redirect and is_pr_write_gh(tokens):
+        allow("Pull-request write auto-approved by bash-guard hook")
+        return
+
     if has_redirect and only_writes_to_tmp(command, tokens):
         allow("Write confined to /tmp auto-approved by bash-guard hook")
+        return
+
+    # Mutating `gh api` that got this far is not PR-scoped -- still confirm.
+    if gh_api_method(tokens) in ("POST", "PUT", "PATCH", "DELETE"):
+        ask("gh api command may mutate non-PR state — confirm before running")
         return
 
     no_decision()
