@@ -47,6 +47,7 @@ EOF
 newlocalrcfile brewrc && cat >> "${HOME}/.local/brewrc" <<'EOF'
 export HOMEBREW_TEMP="$HOME/.brew-tmp";
 [[ -e $HOMEBREW_TEMP ]] || mkdir -p $HOMEBREW_TEMP;
+export HOMEBREW_DOWNLOAD_CONCURRENCY=2;
 EOF
 
 newlocalrcfile herdrguirc && cat >> "${HOME}/.local/herdrguirc" <<'EOF'
