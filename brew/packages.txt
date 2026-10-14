@@ -68,6 +68,7 @@ nodenv
 opa
 opencode
 openssh
+pam-reattach
 pcre
 perl-build
 pgpdump
