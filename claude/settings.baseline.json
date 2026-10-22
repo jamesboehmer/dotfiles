@@ -25,7 +25,6 @@
       "Bash(git remote show *)",
       "Read(**)",
       "Grep(**)",
-      "Glob(**)",
       "Edit(**)"
     ],
     "ask": [
