@@ -134,6 +134,7 @@
 	unlock = !git crypt unlock
 	dotfiles = !git pull && ./install.sh
 	main = !git fetch origin main:main && git switch main
+  fp = push --force
 [pull]
 	ff = only
 [init]
