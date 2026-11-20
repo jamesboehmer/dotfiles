@@ -46,9 +46,11 @@ ${THISDIR}/docker.sh;
 ${THISDIR}/defaults.sh;
 ${THISDIR}/gnupg.sh;
 ${THISDIR}/launchagents.sh;
+${THISDIR}/rexdevcontainers.sh;
 ${THISDIR}/brewpackages.sh;
 ${THISDIR}/uvtools.sh;
 ${THISDIR}/herdr.sh;
+${THISDIR}/rex.sh;
 ${THISDIR}/claude.sh;
 ${THISDIR}/pgcli.sh;
 

@@ -79,6 +79,31 @@ function curlzipinstall() {
 	done
 }
 
+function curldmginstall() {
+	# Usage: curldmginstall URL App.app [targetdir]
+	TARGETDIR="${3:-/Applications}";
+	if [[ -e "${TARGETDIR}/${2}" ]]; then
+		if [[ "${DOUPDATE}" != "true" ]]; then
+			echo "${TARGETDIR}/${2} exists.  Skipping install.";
+			return;
+		fi
+	fi
+	DLDIR="$(mktemp -d)";
+	echo "Downloading ${1} to ${DLDIR}/download.dmg";
+	curl -fsSL "${1}" -o "${DLDIR}/download.dmg" || { rm -rf "${DLDIR}"; return 1; }
+	mkdir -p "${DLDIR}/mnt";
+	hdiutil attach -nobrowse -readonly -noautoopen -mountpoint "${DLDIR}/mnt" "${DLDIR}/download.dmg" >/dev/null || { rm -rf "${DLDIR}"; return 1; }
+	if [[ -e "${DLDIR}/mnt/${2}" ]]; then
+		echo "Copying ${2} to ${TARGETDIR}";
+		rm -rf "${TARGETDIR}/${2}";
+		ditto "${DLDIR}/mnt/${2}" "${TARGETDIR}/${2}";
+	else
+		echo "${2} not found in ${1}.  Skipping.";
+	fi
+	hdiutil detach "${DLDIR}/mnt" >/dev/null;
+	rm -rf "${DLDIR}";
+}
+
 function checkfor() {
 	# Usage: checkfor program
 	DOINSTALL="true"; # be default always install
@@ -150,6 +175,7 @@ function get_gh_latest_release() {
 export gitcloneinstall;
 export curlbininstall;
 export curlzipinstall;
+export curldmginstall;
 export dangerous;
 export curldpkginstall;
 export checkfor;
