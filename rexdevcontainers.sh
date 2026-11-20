@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Create a socat launchagent for each running devcontainer that exposes the Rex
-# server inside it as ~/.local/state/rex-devcontainer-{name}.sock, so the Rex
-# GUI can add it as a remote host (unix:///Users/.../rex-devcontainer-{name}.sock).
+# server inside it as ~/.local/state/rex-devcontainer-{name}.sock, and add that
+# socket to the Rex GUI's hosts as rex-devcontainer-{name}.
 # Agents key on the devcontainer.config_file label rather than the container, so
 # they keep working across rebuilds.  Re-run to pick up new devcontainers.
 
@@ -36,7 +36,51 @@ function devcontainername() {
     echo "${project}${sub:+-${sub}}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._-]+/-/g';
 }
 
-docker ps --filter label=devcontainer.config_file --format '{{.Label "devcontainer.config_file"}}' | sort -u | while read -r CONFIG
+# The Rex GUI shows only the hosts in its own RexSync.servers preference (JSON
+# stored as data), not the ones `rex hosts add` writes to the server, so add
+# records there.  Returns 0 if a record was added.
+# Usage: addrexguihost LABEL ENDPOINT
+REXDOMAIN="com.superlogical.rex";
+function addrexguihost() {
+    # The key has a dot in it, so escape it for plutil's key path.
+    local servers="$(defaults export "${REXDOMAIN}" - 2>/dev/null | plutil -extract 'RexSync\.servers' raw -o - - 2>/dev/null | base64 -d 2>/dev/null)";
+    # Start a new list only if the key is really missing, never because reading it failed.
+    if [[ -z "${servers}" ]]; then
+        if defaults read "${REXDOMAIN}" RexSync.servers &>/dev/null; then
+            echo "  Couldn't read RexSync.servers.  Add ${2} as a Rex host manually.";
+            return 1;
+        fi
+        servers='{"formatVersion":1,"records":[]}';
+    fi
+    if [[ "$(jq -r '.formatVersion' <<< "${servers}" 2>/dev/null)" != "1" ]]; then
+        echo "  Unknown RexSync.servers format.  Add ${2} as a Rex host manually.";
+        return 1;
+    fi
+    if jq -e --arg e "${2}" 'any(.records[]; .locators | index($e))' <<< "${servers}" &>/dev/null; then
+        echo "  Rex GUI already has a host for ${2}.  Skipping.";
+        return 1;
+    fi
+
+    # The GUI records which server it last reached at each host; fill those in the same way.
+    local whoami="$(rex -S "${2}" whoami --json 2>/dev/null)";
+    local record="$(jq -cn --arg id "$(uuidgen)" --arg name "${1}" --arg e "${2}" \
+        --arg host "$(jq -r '.host_id // empty' <<< "${whoami}" 2>/dev/null)" \
+        --arg instance "$(jq -r '.instance_id // empty' <<< "${whoami}" 2>/dev/null)" \
+        '{acceptsAnonymousClients: false, icon: "globe", id: $id, locators: [$e], name: $name}
+         + (if $host != "" then {lastHostID: $host} else {} end)
+         + (if $instance != "" then {lastInstanceID: $instance} else {} end)')";
+
+    local backup="${HOME}/Library/Preferences/${REXDOMAIN}.plist.rexdevcontainersbak.${TIME}";
+    [[ -e "${backup}" ]] || defaults export "${REXDOMAIN}" "${backup}";
+    # Escape slashes the way the GUI writes them.
+    local updated="$(jq -c --argjson r "${record}" '.records += [$r]' <<< "${servers}" | sed 's#/#\\/#g')";
+    echo "  Adding Rex GUI host ${1} -> ${2} (prefs backed up to ${backup})";
+    defaults write "${REXDOMAIN}" RexSync.servers -data "$(printf '%s' "${updated}" | xxd -p | tr -d '\n')";
+}
+
+TIME="$(date +%Y%m%d%H%M%S)";
+CHANGED="false";
+while read -r CONFIG
 do
     [[ -z "${CONFIG}" ]] && continue;
     NAME="$(devcontainername "${CONFIG}")";
@@ -92,5 +136,8 @@ EOF
         mv "${TMPFILE}" "${PLIST}";
         launchctl load -wF "${PLIST}";
     fi
-    echo "  Rex host address: unix://${SOCKET}";
-done
+
+    addrexguihost "rex-devcontainer-${NAME}" "unix://${SOCKET}" && CHANGED="true";
+done < <(docker ps --filter label=devcontainer.config_file --format '{{.Label "devcontainer.config_file"}}' | sort -u)
+
+[[ "${CHANGED}" == "true" ]] && echo "Restart Rex now to pick up changes";
